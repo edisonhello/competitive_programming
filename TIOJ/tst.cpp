@@ -14,12 +14,13 @@ inline int rit(){
     }while((j>='0' && j<='9'));
     return t;
 }
-
+int a[5][5];
 
 int main(){
 
-    bool *j = new bool[50];
-    for(int i=0;i<50;i++){
-        cout<<j[i]<<endl;
+    for(int i=0;i<5;i++){
+        for(int j=0;j<5;j++){
+            cout<<a[i][j];
+        }
     }
 }
