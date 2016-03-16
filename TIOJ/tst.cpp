@@ -1,33 +1,7 @@
 #include<bits/stdc++.h>
-
+#define ll long long
+#define ull unsigned long long
 using namespace std;
-
-int sv[3165];
-
-
-inline bool isprime(int a){
-    for(int i=0;sv[i]*sv[i]<=a;i++){
-        if(a%sv[i]==0){
-            return 0;
-        }
-    }
-    return 1;
-}
-
-inline void make(){
-    sv[0]=2;
-    sv[1]=3;
-    sv[2]=5;
-    sv[3]=7;
-    int n=4;
-    for(int i=11;i*i<10000100 && n<3165;i+=10){
-        if(isprime(i)){sv[n++]=i;}
-        if(isprime(i+2)){sv[n++]=i+2;}
-        if(isprime(i+6)){sv[n++]=i+6;}
-        if(isprime(i+8)){sv[n++]=i+8;}
-    }
-}
-
 
 inline int rit(){
     int t=0;
@@ -43,16 +17,9 @@ inline int rit(){
 
 
 int main(){
-    make();
-    FILE *addd = freopen("out.txt","w",stdout);
 
-
-
-    for(int i=9500000;i<10000000;i++){
-        if(isprime(i)){
-            cout<<"&&tmp!="<<i;
-        }
+    bool *j = new bool[50];
+    for(int i=0;i<50;i++){
+        cout<<j[i]<<endl;
     }
-
-
 }
