@@ -20,6 +20,63 @@ int main(){
     //getchar();
     //getchar();
     while(t--){
+        stack<char> j;
+        string ans = "";
+        while(1){
+            char c;scanf("%c",&c);   //cout<<(int)c<<endl;
+
+//getchar();
+            if(c>='0'&&c<='9'){
+                ans = ans + c;
+            }
+            if(c=='-'||c=='+'){
+                while(j.size() && (j.top()!='(')){
+                    ans = ans + j.top();
+                    j.pop();
+                }
+                j.push(c);
+            }
+            if(c=='*'||c=='/'){
+                while(j.size() && (j.top()=='*' || j.top()=='/')){
+                    ans = ans + j.top();
+                    j.pop();
+                }
+
+                j.push(c);
+            }
+
+            if(c=='('){
+                j.push(c);
+            }
+            if(c==')'){
+                while(j.top()!='('){
+                    ans = ans + j.top();
+                    j.pop();
+                }
+                j.pop();
+            }
+            if(c=='\n'){
+                while(j.size()){
+                    ans = ans + j.top();
+                    j.pop();
+                }
+                cout<<ans<<endl;
+                break;
+            }getchar();
+            //cout<<"now ans "<<ans<<" ";for(int i=0;i<j.size();i++){printf("%d",j[i]);}
+        }
+        cout<<endl;
+    }
+}
+/*
+int main(){
+    int t;
+    scanf("%d",&t);
+    getchar();
+    getchar();
+    //getchar();
+    //getchar();
+    while(t--){
         vector<char> j;
         string ans = "";
         while(1){
@@ -65,8 +122,7 @@ int main(){
             }getchar();
             //cout<<"now ans "<<ans<<" ";for(int i=0;i<j.size();i++){printf("%d",j[i]);}
         }
-        if(t!=1){
-            cout<<endl;
-        }
+        cout<<endl;
     }
 }
+*/
