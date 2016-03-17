@@ -77,49 +77,49 @@ void pull12(node *now){
 }
 
 void paint2(area in,int l,int r,node_2 *now){
-        /*debug*/printf("painting 2d %d %d %d %d\n",in.y1,in.y2,l,r);
-    if(in.y2<l || in.y1>r){     /*debug*/printf("out\n");
+        /*debug*///printf("painting 2d %d %d %d %d\n",in.y1,in.y2,l,r);
+    if(in.y2<l || in.y1>r){     /*debug*///printf("out\n");
         return ;
     }
-    if(in.y1<=l&&r<=in.y2){     /*debug*/printf("all in\n");
+    if(in.y1<=l&&r<=in.y2){     /*debug*///printf("all in\n");
         now->mx = in.y2-in.y1+1;
         now->val = now->mx;
         now->l = l;
         now->r = r;
         return;
-    }                           /*debug*/printf("split\n");
+    }                           /*debug*///printf("split\n");
     if(now->_lc == NULL) now->_lc = new node_2();
     if(now->_rc == NULL) now->_rc = new node_2();
     paint2(in,l,mid,now->_lc);
     paint2(in,mid+1,r,now->_rc);
-                                    /*debug*/printf("pulling back 2d\n");
-    pull2(now);                     /*debug*/printf("pulled back %d %d(dem2)%d %d,val=%d\n",l,r,in.y1,in.y2,now->val);
+                                    /*debug*///printf("pulling back 2d\n");
+    pull2(now);                     /*debug*///printf("pulled back %d %d(dem2)%d %d,val=%d\n",l,r,in.y1,in.y2,now->val);
 }
 
 void paint(area in,int l,int r,node *now){
-        /*debug*/printf("in paint %d %d %d %d\n",in.x1,in.x2,l,r);
-    if(in.x2<l || in.x1>r){     /*debug*/printf("out\n");
+        /*debug*///printf("in paint %d %d %d %d\n",in.x1,in.x2,l,r);
+    if(in.x2<l || in.x1>r){     /*debug*///printf("out\n");
         return;
     }
-    if(in.x1<=l&&r<=in.x2){        /*debug*/printf("all in\n");
+    if(in.x1<=l&&r<=in.x2){        /*debug*///printf("all in\n");
         now->mx = (in.x2-in.x1+1)*2*BIG;
         if(now->_lc == NULL) now->_lc = new node_2();
         if(now->_rc == NULL) now->_rc = new node_2();
-                                    /*debug*/printf("go paint2d\n");
+                                    /*debug*///printf("go paint2d\n");
         paint2(in,SML,0,now->_lc);
         paint2(in,1,BIG,now->_rc);
         now->l = l;
-        now->r = r;                 /*debug*/printf("pull back () %d %d\n",l,r);
-        pull12(now);                /*debug*/printf("pulled back () val=%d\n",l,r,now->val);
+        now->r = r;                 /*debug*///printf("pull back () %d %d\n",l,r);
+        pull12(now);                /*debug*///printf("pulled back () val=%d\n",l,r,now->val);
         return;
-    }                               /*debug*/printf("split\n");
+    }                               /*debug*///printf("split\n");
     if(now->lc == NULL) now->lc = new node();
     if(now->rc == NULL) now->rc = new node();
 
     paint(in,l,mid,now->lc);
     paint(in,mid+1,r,now->rc);
-                                    /*debug*/printf("pulling back %d %d\n",l,r);
-    pull(now);                      /*debug*/printf("pulled back %d %d(dem1)%d %d, val=%d\n",l,r,in.x1,in.x2,now->val);
+                                    /*debug*///printf("pulling back %d %d\n",l,r);
+    pull(now);                      /*debug*///printf("pulled back %d %d(dem1)%d %d, val=%d\n",l,r,in.x1,in.x2,now->val);
 }
 
 int main(){
@@ -140,7 +140,7 @@ int main(){
 */
         if(tmp.x1>tmp.x2){tmp.swapx();}
         if(tmp.y1>tmp.y2){tmp.swapy();}
-                /*debug*/printf("rec pnt,go pnt %d %d %d %d\n",tmp.x1,tmp.y1,tmp.x2,tmp.y2);
+                /*debug*///printf("rec pnt,go pnt %d %d %d %d\n",tmp.x1,tmp.y1,tmp.x2,tmp.y2);
         paint(tmp,SML,BIG,root);
     }
 

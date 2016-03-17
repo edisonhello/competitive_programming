@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 #define ll long long
 #define ull unsigned long long
+#define imnot guagua
 using namespace std;
 
 inline int rit(){
@@ -16,7 +17,6 @@ inline int rit(){
 }
 
 int main(){
-
-    string qw="sd\nsf";
-    cout<<qw;
+    float b=-0.6;
+    cout<<(int)b;
 }

@@ -2,8 +2,6 @@
 
 using namespace std;
 
-
-
 #define ull unsigned long long
 #define ll long long
 #define midx (((x1+x2)>>1) - 0.5)
@@ -12,12 +10,14 @@ using namespace std;
 ll mid(ll x,ll y){
     ll ret;
     ret = (x+y)>>1;
-    ///*debug*/printf("%d\n",ret);
+    ///*debug*///printf("%d\n",ret);
     return ret;
 }
-
+/*
 const ll BIG = 100000000;
-const ll SML =-100000000;
+const ll SML =-100000000;*/
+
+
 
 inline ll rit(){
     ll t=0,key=1;char c;
@@ -48,37 +48,56 @@ void pull(node *now){
 }
 
 void build(node *now,ll fx1,ll fy1,ll fx2,ll fy2,ll x1,ll y1,ll x2,ll y2){
-    /*debug*/printf("now building %d %d %d %d dis(%d %d %d %d) ",x1,x2,y1,y2,fx1,fx2,fy1,fy2);
-    if((fx1>x2||fx2<x1)||(fy1>y2||fy2<y1)){     /*debug*/printf("out\n");
+    /*debug*///printf("now building %d %d %d %d dis(%d %d %d %d) ",x1,x2,y1,y2,fx1,fx2,fy1,fy2);
+    if((fx1>x2||fx2<x1)||(fy1>y2||fy2<y1)){     /*debug*///printf("out\n");
         return;
     }
-    if((fx1<=x1&&x2<=fx2)&&(fy1<=y1&&y2<=fy2)){ /*debug*/printf("in\n");
+    if((fx1<=x1&&x2<=fx2)&&(fy1<=y1&&y2<=fy2)){ /*debug*///printf("in\n");
 
         now->val = (x2-x1+1) * (y2-y1+1);
-                            printf("add %d %d %d %d val %d\n",x1,x2,y1,y2,now->val);
+                            /*debig*///printf("add %d %d %d %d val %d\n",x1,x2,y1,y2,now->val);
         return;
     }
     if(now->lu == NULL)now->lu = new node();
     if(now->ld == NULL)now->ld = new node();
     if(now->ru == NULL)now->ru = new node();
-    if(now->rd == NULL)now->rd = new node();/*debug*/printf("split\ncase1 ");
-    build(now->lu,fx1,fy1,fx2,fy2,          x1,          y1,mid(x1,x2),mid(y1,y2));/*debug*/printf("case2 ");
-    build(now->ld,fx1,fy1,fx2,fy2,          x1,mid(y1,y2)+1,mid(x1,x2),       y2);/*debug*/printf("case3 ");
-    build(now->ru,fx1,fy1,fx2,fy2,mid(x1,x2)+1,          y1,        x2,mid(y1,y2));/*debug*/printf("case4 ");
+    if(now->rd == NULL)now->rd = new node();/*debug*///printf("split\ncase1 ");
+    build(now->lu,fx1,fy1,fx2,fy2,          x1,          y1,mid(x1,x2),mid(y1,y2));/*debug*///printf("case2 ");
+    build(now->ld,fx1,fy1,fx2,fy2,          x1,mid(y1,y2)+1,mid(x1,x2),       y2);/*debug*///printf("case3 ");
+    build(now->ru,fx1,fy1,fx2,fy2,mid(x1,x2)+1,          y1,        x2,mid(y1,y2));/*debug*///printf("case4 ");
     build(now->rd,fx1,fy1,fx2,fy2,mid(x1,x2)+1,mid(y1,y2)+1,        x2,       y2);
 
     now->val = now->lu->val + now->ru->val + now->ld->val + now->rd->val;
     //pull(now);
 }
 
+struct _1{
+    ll x1,x2,y1,y2;
+};
+
 int main(){
     int n=rit();
     root = new node();
+    queue<_1> paint;
+    ll SML= 1000000000;
+    ll BIG=-1000000000;
     for(int i=0;i<n;i++){
         ll x1=rit(),y1=rit(),x2=rit(),y2=rit();
         if(x1>x2)swap(x1,x2);
         if(y1>y2)swap(y1,y2);
-        build(root,x1,y1,x2,y2,SML,SML,BIG,BIG);
+
+        _1 _2;
+        _2.x1=x1;_2.x2=x2;_2.y1=y1;_2.y2=y2;
+        SML = min(min(min(min(x1,x2),y1),y2),SML);
+        BIG = max(max(max(max(x1,x2),y1),y2),BIG);
+        paint.push(_2);
+
     }
-    /*system*/printf("%I64d\n",root->val);
+    for(;paint.size();){
+        _1 _3;
+        _3=paint.front();
+        paint.pop();
+        build(root,_3.x1,_3.y1,_3.x2,_3.y2,SML,SML,BIG,BIG);
+    }
+    /*system*/printf("%I64d\n",(root->val));
 }
