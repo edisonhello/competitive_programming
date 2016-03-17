@@ -65,23 +65,28 @@ printf("split\n");
     if(now->lu == NULL && fx1<=midx && fy1<=midy){
         now->lu = new node();
         build(now->lu,fx1,fy1,fx2,fy2,x1,y1,midx,midy);
-        t+=now->lu->val;
+        //t+=now->lu->val;
     }
     if(now->ld == NULL && fx1<=midx && fy2>=midy){
         now->ld = new node();
         build(now->ld,fx1,fy1,fx2,fy2,x1,mid(y1,y2)+1,mid(x1,x2),y2);
-        t+=now->ld->val;
+        //t+=now->ld->val;
     }
     if(now->ru == NULL && fx2>=midx && fy1<=midy){
         now->ru = new node();
         build(now->ru,fx1,fy1,fx2,fy2,mid(x1,x2)+1,y1,x2,mid(y1,y2));
-        t+=now->ru->val;
+        //t+=now->ru->val;
     }
     if(now->rd == NULL && fx2>=midx && fy2>=midy){
         now->rd = new node();
         build(now->rd,fx1,fy1,fx2,fy2,mid(x1,x2)+1,mid(y1,y2)+1,x2,y2);
-        t+=now->rd->val;
+        //t+=now->rd->val;
     }
+
+    if(now->lu != NULL)t += now->lu->val;
+    if(now->ld != NULL)t += now->ld->val;
+    if(now->ru != NULL)t += now->ru->val;
+    if(now->rd != NULL)t += now->rd->val;
 
     now->val = t;
 
