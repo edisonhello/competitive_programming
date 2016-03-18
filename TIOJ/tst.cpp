@@ -17,6 +17,8 @@ inline int rit(){
 }
 
 int main(){
-    float b=-0.6;
-    cout<<(int)b;
+    ll B=1000000000;
+    ll S=-1000000000;
+
+    printf("%I64d\n",B-S);
 }
