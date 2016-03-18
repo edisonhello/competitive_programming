@@ -15,7 +15,7 @@ int main(){
 	}
 
 	for(int i=moreB.size()-1;i>=0;i--){
-        if(a.find(moreB[i]) <654654){
+        if(a.find(moreB[i])<654654){
             cout<<moreB[i].length()<<endl;
             return 0;
         }
