@@ -12,5 +12,4 @@ for(int i=1;i<=n;i++)p[i]=rit();p[0]=0;f[0]=0;b[n+1]=0;p[n+1]=l;
 for(int i=1;i<=n;i++)f[i]=(i-k>=0?f[i-k]+p[i]:p[i])+min(p[i],l-p[i]);
 for(int i=n;i>=1;i--)b[i]=(i+k<=n+1?b[i+k]+l-p[i]:l-p[i])+min(p[i],l-p[i]);
 ll ans=((ll)1<<60);for(int i=0;i<=n;i++)ans=min(ans,f[i]+b[i+1]);cout<<ans<<endl;
-}
-}
+}}

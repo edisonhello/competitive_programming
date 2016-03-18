@@ -5,15 +5,18 @@
 using namespace std;
 
 inline int rit(){
-    int t=0;
+    int t=0,key=1;
     char j;
-    do{j=getchar();}while((j<'0' || j>'9'));
+    do{
+            j=getchar();
+            if(j=='-')key=-1;
+    }while((j<'0' || j>'9'));
     do{
         t = t*10+j-'0';
         j=getchar();
 
     }while((j>='0' && j<='9'));
-    return t;
+    return t*key;
 }
 
 int main(){

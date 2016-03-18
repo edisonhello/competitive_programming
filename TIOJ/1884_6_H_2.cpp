@@ -15,7 +15,7 @@ inline int rit(){
     do{
         t=t*10+c-'0';
         c=getchar();
-    }while(c<='0'&&c>='9');
+    }while(c>='0'&&c<='9');
     return t*k;
 }
 
