@@ -8,8 +8,8 @@ inline int rit(){
     int t=0,key=1;
     char j;
     do{
-            j=getchar();
-            if(j=='-')key=-1;
+        j=getchar();
+        if(j=='-')key=-1;
     }while((j<'0' || j>'9'));
     do{
         t = t*10+j-'0';
@@ -20,8 +20,7 @@ inline int rit(){
 }
 
 int main(){
-    ll B=1000000000;
-    ll S=-1000000000;
-
-    printf("%I64d\n",B-S);
+    vector<int> s;s.push_back(1);s.push_back(2);
+    sort(s.begin(),s.end());
+    cout<<s[0]<<s[1]<<endl;
 }
