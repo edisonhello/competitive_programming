@@ -20,19 +20,5 @@ inline int rit(){
 }
 
 int main(){
-
-    ll m = 8;
-
-    ll ans = 1;
-    ll by = 2;
-
-    while(m!=0){
-        //n*=by;
-
-        if(m%2==1){
-            ans*=by;
-        }by*=by;
-
-        m/=2;
-    }cout<<ans<<endl;
+    printf("%d",'z');
 }
