@@ -51,9 +51,27 @@ int main(){
 
         sort(pts.begin(),pts.end());
 
-        int i,j;
+        int i,j,now=1;
         for(i=0;i<pts.size();i=j){
             vector<int> pos,val;
+            /*if(pts[i].m!=now){
+                printf("0\n\n");
+                now++;
+            }*/
+            if(i==0){
+                if(pts[0].m!=1){
+                    for(int sdf=1;sdf<pts[0].m;sdf++){
+                        printf("0\n\n");
+                    }
+                }
+            }
+            else{
+                if(pts[i].m-pts[i-1].m>1){
+                    for(int qwe=1;qwe<pts[i].m-pts[i-1].m;qwe++){
+                        printf("0\n\n");
+                    }
+                }
+            }
             for(j=i;pts[i].n==pts[j].n;j++){
                 pos.push_back(pts[j].m/*?*/);
                 val.push_back(pts[j].v);

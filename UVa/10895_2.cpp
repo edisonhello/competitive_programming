@@ -19,6 +19,11 @@ inline int rit(){
 }
 
 int main(){
+
+    freopen("jizz","w",stdout);
+    freopen("iiji","r",stdin);
+
+
     int m,n;
     while(scanf("%d %d",&m,&n) &&m &&n){
         int mtx[n][m];
