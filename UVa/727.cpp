@@ -2,16 +2,66 @@
 
 using namespace std;
 
-inline char r(){
-    char a;bool jizz=false;
-    a = getchar();
-    if(a=='\n'){
-        return a;
+int main(){
+    /*ios_base::sync_with_stdio(0);
+    cin.tie(0);*/
+/*freopen("iiji","r",stdin);
+freopen("jizz","w",stdout);*/
+    int t;
+    scanf("%d",&t);
+    getchar();
+    getchar();
+    stack<char> j;
+    char c;
+
+    for(int i=0;i<t;i++){
+        if(i)printf("\n");
+
+
+        while(scanf("%c",&c) != EOF && c != '\n'){
+            getchar();
+            if(c>='0'&&c<='9'){
+                printf("%c",c);
+            }
+            else if(c=='-'||c=='+'){
+                while(j.size() && /*(j.top()!='(')*/ (j.top()=='+'||j.top()=='-'||j.top()=='*'||j.top()=='/')){
+                    printf("%c",j.top());//cout<<j.top();
+                    j.pop();
+                }
+                j.push(c);
+            }
+            else if(c=='*'||c=='/'){
+                while(j.size() && (j.top()=='*' || j.top()=='/')){
+                    printf("%c",j.top());//cout<<j.top();
+                    j.pop();
+                }
+
+                j.push(c);
+            }
+
+            else if(c=='('){
+                j.push(c);
+            }
+            else if(c==')'){
+                while(j.size() && j.top()!='('){
+                    printf("%c",j.top());//cout<<j.top();
+                    j.pop();
+                }
+                if(j.size())j.pop();
+            }
+            //cout<<"now ans "<<ans<<" ";for(int i=0;i<j.size();i++){printf("%d",j[i]);}
+        }
+        while(j.size()){
+            /*if(j.top()!='(')*/printf("%c",j.top());//cout<<j.top();
+            j.pop();
+        }//getchar();
+        printf("\n");
+
     }
-    char tmp = getchar();
-    return a;
 }
 
+
+/*
 int main(){
     int t;
     scanf("%d",&t);
@@ -32,14 +82,14 @@ int main(){
             if(c=='-'||c=='+'){
                 while(j.size() && (j.top()!='(')){
                     ans = ans + j.top();
-                    j.pop();
+                    if(j.size())j.pop();
                 }
                 j.push(c);
             }
             if(c=='*'||c=='/'){
                 while(j.size() && (j.top()=='*' || j.top()=='/')){
                     ans = ans + j.top();
-                    j.pop();
+                    if(j.size())j.pop();
                 }
 
                 j.push(c);
@@ -51,14 +101,14 @@ int main(){
             if(c==')'){
                 while(j.top()!='('){
                     ans = ans + j.top();
-                    j.pop();
+                    if(j.size())j.pop();
                 }
-                j.pop();
+                if(j.size())j.pop();
             }
             if(c=='\n'){
                 while(j.size()){
                     ans = ans + j.top();
-                    j.pop();
+                    if(j.size())j.pop();
                 }
                 cout<<ans<<endl;
                 break;
@@ -67,7 +117,9 @@ int main(){
         }
         cout<<endl;
     }
-}
+}*/
+
+
 /*
 int main(){
     int t;
