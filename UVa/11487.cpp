@@ -8,13 +8,13 @@ struct _6{
     char e;
 };
 queue<_6>goq;
-void go(int nx,int ny,int px,int py,char dis,int len){
-    printf("come to %d %d dist %d %d\n",nx,ny,px,py);
-    if(gotshort){
+void go(int nx,int ny,int px,int py,char dis,int len){ // cout<<"jizz"<<endl;
+    //printf("come to %d %d dist %d %d\n",nx,ny,px,py);
+    /*if(gotshort){
         if(dis>gotshort){
             return;
         }
-    }
+    }*/
     gone[nx][ny] = 1;
     if(nx==px && ny==py){
         if(gotshort){
@@ -70,7 +70,7 @@ void go(int nx,int ny,int px,int py,char dis,int len){
     if(ny<n-1 && (mp[nx][ny+1]=='.' || mp[nx][ny+1]==dis) && !(gone[nx][ny+1])){
         t.a=nx;
         t.b=ny+1;
-        t.c=px;     cout<<"jizz"<<endl;
+        t.c=px;     //cout<<"jizz"<<endl;
         t.d=py;
         t.e=dis;
         t.f=len+1;
@@ -81,6 +81,10 @@ void go(int nx,int ny,int px,int py,char dis,int len){
 
 
 int main(){
+
+    freopen("in","r",stdin);
+    freopen("out","w",stdout);
+
     int t=0;
     while(cin>>n && n && ++t){
         cout<<"Case "<<t<<": ";
@@ -98,22 +102,24 @@ int main(){
                 break;
             }
         }
+        totshort=0;
+        tottype =1;
         bool jizz = 0;
         for(int i=1;!(jizz);i++){
             //finding
             gotshort=0;
             thistype=0;
             memset(gone,0,sizeof(gone));
-            bool fd=false;
-            for(int a=0;i<n;a++){
+            bool fd=false;     // cout<<"jizz"<<endl;
+            for(int a=0;a<n;a++){   //cout<<n<<endl;
                 posy[i] = mp[a].find(i+65);
                 if( posy[i] !=string::npos){
                     fd=true;
                     posx[i] = a;
                     break;
                 }
-            }
-            if(!fd){
+            }   //    cout<<"asd"<<endl;
+            if(!fd){    //cout<<"jizz";
                 break;
             }
             else if(fd){
@@ -140,7 +146,7 @@ int main(){
             gotshort=0;
         }
         if(!jizz){
-            cout<<totshort<<" "<<tottype<<endl;
+            cout<<totshort%20437<<" "<<tottype<<endl;
         }
     }
 }
