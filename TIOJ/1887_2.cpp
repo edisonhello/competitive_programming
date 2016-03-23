@@ -2,7 +2,7 @@
 using namespace std;
 #define ull unsigned long long
 #define db double
-struct val{
+/*struct val{
     ull v,s;
     db lv,ls;
     val(){
@@ -14,7 +14,7 @@ struct val{
         ls=log((db)s);
         return;
     }
-};
+};*/
 const ull MOD = 1e9+7;
 /*val operator + (const val &a,const val &b){
     val t;
@@ -49,12 +49,19 @@ const ull MOD = 1e9+7;
 }*/
 #define mid (l+r)/2
 struct node{
-    val v;
+    pair<db,ull> v,s;
     node *l,*r;
     node(){
         l = r = NULL;
     }
 };
+
+pair<db,ull> operator + (const pair<db,ull> a,const pair<db,ull> &b){
+    pair<db,ull> t;
+    t.first = a.first + b.first;
+    t.second= a.second*b.second%MOD;
+    return t;
+}
 
 vector<ull> x,y;
 
@@ -70,43 +77,50 @@ inline ull rit(){
     return t*k;
 }
 
-void pull(node *now){
+/*void pull(node *now){
     now->v.s = now->l->v.s * now->r->v.s % MOD;
-    now->v.ls= now->l->v.ls* now->r->v.ls;
-    if(now->l->v.lv > now->l->v.ls+now->r->v.lv){  ///1e-9
+    now->v.ls= now->l->v.ls+ now->r->v.ls;
+    if(now->l->v.lv > now->r->v.lv + now->l->v.ls){ ///1e-9
         now->v.lv = now->l->v.lv;
         now->v.v  = now->l->v.v ;
     }
     else{
-        now->v.lv = now->l->v.ls+now->r->v.lv;
-        now->v.v  = now->l->v.s *now->r->v.v%MOD;
+        now->v.lv = now->r->v.lv + now->l->v.ls;
+        now->v.v  = now->r->v.v  * now->l->v.s %MOD;
     }
-}
+    return;
+}*/
 
 void build(node *now,int l,int r){
     if(l==r){
-        now->v.v = (x[l]*y[l])%MOD;
-        now->v.s = y[l];
-        now->v.update();
+        now->v.second = (x[l]*y[l])%MOD;
+        now->s.second = y[l];
+        now->v.first  = log(now->v.second);
+        now->s.first  = log(now->s.second);
         return;
     }
     now->l = new node();
     now->r = new node();
     build(now->l,l,mid);
     build(now->r,mid+1,r);
-    pull(now);
+
+    now->s = now->l->s + now->r->s;
+    now->v = max(now->l->v,now->l->s+now->r->v);
+    //pull(now);
+
 }
 
 void update(node *now,int l,int r,int pos,ull val,int type){
     if(l==r){
         assert(l==pos);
         if(type==1){
-            now->v.s = val;
-            now->v.update();
+            now->s.second = val;
+            now->s.first  = log(now->s.second);
+            return;
         }
         else{
-            now->v.v = val;
-            now->v.update();
+            now->v.second = val;
+            now->v.first  = log(now->v.second);
             return ;
         }
     }       cout<<"jizz";
@@ -116,7 +130,10 @@ void update(node *now,int l,int r,int pos,ull val,int type){
     if(pos<=mid){
         update(now->l,l,mid,pos,val,type);
     }
-    pull(now);
+
+    now->s = now->l->s + now->r->s;
+    now->v = max(now->l->v,now->l->s+now->r->v);
+    //pull(now);
 }
 
 void dlt(node *now){
@@ -140,12 +157,12 @@ int main(){
         }
         root = new node();
         build(root,0,n-1);
-        printf("%llu\n",root->v.v);
+        printf("%llu\n",root->v.second);
         int m=rit();
         for(int i=0;i<m;i++){
             int k=rit(),p=rit();ull v=rit();
             update(root,0,n-1,p-1,v,k);
-            printf("%llu\n",root->v.v);
+            printf("%llu\n",root->v.second);
         }
         dlt(root);
     }
