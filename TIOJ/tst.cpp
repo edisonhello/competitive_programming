@@ -4,8 +4,8 @@
 #define imnot guagua
 using namespace std;
 
-inline int rit(){
-    int t=0,key=1;
+inline ull rit(){
+    ull t=0,key=1;
     char j;
     do{
         j=getchar();
@@ -20,5 +20,6 @@ inline int rit(){
 }
 
 int main(){
-    printf("%d",'z');
+    int n=rit();
+    cout<<n<<endl;
 }
