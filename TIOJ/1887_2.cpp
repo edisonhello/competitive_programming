@@ -57,10 +57,11 @@ struct node{
 };
 
 pair<db,ull> operator + (const pair<db,ull> a,const pair<db,ull> &b){
-    pair<db,ull> t;
+    /*pair<db,ull> t;
     t.first = a.first + b.first;
     t.second= a.second*b.second%MOD;
-    return t;
+    return t;*/
+    return make_pair(a.first + b.first , a.second*b.second%MOD);
 }
 
 vector<ull> x,y;
@@ -94,8 +95,8 @@ inline ull rit(){
 void build(node *now,int l,int r){
     if(l==r){
         now->v.second = (x[l]*y[l])%MOD;
-        now->s.second = y[l];
-        now->v.first  = log(now->v.second);
+        now->s.second = x[l];
+        now->v.first  = log(x[l]*y[l]);
         now->s.first  = log(now->s.second);
         return;
     }
@@ -114,16 +115,20 @@ void update(node *now,int l,int r,int pos,ull val,int type){
     if(l==r){
         assert(l==pos);
         if(type==1){
-            now->s.second = val;
+            x[l] = val;
+            now->v.second = (x[l]*y[l])%MOD;
+            now->s.second = x[l];
+            now->v.first  = log(x[l]*y[l]);
             now->s.first  = log(now->s.second);
             return;
         }
         else{
-            now->v.second = val;
-            now->v.first  = log(now->v.second);
+            y[l] = val;
+            now->v.second = (x[l]*y[l])%MOD;
+            now->v.first  = log(x[l]*y[l]);
             return ;
         }
-    }       cout<<"jizz";
+    }       //cout<<"jizz";
     if(pos>mid){
         update(now->r,mid+1,r,pos,val,type);
     }
@@ -161,7 +166,7 @@ int main(){
         int m=rit();
         for(int i=0;i<m;i++){
             int k=rit(),p=rit();ull v=rit();
-            update(root,0,n-1,p-1,v,k);
+            update(root,0,n-1,p,v,k);
             printf("%llu\n",root->v.second);
         }
         dlt(root);
