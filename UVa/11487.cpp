@@ -82,8 +82,8 @@ void go(int nx,int ny,int px,int py,char dis,int len){ // cout<<"jizz"<<endl;
 
 int main(){
 
-    freopen("in","r",stdin);
-    freopen("out","w",stdout);
+    /*freopen("in","r",stdin);
+    freopen("out","w",stdout);*/
 
     int t=0;
     while(cin>>n && n && ++t){
@@ -109,7 +109,7 @@ int main(){
             //finding
             gotshort=0;
             thistype=0;
-            memset(gone,0,sizeof(gone));
+
             bool fd=false;     // cout<<"jizz"<<endl;
             for(int a=0;a<n;a++){   //cout<<n<<endl;
                 posy[i] = mp[a].find(i+65);
@@ -131,9 +131,11 @@ int main(){
                 _.e=i+65;
                 _.f=0;
                 goq.push(_);
+                memset(gone,0,sizeof(gone));
                 while(goq.size()>0){
                     go(goq.front().a,goq.front().b,goq.front().c,goq.front().d,goq.front().e,goq.front().f);
                 }
+                mp[posx[0]][posy[0]]='.';
             }
             tottype*=thistype;
             if(tottype==0){
@@ -146,7 +148,7 @@ int main(){
             gotshort=0;
         }
         if(!jizz){
-            cout<<totshort%20437<<" "<<tottype<<endl;
+            cout<<totshort%20437<<" "<<tottype%<<endl;
         }
     }
 }

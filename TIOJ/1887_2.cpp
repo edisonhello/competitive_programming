@@ -10,26 +10,43 @@ struct val{
         lv=ls=0;
     }
     void update(){
-        lv=log(v);
-        ls=log(s);
+        lv=log((db)v);
+        ls=log((db)s);
         return;
     }
 };
 const ull MOD = 1e9+7;
-val operator + (const val &a,const val &b){
+/*val operator + (const val &a,const val &b){
     val t;
     t.s=a.s*b.s%MOD;
     t.ls=a.ls+b.ls;
-    if(a.lv>b.lv+a.ls){
-        t.v=a.v;
-        t.lv=a.lv;
+    bool which; //ans=max(lc->ans,lc->sum+rc->ans);
+    if(abs((a.lv) - (a.ls+a.lv+b.lv))<1e-9){
+        if(a.v > a.s*b.v){
+            which = 0;
+        }
+        else{
+            which = 1;
+        }
     }
     else{
-        t.v=b.v*a.s%MOD;
-        t.lv=b.lv+a.ls;
+        if(a.lv > a.ls+b.lv){
+            which = 0;
+        }
+        else{
+            which =1;
+        }
+    }
+    if(which==0){
+        t.v = a.v*b.v;
+        t.lv= a.lv+b.lv;
+    }
+    else{
+        t.v = a.s*b.v%MOD;
+        t.lv= a.ls+b.lv;
     }
     return t;
-}
+}*/
 #define mid (l+r)/2
 struct node{
     val v;
@@ -37,7 +54,7 @@ struct node{
     node(){
         l = r = NULL;
     }
-} *root;
+};
 
 vector<ull> x,y;
 
@@ -54,12 +71,21 @@ inline ull rit(){
 }
 
 void pull(node *now){
-    now->v = now->l->v + now->r->v;printf("%d\n",now->v.v);
+    now->v.s = now->l->v.s * now->r->v.s % MOD;
+    now->v.ls= now->l->v.ls* now->r->v.ls;
+    if(now->l->v.lv > now->l->v.ls+now->r->v.lv){  ///1e-9
+        now->v.lv = now->l->v.lv;
+        now->v.v  = now->l->v.v ;
+    }
+    else{
+        now->v.lv = now->l->v.ls+now->r->v.lv;
+        now->v.v  = now->l->v.s *now->r->v.v%MOD;
+    }
 }
 
 void build(node *now,int l,int r){
     if(l==r){
-        now->v.v = x[l];
+        now->v.v = (x[l]*y[l])%MOD;
         now->v.s = y[l];
         now->v.update();
         return;
@@ -81,6 +107,7 @@ void update(node *now,int l,int r,int pos,ull val,int type){
         else{
             now->v.v = val;
             now->v.update();
+            return ;
         }
     }       cout<<"jizz";
     if(pos>mid){
@@ -98,10 +125,10 @@ void dlt(node *now){
     delete now;
 }
 
-
 int main(){
     int t=rit();
-    while(t--){cout<<"jizz"<<endl;
+    while(t--){//cout<<"jizz"<<endl;
+        node *root;
         int n=rit();
         x.clear();y.clear();
         x.resize(n);y.resize(n);
@@ -113,13 +140,14 @@ int main(){
         }
         root = new node();
         build(root,0,n-1);
-        printf("%llu\n",root->v.v/* * root->v.*/);
+        printf("%llu\n",root->v.v);
         int m=rit();
         for(int i=0;i<m;i++){
             int k=rit(),p=rit();ull v=rit();
             update(root,0,n-1,p-1,v,k);
             printf("%llu\n",root->v.v);
         }
+        dlt(root);
     }
 
 }
