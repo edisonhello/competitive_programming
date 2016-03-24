@@ -45,28 +45,37 @@ int findtimes(){
 int main(){
     int t=rit();
     while(t--){
-        n=rit();
+        n=rit();                
+            printf("got n = %d\n",n);
         wm.clear();
-        wm.resize(n);
-        for(int i=0;i<n;i++){
-            wm[i] = rit();
-        }
+        wm.resize(n);           
+        for(int i=0;i<n;i++){   
+            wm[i] = rit();      
+        }                       
+            for(int i=0;i<n;i++)printf("wm[%d] = %d \n",i,wm[i]);
         ori = wm;
-        int m = rit();
+        int m = rit();          
+            printf("got m = %d\n",m);
         for(int i=0;i<m;i++){
             int l=rit(),r=rit();
             sw.push_back(make_pair(min(l,r),max(l,r)));
-        }
+        }                       
         swap(wm[sw[0].X],wm[sw[0].Y]);
+              printf("after first swap\n");for(int i=0;i<n;i++)printf("wm[%d] = %d \n",i,wm[i]);   
         //now times means 0;
         int time = findtimes();
+            printf("@ first time, time = %d\n",time);
         if(time==1){
+                printf("got time\n");
             goto got_time;
         }
         else{
             for(int i=1;i<sw.size();i++){
+                    printf("swap for time %d of all size %d\n",i,sw.size());
                 time = findtimes();
+                    printf("after swap for time %d, time = %d\n",i,time);
                 if(time<=i){
+                        printf("got time %d\n",time);
                     goto got_time;
                     break;
                 }
@@ -92,6 +101,5 @@ int main(){
             }
             cout<<endl;
         }
-
     }
 }
