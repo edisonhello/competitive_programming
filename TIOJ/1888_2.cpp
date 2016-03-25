@@ -46,23 +46,34 @@ bool can_done_in_time(int time){
 void realdo(int time){
     int cnt=0;
     cout<<time<<endl;
+    printf("time %d\n",time);
     for(int i=0;i<sw_rec.size();i++){
-        cnt++;
-        swap(ori_clo[sw_rec[i].X],ori_clo[sw_rec[i].Y]);
+        swap(ori_clo[sw[i].X],ori_clo[sw[i].Y]);
+
+        printf("after auto swap ");for(int j=0;j<n;j++)printf("%d ",ori_clo[j]);printf("\n");
+        int sw1,sw2; 
         for(int j=0;j<n;j++){
             if(ori_clo[j]==sw_rec[i].X){
                 cout<<j<<" ";
+                sw1=j;
+                cnt++;
+                //printf("now cnt = %d \n",cnt);
                 break;
             }
         }
         for(int j=0;j<n;j++){
             if(ori_clo[j]==sw_rec[i].Y){
                 cout<<j<<endl;
+                sw2=j;
+                cnt++;
                 break;
             }
         }
+        swap(ori_clo[sw1],ori_clo[sw2]);
+        printf("after I swap ");for(int j=0;j<n;j++)printf("%d ",ori_clo[j]);printf("\n");
+        
     }
-    if(cnt!=sw_rec.size()){
+    if(cnt<time*2){
         cout<<"0 0"<<endl;
     }
     return ;
@@ -72,9 +83,10 @@ void jizz(){
     doinjizz = ori_clo;
     for(int i=0;i<sw_t;i++){
         swap(doinjizz[sw[i].X],doinjizz[sw[i].Y]);
-        for(int i=0;i<n;i++)printf("%d ",doinjizz[i]);printf("\n");
+        for(int j=0;j<n;j++)printf("%d ",doinjizz[j]);printf("\n");
         if(can_done_in_time(i+1)){
-            printf("can done in time %d\n",i+1);
+            printf("can done in time %d :",i+1);
+            for(int k=0;k<i+1;k++)printf("(%d,%d) ",sw_rec[k].X,sw_rec[k].Y);
             realdo(i+1);
             return;
         }
@@ -87,6 +99,10 @@ int main(){
         n=rit();
         ori_clo.clear();
         ori_clo.resize(n);
+        doinjizz.clear();
+        doinif.clear();
+        sw.clear();
+        sw_rec.clear();
         for(int i=0;i<n;i++)ori_clo[i]=rit();
         printf("original cloth ");
         for(int i=0;i<n;i++)printf("%d ",ori_clo[i]);printf("\n");
