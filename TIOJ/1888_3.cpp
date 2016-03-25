@@ -90,7 +90,7 @@ int sch(int l,int r){
     oricpy = ori_clo;
     poscpy = clo_pos;
 
-    for(int i=0;i<mid/*-1?*/;i++){
+    for(int i=0;i<mid;i++){
         int x=sw[i].X;
         int y=sw[i].Y;
 
