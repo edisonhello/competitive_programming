@@ -84,7 +84,6 @@ void real_do(int timeset){
 
 int sch(int l,int r){
 //            printf("sch %d %d\n",l,r);
-    
     oricpy.clear();
     poscpy.clear();
     oricpy = ori_clo;
