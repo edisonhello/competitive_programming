@@ -41,7 +41,7 @@ int main(){
             // int nxwall=rec[r++];
             // int canbrk = lftk>nxwall ? nxwall : lftk;
             // lftk-=
-            int trecr = r!=sz-1?rec[r++]:0;
+            int trecr = r>=sz-1?0:rec[r++];
             int reclftk = lftk;
             lftk-=trecr;
             now += lftk<0 ? reclftk : trecr;
@@ -71,7 +71,7 @@ int main(){
            // int nxwall=rec[r++];
            // int canbrk = lftk>nxwall ? nxwall : lftk;
            // lftk-=
-           int trecr = r!=sz-1?rec[r++]:0;
+           int trecr = r>=sz-1?0:rec[r++];
            int reclftk = lftk;
            lftk-=trecr;
            now += lftk<0 ? reclftk : trecr;
