@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define unsigned long long ull
+#define ull unsigned long long
 int main(){
     ull n;cin>>n;
     if(n%2==0){
