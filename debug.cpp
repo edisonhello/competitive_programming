@@ -1,25 +1,23 @@
-#include<iostream>
-#include<stdio.h>
-#include<cmath>
+#include<bits/stdc++.h>
 using namespace std;
+#define ll long long
+#define ull unsigned long long
+#define PB(x) push_back(x)
+#define X first
+#define Y second
+
+int ouo(int base,int pow){
+    int ans=1;
+    while(pow){
+        if(pow&1){
+            ans*=base;
+        }
+        base*=base;
+        pow>>=1;
+    }
+    return ans;
+}
 
 int main(){
-	unsigned long long n,m,a;
-	unsigned long long len,wid;
-	while(cin>>n>>m>>a){
-		if(n%a!=0){
-			len=ceil(n/a);
-			}
-		else{
-			len=n/a;
-			}
-		if(m%a!=0){
-			wid=ceil(m/a);
-			}
-		else{
-			wid=m/a;
-			}
-		printf("%d",len*wid);
-		}
-	return 0;
-	}
+    cout<<ouo(3,5)<<endl;
+}
