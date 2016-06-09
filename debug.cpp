@@ -6,18 +6,7 @@ using namespace std;
 #define X first
 #define Y second
 
-int ouo(int base,int pow){
-    int ans=1;
-    while(pow){
-        if(pow&1){
-            ans*=base;
-        }
-        base*=base;
-        pow>>=1;
-    }
-    return ans;
-}
-
-int main(){
-    cout<<ouo(3,5)<<endl;
+int main()
+{
+    printf("%d %d\n", sizeof(double), sizeof(long double));
 }
