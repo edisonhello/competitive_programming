@@ -8,5 +8,9 @@ using namespace std;
 
 int main()
 {
-    printf("%d %d\n", sizeof(double), sizeof(long double));
+    int a[20];
+    int b[20]={0};
+
+    for(int i=0;i<20;i++)cout<<a[i]<<" ";cout<<endl;
+    for(int i=0;i<20;i++)cout<<b[i]<<" ";cout<<endl;
 }
