@@ -21,11 +21,15 @@ void trans(string s,int type){
         int c=0;
         for(i=0;i<s.length();i++){
             if(s[i]>='A'&&s[i]<='Z'){
-                r=r*26+s[i]-'A'+1;
+                c=c*26+s[i]-'A'+1;
+            }
+            else{
+                break;
             }
         }
-        for(;s.length();i++){
-            c=c*10+s[i]-'0';
+        // cout<<"jizz"<<endl;
+        for(;i<s.length();i++){
+            r=r*10+s[i]-'0';
         }
         cout<<"R"<<r<<"C"<<c<<endl;
     }
@@ -37,15 +41,25 @@ void trans(string s,int type){
             if(s[i]=='C')break;
             r=r*10+s[i]-'0';
         }
+        // cout<<r<<endl;
         i++;
         for(;i<s.length();i++){
             c=c*10+s[i]-'0';
         }
-        string rstr="";
-        while(r>26){
-            rstr=rstr+(char)(r%26+'A');
+        // cout<<c<<endl;
+        string cstr="";
+        while(c){
+            // cout<<c%26<<endl;
+            if(c%26==0){
+                cstr=(char)(25+'A')+cstr;
+                c/=26;c--;
+            }
+            else{
+                cstr=(char)(c%26+'A'-1)+cstr;
+                c/=26;
+            }
         }
-        cout<<rstr<<c<<endl;
+        cout<<cstr<<r<<endl;
     }
 }
 
@@ -54,11 +68,11 @@ int main(){
     for(int t=0;t<n;t++){
         string s;cin>>s;
         if(chk(s)){//s==BC55
-            cout<<"type 1"<<endl;
+            // cout<<"type 1"<<endl;
             trans(s,1);
         }
         else{//s==R23C55
-            cout<<"type 0"<<endl;
+            // cout<<"type 0"<<endl;
             trans(s,0);
         }
     }
