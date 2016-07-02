@@ -6,13 +6,15 @@ vector<string> o;
 struct node{
     int val,pri,size,weight;
     node *l,*r;
+    bool init;
 
-    node(int n){
-        val = n;
+    node(){
+        val = 0;
         pri = rand();
         size = 1;
         weight = 1;
         l = r = NULL;
+        init = false;
     }
 } *root;
 
@@ -30,13 +32,16 @@ void turnL(node *now){
     now->r = tmp->l;
     tmp->l = now;
     now = tmp;
+    
+    tmp->size = (!tmp->l?tmp->l->size:0)+(tmp->r?tmp->r->size:0)+tmp->weight;
+    now->size = (!now->l?now->l->size:0)+(now->r?now->r->size:0)+now->weight;
 }
 
 void insert(node *now,int n){
     // cout<<root->val<<"inins"<<endl;
-    if(!now){
+    if(!now->init){
         // cout<<root->val<<"!now"<<endl;
-        now = new node(n);
+        now->val = n;
         // cout<<"now == root->l : "<<(now==root->l)<<endl;
         // cout<<root->val<<"newnode"<<endl;
         return;
@@ -48,22 +53,24 @@ void insert(node *now,int n){
     if(n<now->val){
         // cout<<root->val<<"shdths"<<endl;
         // cout<<(now==root)<<endl;
+        now->l = new node();
         insert(now->l,n);
         now->size++;
         // cout<<root->val<<"sz++"<<endl;
-        cout<<"!"<<endl;
-        cout<<now->l->pri<<endl;
-        cout<<"@"<<endl;
-        cout<<now->pri<<endl;
-        cout<<"#"<<endl;
+        // cout<<"!"<<endl;
+        // cout<<now->l->pri<<endl;
+        // cout<<"@"<<endl;
+        // cout<<now->pri<<endl;
+        // cout<<"#"<<endl;
         if(now->l->pri < now->pri){
-            cout<<root->val<<"itturn"<<endl;
+            // cout<<root->val<<"itturn"<<endl;
             turnR(now);
         }
-        cout<<root->val<<"trned"<<endl;
+        // cout<<root->val<<"trned"<<endl;
         return;
     }
     if(now->val<n){
+        now->r = new node();
         insert(now->r,n);
         now->size++;
         if(now->r->pri < now->pri){
@@ -74,12 +81,16 @@ void insert(node *now,int n){
     return;
 }
 
-void removeMin(node *now){
-    if(now->l){
-        removeMin(now->l);
+bool removeMin(node *now){
+    if(now->l && now->l->init){
+        if(removeMin(now->l)){
+            now->l = new node();
+        }
+        return false;
     }
     else{
         delete now;
+        return true;
     }
 }
 
@@ -89,20 +100,21 @@ void delete_(node *now){
     delete now;
 }
 void getMin(node *now,int m,int rank){
-    cout<<now->val<<endl;
+    // cout<<now->val<<endl;
     if(now->val==m){
-        cout<<"here"<<endl;
+        // cout<<"here"<<endl;
         if(now->l){
             int sz = now->l->size;
             for(int i=0;i<sz+rank;i++){
                 o.push_back("removeMin");
             }
             delete_(now->l);
+            now->l = new node();
         }
         return;
     }
     if(m<now->val){
-        cout<<"there"<<endl;
+        // cout<<"there"<<endl;
         if(now->l){
             getMin(now->l,m,rank);
         }
@@ -121,9 +133,9 @@ void getMin(node *now,int m,int rank){
         return;
     }
     if(now->val<m){
-        cout<<"sc\n";
+        // cout<<"sc\n";
         if(now->r){
-            getMin(now->r,m,rank+(now->l?now->l->size:0)+now->weight);
+            getMin(now->r,m,rank+(now->l->init?now->l->size:0)+now->weight);
         }
         else{
             for(int i=0;i<rank+now->size;i++){
@@ -146,7 +158,9 @@ int main(){
 
     srand(time(NULL));
 
-    root = new node(1e9+5);
+    root = new node();
+    root->val = 1e9+5;
+    root->init = true;
 
     int n;cin>>n;
     for(int i=0;i<n;i++){
@@ -156,7 +170,7 @@ int main(){
             int m;cin>>m;
             // cout<<root->val<<"b4ins"<<endl;
             insert(root,m);
-            cout<<root->val<<"afins"<<endl;
+            // cout<<root->val<<"afins"<<endl;
             stringstream s;
             s<<m;
             string sm;
