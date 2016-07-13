@@ -21,7 +21,7 @@ int main(){
             cod.push_back(63);
         }
 
-        cout<<cod[i]<<" ";
+        // cout<<cod[i]<<" ";
 
         int cnt=1;
         for(int bit=1;bit<64;bit*=2){
@@ -30,7 +30,7 @@ int main(){
             }
         }
         pos.push_back(cnt);
-        cout<<cnt<<endl;
+        // cout<<cnt<<endl;
     }
 
     unsigned long long res=1;

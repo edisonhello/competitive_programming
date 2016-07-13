@@ -66,7 +66,7 @@ int main(){
     }
     else{
         vector<int> grp1,grp2;
-        for(int i=1;i<n;i++){
+        for(int i=1;i<=n;i++){
             if(clr[i]==1){
                 grp1.push_back(i);
             }
@@ -76,14 +76,14 @@ int main(){
         }
 
         cout<<"1\n";
-        for(int i=0;i<(int)grp1.size();i++){
-            if(i)cout<<" ";
-            cout<<grp1[i];
-        }
-        cout<<"\n2\n";
         for(int i=0;i<(int)grp2.size();i++){
             if(i)cout<<" ";
             cout<<grp2[i];
+        }
+        cout<<"\n2\n";
+        for(int i=0;i<(int)grp1.size();i++){
+            if(i)cout<<" ";
+            cout<<grp1[i];
         }
         cout<<"\n";
     }
