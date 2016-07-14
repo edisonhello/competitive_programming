@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #define m (l+r)/2
+#include<algorithm>
 using namespace std;
 vector<int> s;
 int n,w,t;
@@ -17,7 +18,7 @@ bool chk(int y,int st){
 }
 
 int bs(int l,int r){
-    if(l==r)return r;
+    if(l==r)return max(r,n-r);
 
     if(chk(m,0)){
         return bs(l,m);
