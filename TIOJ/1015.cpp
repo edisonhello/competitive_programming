@@ -1,46 +1,42 @@
 #include<bits/stdc++.h>
-#define ll long long
 using namespace std;
+#define ull unsigned long long
+#define ll long long
+#define PB(x) push_back(x)
+#define vint vector<int>
+#define rz(x) resize(x+5)
+#define X first
+#define Y second
+#define M (l+r)/2
 
+ll n,mxw;
+vint a;
+ll mx;
 
-struct jizz{
-    ll m,n,v;
-};
+/*inline ll rit(){
+    ll t=0,k=1;
+    char c;
+    do{
+        c=getchar();
+        if(c=='-')k=-1;
+    }while(c<'0'||c>'9');
+    do{
+        t=t*10+c-'0';
+        c=getchar();
+    }while(c>='0'&&c<='9');
+    return t*k;
+}*/
 
 int main(){
-    ios_base::sync_with_stdio(0);
     cin.tie(0);
-    vector<jizz> app;
-    int n,m;
-    jizz t;
-    t.m=1000000;
-    t.n=1000000;
-    t.v=333333833333500000;
-    app.push_back(t);
-    while(cin>>n>>m && n){
+    ios_base::sync_with_stdio(0);
 
-        for(int i=0;i<app.size();i++){
-            if(app[i].m==m&&app[i].n==n){
-                cout<<app[i].v<<endl;
-                continue;
-            }
+    ll m,n;
+    while(cin>>m>>n&&m){
+        ll ans=0;
+        for(int i=1;i<=min(m,n);i++){
+            ans += (m-i+1)*(n-i+1);
         }
-
-            ll cnt=0;
-        for(int i=min(m,n);i>=0;i--){
-            cnt += (ll) (m-i)*(n-i);
-            jizz t;
-            t.m=m-i;
-            t.n=n-i;
-            t.v=cnt;
-            app.push_back(t);
-        }
-        jizz t;
-        t.m=m;
-        t.n=n;
-        t.v=cnt;
-        app.push_back(t);
-    cout<<cnt<<endl;
-
+        cout<<ans<<'\n';
     }
 }
