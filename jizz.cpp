@@ -10,9 +10,6 @@ using namespace std;
 #define X first
 #define Y second
 
-
-
-
 int n;
 
 struct node{
@@ -136,7 +133,7 @@ int main(){
 
     string s,ss,sss;
     int x,y;
-    while(cin>>s>>ss>>sss>>x>>y){
+        while(cin>>s>>ss>>sss>>x>>y){
         int xhead = findHead(x);
         int yhead = findHead(y);
         if(s[0]=='y'){
