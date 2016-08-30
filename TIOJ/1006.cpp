@@ -3,7 +3,7 @@
 using namespace std;
 
 struct BIG{
-	int n[55];
+	int n[1234];
 	int length;
 	BIG(){
 		memset(n,0,sizeof(n));
@@ -40,12 +40,12 @@ struct BIG{
 		return !(*this<a);
 	}
 
-	BIG operator+(int b){
+	friend BIG operator+(BIG const &a,int b){
 		BIG t;
 		int i=0;
 		t.n[0]+=b;
 		for(;;i++){
-			t.n[i]+=this->n[i];
+			t.n[i]+=a.n[i];
 			if(!t.n[i])break;
 			if(t.n[i]>9){
 				t.n[i+1]+=t.n[i]/10;
@@ -55,21 +55,35 @@ struct BIG{
 		t.length=i;
 		return t;
 	}
-	// BIG operator+(int b,BIG const &a){
-	// 	BIG t;
-	// 	int i=0;
-	// 	t.n[0]+=b;
-	// 	for(;;i++){
-	// 		t.n[i]+=a.n[i];
-	// 		if(!t.n[i])break;
-	// 		if(t.n[i]>9){
-	// 			t.n[i+1]+=t.n[i]/10;
-	// 			t.n[i]%=10;
-	// 		}
-	// 	}
-	// 	t.length=i;
-	// 	return t;
-	// }
+	friend BIG operator+(int b,BIG const &a){
+		BIG t;
+		int i=0;
+		t.n[0]+=b;
+		for(;;i++){
+			t.n[i]+=a.n[i];
+			if(!t.n[i])break;
+			if(t.n[i]>9){
+				t.n[i+1]+=t.n[i]/10;
+				t.n[i]%=10;
+			}
+		}
+		t.length=i;
+		return t;
+	}
+	friend BIG operator+(BIG const &a,BIG const &b){
+		BIG t;
+		int i=0;
+		for(;;i++){
+			t.n[i]+=(a.n[i]+b.n[i]);
+			if(!t.n[i])break;
+			if(t.n[i]>9){
+				t.n[i+1]+=t.n[i]/10;
+				t.n[i]%=10;
+			}
+		}
+		t.length=i;
+		return t;
+	}
 
 	BIG operator-(int b){
 		BIG t;
@@ -91,15 +105,12 @@ struct BIG{
 };
 
 BIG a,b,c;
-string as,bs;
-
-
 
 void div(){
 
 }
 
 int main(){
-	cin>>a;
-	cout<<9898+a<<endl;
+	cin>>a>>b;
+	cout<<b+a<<endl;
 }

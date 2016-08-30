@@ -28,7 +28,7 @@ inline int rit(){
 };
 
 int n;
-int a[505][505];
+ll a[505][505];
 ll rowadd[505];
 int rowhave0[505];
 ll crs[5];
@@ -40,11 +40,11 @@ int main(){
         cout<<1<<endl;
         return 0;
     }
-    ll magic=0;
+    ull magic=0;
     int maybehaveans=1;
     int x,y;
     for(int i=0;i<n;i++){
-        ll thisnum=0;
+        ull thisnum=0;
         int therehave0=0;
         for(int j=0;j<n;j++){
             cin>>a[i][j];
@@ -95,6 +95,15 @@ int main(){
             maybehaveans=0;
         }
     }
+    for(int i=0;i<n;i++){
+        if(!rowhave0[i]){
+            // cout<<i<<endl;
+            if(rowadd[i]!=magic){
+                maybehaveans=0;
+                break;
+            }
+        }
+    }
     if(!maybehaveans){
         cout<<"-1"<<endl;
         return 0;
@@ -103,7 +112,10 @@ int main(){
         // cout<<magic-rowadd[y]<<endl;
         a[x][y]=magic-rowadd[y];
 
-
+        if(a[x][y]<=0){
+            cout<<-1<<endl;
+            return 0;
+        }
 
         // ll rowadd[505];
         memset(rowadd,0,sizeof(rowadd));
@@ -117,7 +129,7 @@ int main(){
         magic=0;
         maybehaveans=1;
         for(int i=0;i<n;i++){
-            ll thisnum=0;
+            ull thisnum=0;
             int therehave0=0;
             for(int j=0;j<n;j++){
                 if(a[i][j]==0){
@@ -165,6 +177,15 @@ int main(){
         if(!crshave0[1]){
             if(crs[1]!=magic){
                 maybehaveans=0;
+            }
+        }
+        for(int i=0;i<n;i++){
+            if(!rowhave0[i]){
+                // cout<<i<<endl;
+                if(rowadd[i]!=magic){
+                    maybehaveans=0;
+                    break;
+                }
             }
         }
         if(!maybehaveans){
