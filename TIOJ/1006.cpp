@@ -1,4 +1,5 @@
 #include<bits/stdc++.h>
+#define ll long long
 
 using namespace std;
 
@@ -9,6 +10,48 @@ struct BIG{
 		memset(n,0,sizeof(n));
 		length = 0;
 	}
+    BIG(int in){
+        int ptr=0;
+        while(in){
+            this->n[ptr++]=in%10;
+            in/=10;
+        }
+        this->length=ptr;
+    }
+    BIG(long in){
+        int ptr=0;
+        while(in){
+            this->n[ptr++]=in%10;
+            in/=10;
+        }
+        this->length=ptr;
+    }
+    BIG(ll in){
+        int ptr=0;
+        while(in){
+            this->n[ptr++]=in%10;
+            in/=10;
+        }
+        this->length=ptr;
+    }
+    BIG(string s){
+        int i;
+        for(i=0;i<(int)s.length();i++){
+            if(s[i]>'9'||s[i]<'0'){
+                printf("WTF are you input?\n");
+                break;
+            }
+            this->n[i]=s[s.length()-1-i]-'0';
+        }
+        this->length=i;
+    }
+
+    /* friend void operator=(BIG const &a,string const &s){
+        stringstream ss;
+        ss<<s;
+        ss>>a;
+        return a;
+    } */
 
 	friend ostream &operator<<(ostream &ostm,BIG big){
 		for(int i=big.length-1;i>=0;i--){
@@ -20,10 +63,15 @@ struct BIG{
 	friend istream &operator>>(istream &istm,BIG &big){
 		string s;
 		istm>>s;
-		for(int i=0;i<(int)s.length();i++){
+        int i;
+		for(i=0;i<(int)s.length();i++){
+            if(s[i]>'9'||s[i]<'0'){
+                printf("WTF are you input?\n");
+                break;
+            }
 			big.n[i]=s[s.length()-1-i]-'0';
 		}
-		big.length=s.length();
+		big.length=i;
 		// ostm<<" ("<<big.length<<")";
 		return istm;
 	}
@@ -102,6 +150,23 @@ struct BIG{
 		t.length=i;
 		return t;
 	}
+	/* friend BIG operator-(BIG const &a,BIG const &b){
+		BIG t;
+		int i=0;
+		t.n[0]-=b;
+		for(;;i++){
+			t.n[i]+=this->n[i];
+			if(t.n[i]==0)break;
+			if(t.n[i]<0){
+				t.n[i+1]+=((t.n[i]+1)/10-1);
+				// cout<<t.n[i]/10<<endl;
+				t.n[i]%=10;
+				if(t.n[i])t.n[i]+=10;
+			}
+		}
+		t.length=i;
+		return t;
+	} */
 };
 
 BIG a,b,c;
@@ -111,6 +176,6 @@ void div(){
 }
 
 int main(){
-	cin>>a>>b;
-	cout<<b+a<<endl;
+    b=99898989898;
+    cout<<b<<endl;
 }
