@@ -124,7 +124,7 @@ struct BIG{
 	}
 
 	bool operator>(BIG const &a){
-		return !(*this<a);
+		return !(*this<=a);
 	}
 
 	friend BIG operator+(BIG const &a,int b){
@@ -191,7 +191,7 @@ struct BIG{
 	}
 
 	BIG operator-(int b){
-		cout<<"b="<<b<<endl;
+		cout<<"in BIG - int, int b="<<b<<endl;
 		BIG t;
 		int i=0;
 		t.n[0]-=b;
@@ -209,9 +209,9 @@ struct BIG{
 		return t;
 	}
 	friend BIG operator-(BIG &a,BIG &b){
-		cout<<"in big -"<<a<<" "<<b<<endl;
+		// cout<<"in BIG - BIG, a,b="<<a<<" "<<b;
 		BIG t=a;
-		cout<<t<<endl;
+		// cout<<t<<endl;
 		if(b>a){
 			printf("Wtf are you doing?\n");
 			return 0;
@@ -232,6 +232,7 @@ struct BIG{
 		}
 		t.length=i+1;
 		// cout<<a.length<<endl;
+        // cout<<", t ="<<t<<endl;
 		return t;
 	}
 
@@ -286,35 +287,44 @@ struct BIG{
 		int de=0;
 		while(a>b){
 			int _l=a.length-b.length;
-			BIG k=1;
-			cout<<k*b*_10pow(_l)<<endl;
+			int k=1;
+			// cout<<k*b*_10pow(_l)<<endl;
 			while(k*b*_10pow(_l)<=a){
 				k++;
-				cout<<k*b*_10pow(_l)<<endl;
+				// cout<<k*b*_10pow(_l)<<endl;
 			}
-			cout<<a<<" "<<b<<" ";
-			for(int i=2;i>=0;i--)putchar(t.n[i]+'0');
-			cout<<" k="<<k<<endl;
-			assert(de<5);
+			// cout<<a<<" "<<b<<" ";
+			// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
+			// cout<<" k="<<k<<endl;
+			// assert(de<5);
+            // cout<<"_l="<<_l<<", k-1="<<k-1<<endl;
 			t.n[_l]+=k-1;
-			cout<<"-"<<((k-1)*b)*_10pow(_l)<<endl;
-			cout<<"a = "<<a<<", ((k-1)*b)*_10pow(_l) = "<<((k-1)*b)*_10pow(_l)<<" mmm "<<a-(((k-1)*b)*_10pow(_l))<<endl;
-			cout<<"old a = "<<a<<", ";
-			cout<<typeid(((k-1)*b)*_10pow(_l)).name()<<endl;
-			a=a-((b)*_10pow(_l)*(BIG)(k-1));
-			cout<<"new a = "<<a<<endl;
-			a.length--;
+			// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
+			// cout<<"-"<<((k-1)*b)*_10pow(_l)<<endl;
+			// cout<<"a = "<<a<<", ((k-1)*b)*_10pow(_l) = "<<((k-1)*b)*_10pow(_l)<<" mmm "<<a-(((k-1)*b)*_10pow(_l))<<endl;
+			// cout<<"old a = "<<a<<", ";
+			// cout<<typeid(((k-1)*b)*_10pow(_l)).name()<<endl;
+            // cout<<"making tt"<<endl;
+            BIG tt = b*_10pow(_l)*(k-1);
+			a=a-tt;
+            // cout<<"tt returned, a="<<a<<endl;
+			// cout<<"new a = "<<a<<endl;
+			// a.length--;
 			de++;
 		}
+		// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		for(int i=0;i<mxl+2;i++){
-			t.n[i+1]=t.n[i]/10;
+			t.n[i+1]+=t.n[i]/10;
 			t.n[i]%=10;
 		}
+		// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		int i;
 		for(i=mxl+4;i>=0;i--){
 			if(t.n[i])break;
 		}
+		// for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		t.length=i+1;
+		// for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		return t;
 	}
 };
@@ -329,8 +339,8 @@ BIG _10pow(int l){
 BIG a,b;
 
 int main(){
-    // cin>>a>>b;
-	a=46;b=2;
+    cin>>a>>b;
+	// a=6546;b=123;
 	// c.length+=5;
 	cout<<a/b<<endl;
 }
