@@ -76,7 +76,7 @@ struct BIG{
     //     ss>>*this;
     //     return;
     // }
-	
+
     friend ostream &operator<<(ostream &ostm,BIG big){
 		for(int i=big.length-1;i>=0;i--){
 			ostm<<big.n[i];
@@ -284,14 +284,18 @@ struct BIG{
 		BIG t;
 		int mxl=a.length-b.length+1;
 		// cout<<mxl<<endl;
-		while(a>b){
+		// int de=0;
+		while(a>=b){
 			int _l=a.length-b.length;
             nodid:
+			if(a<b)break;
 			int k=1;
 			// cout<<k*b*_10pow(_l)<<endl;
+			// cout<<k<<" "<<a<<" "<<b<<" "<<_l<<" "<<k*b*_10pow(_l)<<endl;
 			while(k*b*_10pow(_l)<=a){
 				k++;
-				// cout<<k*b*_10pow(_l)<<endl;
+				// cout<<k<<" "<<a<<" "<<b<<" "<<_l<<" "<<k*b*_10pow(_l)<<endl;
+				// cout<<"not here"<<endl;
 			}
 			// cout<<a<<" "<<b<<" ";
 			// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
@@ -314,6 +318,7 @@ struct BIG{
             // cout<<"tt returned, a="<<a<<endl;
 			// cout<<"new a = "<<a<<endl;
 			// a.length--;
+			// de++;
 		}
 		// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		for(int i=0;i<mxl+2;i++){
@@ -339,17 +344,18 @@ BIG _10pow(int l){
 	return t;
 }
 
-string as,bs;
+BIG a,b;
 
 int main(){
-    cin>>as>>bs;
-    if(as==bs){
-        cout<<1<<endl;
-        return 0;
-    }
-    BIG a(as);
-    BIG b(bs);
+    cin>>a>>b;
+    // if(as==bs){
+    //     cout<<1<<endl;
+    //     return 0;
+    // }
+    // BIG a(as);
+    // BIG b(bs);
 	// a=6546;b=123;
 	// c.length+=5;
+	// if(a.length>50||b.length>50)return 0;
 	cout<<a/b<<endl;
 }
