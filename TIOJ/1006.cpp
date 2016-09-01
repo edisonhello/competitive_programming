@@ -357,5 +357,6 @@ int main(){
 	// a=6546;b=123;
 	// c.length+=5;
 	// if(a.length>50||b.length>50)return 0;
+	if(b==0)return 0;
 	cout<<a/b<<endl;
 }
