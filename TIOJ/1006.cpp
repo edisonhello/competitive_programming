@@ -46,12 +46,12 @@ struct BIG{
         this->length=i;
     }
 
-    /* friend void operator=(BIG const &a,string const &s){
+    void operator=(string const &s){
         stringstream ss;
         ss<<s;
-        ss>>a;
-        return a;
-    } */
+        ss>>(*this);
+        return;
+    }
 
 	friend ostream &operator<<(ostream &ostm,BIG big){
 		for(int i=big.length-1;i>=0;i--){
@@ -176,6 +176,6 @@ void div(){
 }
 
 int main(){
-    b=99898989898;
+    b="456789";
     cout<<b<<endl;
 }
