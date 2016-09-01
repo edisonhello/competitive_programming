@@ -339,10 +339,16 @@ BIG _10pow(int l){
 	return t;
 }
 
-BIG a,b;
+string as,bs;
 
 int main(){
-    cin>>a>>b;
+    cin>>as>>bs;
+    if(as==bs){
+        cout<<1<<endl;
+        return 0;
+    }
+    BIG a(as);
+    BIG b(bs);
 	// a=6546;b=123;
 	// c.length+=5;
 	cout<<a/b<<endl;
