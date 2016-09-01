@@ -284,9 +284,9 @@ struct BIG{
 		BIG t;
 		int mxl=a.length-b.length+1;
 		// cout<<mxl<<endl;
-		int de=0;
 		while(a>b){
 			int _l=a.length-b.length;
+            nodid:
 			int k=1;
 			// cout<<k*b*_10pow(_l)<<endl;
 			while(k*b*_10pow(_l)<=a){
@@ -306,11 +306,14 @@ struct BIG{
 			// cout<<typeid(((k-1)*b)*_10pow(_l)).name()<<endl;
             // cout<<"making tt"<<endl;
             BIG tt = b*_10pow(_l)*(k-1);
+            if(tt.length==0){
+                _l--;
+                goto nodid;
+            }
 			a=a-tt;
             // cout<<"tt returned, a="<<a<<endl;
 			// cout<<"new a = "<<a<<endl;
 			// a.length--;
-			de++;
 		}
 		// cout<<"t=";for(int i=2;i>=0;i--)putchar(t.n[i]+'0');putchar('\n');
 		for(int i=0;i<mxl+2;i++){
