@@ -191,7 +191,7 @@ struct BIG{
 	}
 
 	BIG operator-(int b){
-		cout<<"in BIG - int, int b="<<b<<endl;
+		// cout<<"in BIG - int, int b="<<b<<endl;
 		BIG t;
 		int i=0;
 		t.n[0]-=b;

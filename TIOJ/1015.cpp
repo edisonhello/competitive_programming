@@ -9,10 +9,6 @@ using namespace std;
 #define Y second
 #define M (l+r)/2
 
-ll n,mxw;
-vint a;
-ll mx;
-
 /*inline ll rit(){
     ll t=0,k=1;
     char c;
@@ -32,11 +28,10 @@ int main(){
     ios_base::sync_with_stdio(0);
 
     ll m,n;
-    while(cin>>m>>n&&m){
-        ll ans=0;
-        for(int i=1;i<=min(m,n);i++){
-            ans += (m-i+1)*(n-i+1);
-        }
-        cout<<ans<<'\n';
+    while(cin>>m>>n&&m&&n){
+        ll mm=min(m,n);
+        ll nn=max(m,n);
+        ll ans=mm*mm*nn-(nn+mm)*((mm*(mm-1))/2)+((mm-1)*mm*(2*mm-1))/6;
+        cout<<ans<<endl;
     }
 }
