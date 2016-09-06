@@ -29,7 +29,7 @@ inline int rit(){
     return t*k;
 };
 
-int n,m,q;
+ll n,m,q;
 vector<pair<int,int> > h;
 
 int _f(int a,int b){
@@ -52,8 +52,8 @@ int main(){
     // cin.tie(0);
 
     n=rit(),m=rit(),q=rit();
-    for(int i=0;i<m;i++){
-        int a=rit(),b=rit();
+    for(ll i=0;i<m;i++){
+        ll a=rit(),b=rit();
         h.PB(MP(a,b));
         h.PB(MP(b,a));
     }
@@ -61,9 +61,9 @@ int main(){
     // for(int i=0;i<h.size();i++){
     //     printf("%d %d\n",h[i].X,h[i].Y);
     // }
-    for(int i=0;i<q;i++){
-        int a=rit(),b=rit();
-        if(_f(a,b)){
+    for(ll i=0;i<q;i++){
+        ll a=rit(),b=rit();
+        if(_f(a,b) || _f(b,a)){
             printf("yes\n");
         }
         else{

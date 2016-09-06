@@ -4,6 +4,8 @@ using namespace std;
 #define ll long long
 #define ld long double
 #define PB(x) push_back(x)
+#define MP(x,y) make_pair(x,y)
+#define pii pair<int,int>
 #define vint vector<int>
 #define rz(x) resize(x)
 #define X first
@@ -11,6 +13,7 @@ using namespace std;
 // #define m (l+r)/2
 // #define xm (x1+x2)/2
 // #define ym (y1+y2)/2
+#define DE cout<<"de"<<endl;
 
 inline int rit(){
     int t=0,k=1;
