@@ -29,7 +29,7 @@ inline int rit(){
     return t*k;
 };
 
-int n,w,h,tot,mxx[20008];
+int n,w,h,tot,mxx[20008],rec[20008],low;
 // bool gone[20008][20008];
 vector<pii> rs;
 
@@ -42,9 +42,15 @@ int _(int pt,int tot){
     }
     pii &now=rs[pt];
     int mx=0;
-    for(int i=pt-1;i>=0;i--){
+    for(int i=pt-1;i>=low;i--){
         if(rs[i].X<now.X && rs[i].Y<now.Y){
-            mx=max(mx,_(i,tot+1));
+            int __ = _(i,tot+1);
+            if(__ > mx){
+                mx = __;
+                rec[pt] = i;
+                low = rec[i];
+            }
+            // mx=max(mx,_(i,tot+1));
         }
     }
     return mxx[pt]=tot+mx;
@@ -71,6 +77,7 @@ int main(){
         int mx=0;
         for(int i=0;i<rs.size();i++){
             // cout<<"going i="<<i<<endl;
+            low=0;
             mxx[i]=_(i,1);
             mx=max(mxx[i],mx);
             // cout<<"gone i="<<i<<", val="<<mxx[i]<<endl;

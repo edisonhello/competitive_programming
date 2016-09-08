@@ -1,4 +1,7 @@
-#include<bits/stdc++.h>
+#include<utility>
+#include<vector>
+#include<stdio.h>
+#include<algorithm>
 using namespace std;
 #define ull unsigned long long
 #define ll long long
@@ -29,41 +32,49 @@ inline int rit(){
     return t*k;
 };
 
-ll n,m,q;
+int n,m,q;
 vector<pair<int,int> > h;
+bool self[10000007];
 
-int _f(int a,int b){
-    int l=0,r=h.size();
-    pii t=MP(a,b);
-    while(r-l>1){
-        int m=(l+r)/2;
-        // printf("%d %d %d\n",l,r,m);
-
-        if(t==h[m])return 1;
-        if(t>h[m])l=m;
-        else r=m;
-    }
-    if(t==h[m])return 1;
-    return 0;
-}
+// int _f(int a,int b){
+//     int l=0,r=h.size();
+//     pii t=MP(a,b);
+//     while(r-l>1){
+//         int m=(l+r)/2;
+//         if(t==h[m])return 1;
+//         if(t>h[m])l=m;
+//         else r=m;
+//     }
+//     if(t==h[m])return 1;
+//     return 0;
+// }
 
 int main(){
-    // ios_base::sync_with_stdio(0);
-    // cin.tie(0);
-
     n=rit(),m=rit(),q=rit();
-    for(ll i=0;i<m;i++){
-        ll a=rit(),b=rit();
+    for(int i=0;i<m;i++){
+        int a=rit(),b=rit();
+        if(a==b){
+            self[a]=1;
+            continue;
+        }
+        if(a>b)swap(a,b);
         h.PB(MP(a,b));
-        h.PB(MP(b,a));
+        // h.PB(MP(b,a));
     }
     sort(h.begin(),h.end());
-    // for(int i=0;i<h.size();i++){
-    //     printf("%d %d\n",h[i].X,h[i].Y);
-    // }
-    for(ll i=0;i<q;i++){
-        ll a=rit(),b=rit();
-        if(_f(a,b) || _f(b,a)){
+    for(int i=0;i<q;i++){
+        int a=rit(),b=rit();
+        if(a==b){
+            if(self[a]){
+                printf("yes\n");
+            }
+            else{
+                printf("no\n");
+            }
+            continue;
+        }
+        if(a>b)swap(a,b);
+        if(binary_search(h.begin(),h.end(),MP(a,b))){
             printf("yes\n");
         }
         else{
