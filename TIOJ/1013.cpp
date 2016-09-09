@@ -59,9 +59,9 @@ void fWalk(){
     while(fq.size() && fq.front().len==time){
         pnt tmp = fq.front();fq.pop();
         int x = tmp.x,y = tmp.y,len = tmp.len;
-        if(!fgone[x+1][y] && mp[x+1][y]!='!' && x+1<n){fgone[x+1][y]=1;mp[x+1][y]='*';fq.push({x+1,y,len+1});};
+        if(!fgone[x+1][y] && mp[x+1][y]!='!' && x+1 <n){fgone[x+1][y]=1;mp[x+1][y]='*';fq.push({x+1,y,len+1});};
         if(!fgone[x-1][y] && mp[x-1][y]!='!' && x-1>=0){fgone[x-1][y]=1;mp[x-1][y]='*';fq.push({x-1,y,len+1});};
-        if(!fgone[x][y+1] && mp[x][y+1]!='!' && y+1<m){fgone[x][y+1]=1;mp[x][y+1]='*';fq.push({x,y+1,len+1});};
+        if(!fgone[x][y+1] && mp[x][y+1]!='!' && y+1 <m){fgone[x][y+1]=1;mp[x][y+1]='*';fq.push({x,y+1,len+1});};
         if(!fgone[x][y-1] && mp[x][y-1]!='!' && y-1>=0){fgone[x][y-1]=1;mp[x][y-1]='*';fq.push({x,y-1,len+1});};
     }
 }
