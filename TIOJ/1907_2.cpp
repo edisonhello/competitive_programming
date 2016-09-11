@@ -62,7 +62,7 @@ int main(){
             h=rit();
             rs.PB(MP(w,h));
         }
-        sort(rs.begin(),rs.end());
+        sort(rs.begin(),rs.end(),cmp);
 
         printf("%d\n",LIS());
     }

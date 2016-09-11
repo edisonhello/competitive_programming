@@ -63,6 +63,8 @@ int main(){
         n=rit();
         rs.clear();
         memset(mxx,-1,sizeof(mxx));
+        memset(rec,-1,sizeof(rec));
+        low=0;
         for(int i=0;i<n;i++){
             w=rit();
             h=rit();
