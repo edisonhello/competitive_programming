@@ -20,7 +20,6 @@ bool b[55];
 ll dpa[55][55];
 
 ll dp(int l,int r){
-    // cout<<"dping: "<<l<<" "<<r<<endl;
     if(l==r-2){
         dpa[l][r]=a[l]*a[l+1]*a[r];
     }
@@ -47,15 +46,5 @@ int main(){
         cin>>a[i];
     }
 
-    dp(1,n);
-
-    // cout<<"dpa :\n";
-    // for(int i=1;i<=n;i++){
-        // for(int j=1;j<=n;j++){
-            // cout<<dpa[i][j]<<" ";
-        // }
-        // cout<<endl;
-    // }
-
-    cout<<dpa[1][n]<<endl;
+    cout<<dp(1,n);<<endl;
 }
