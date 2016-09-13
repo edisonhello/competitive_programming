@@ -1,16 +1,15 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int n,c;
-vector<int> v,w,t,cs,W;
+int n,c,v[1004],w[1004],t[1004],cs[1004];
 
 
-int dp(int now,int left,int cnt){
+int dp(){
     // cout<<"dp for now="<<now<<" left="<<left<<" cnt="<<cnt<<endl;
     cs[0]=0;
     for(int i=1;i<=n;i++){
-        for(int j=w[i];j<=c;j++){
-            for(int k=0;j-w[i]*k>=0;k++){
+        for(int j=c;j>=w[i];j--){
+            for(int k=0;j-w[i]*k>=0 && (k<=t[i] || t[i]==-1);k++){
                 cs[j] = max(cs[j], cs[j-w[i]*k]+v[i]*k);
             }
         }
@@ -20,16 +19,11 @@ int dp(int now,int left,int cnt){
 
 int main(){
     cin>>n>>c;
-    v.reserve(n+5);
-    w.reserve(n+5);
-    // W.reserve(c+10);
-    t.reserve(n+5);
-    cs.reserve(c+5);
-    for(int i=0;i<n;i++){
+    for(int i=1;i<=n;i++){
         cin>>v[i]>>w[i]>>t[i];
     }
 
-    cout<<dp(n,c,0)<<endl;
+    cout<<dp()<<endl;
 }
 
 
