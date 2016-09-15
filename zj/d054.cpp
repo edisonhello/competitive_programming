@@ -40,8 +40,9 @@ int main(){
     d[1]=1;
     d[2]=5;
     d[3]=11;
-    for(int i=4;1<=42;i++){
-        d[i]=d[i-1]+d[i-2]
+    for(int i=4;i<=42;i++){
+        d[i]=d[i-1]+d[i-2]*4+d[i-3]*2;
+        // cout<<i<<" "<<d[i]<<endl;
     }
 
     cin>>t;
