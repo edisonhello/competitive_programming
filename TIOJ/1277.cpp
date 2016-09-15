@@ -30,7 +30,43 @@ inline int rit(){
     return t*k;
 };
 
+int n;
+ll a[502][502];
+ll ans;
+ll rr[502][502];
+
+void t(int x,int y){
+    ll now=0,mx=0;
+    for(int i=1;i<=n;i++){
+        now+=(rr[y][i]-rr[x-1][i]);
+        if(now<0)now=0;
+        mx=max(mx,now);
+    }
+    ans=max(mx,ans);
+}
+
 int main(){
     // ios_base::sync_with_stdio(0);
     // cin.tie(0);
+    cin>>n;
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=n;j++){
+            cin>>a[i][j];
+            for(int k=1;k<=i;k++){
+                rr[i][j]+=a[k][j];
+            }
+        }
+    }
+    // for(int i=1;i<=n;i++){
+    //     for(int j=1;j<=n;j++){
+    //         cout<<rr[i][j]<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    for(int i=1;i<=n;i++){
+        for(int j=i;j<=n;j++){
+            t(i,j);
+        }
+    }
+    cout<<ans<<endl;
 }
