@@ -30,7 +30,23 @@ inline ll rit(){
     return t*k;
 };
 
+ll n;
+ll cnt;
+ll t;
+stack<ll> st;
+
 int main(){
     // ios_base::sync_with_stdio(0);
     // cin.tie(0);
+    n=rit();
+    while(n--){
+        t=rit();
+        while(st.size() && st.top()<=t){
+            st.pop();
+            cnt++;
+        }
+        if(st.size())cnt++;
+        st.push(t);
+    }
+    cout<<cnt*2<<endl;
 }
