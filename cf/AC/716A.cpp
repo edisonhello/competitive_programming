@@ -33,4 +33,13 @@ inline int rit(){
 int main(){
     // ios_base::sync_with_stdio(0);
     // cin.tie(0);
+    int n,c,t,b=0,a=0;;
+    cin>>n>>c;
+    for(int i=0;i<n;i++){
+        cin>>t;
+        if(t-b>c)a=1;
+        else a++;
+        b=t;
+    }
+    cout<<a<<endl;
 }
