@@ -7,7 +7,7 @@ using namespace std;
 #define MP(x,y) make_pair(x,y)
 #define pii pair<int,int>
 #define vint vector<int>
-#define rz(x) resize(x)
+#define rz(x) reserve(x)
 #define X first
 #define Y second
 // #define m (l+r)/2
