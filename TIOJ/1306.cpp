@@ -1,47 +1,48 @@
 #include<bits/stdc++.h>
 using namespace std;
-int ts,n,sl,cl,fail[10005],cnt;
-char samp[10005],comp[10005];
-
 int main(){
-    // cin.tie(0);
-    ios_base::sync_with_stdio(0);
+    int ts;
     cin>>ts;
     while(ts--){
-        cin>>samp; sl=strlen(samp);
+        string a;
+        cin>>a;
+        int n;
         cin>>n;
         while(n--){
-            cnt=0;
-            cin>>comp; cl=strlen(comp);
-            if(cl>sl){
-                cout<<"0\n";
-                continue;
+            string b;
+            cin>>b;
+            if(b.length()>a.length()) return 0;
+            int f[10005]={0};
+            int cnt=0;
+            f[0]=-1;
+            f[1]= 0;
+            for(int i=1;i<(int)b.length();i++){
+                int j=i;
+                while(b[i]!=b[f[j]] && f[j]!=-1){
+                    j=f[j];
+                    // cout<<j<<endl;
+                }
+                f[i+1]=f[j]+1;
+                // f[i+1]=(b[i]==b[f[i]]?f[i]+1:(b[i]==b[0]?1:0));
             }
-            fail[0]=0;
-            for(int i=1;i<cl;i++){ // counting fail function
-                fail[i]=(comp[fail[i-1]]==comp[i]?fail[i-1]+1:(comp[0]==comp[i]?1:0));
-                // cout<<i<<","<<comp[fail[i-1]]<<' '<<comp[i]<<endl;
-            }
-            // cout<<"fail=";for(int i=0;i<cl;i++)cout<<fail[i]<<" ";cout<<endl;
-            for(int i=0,j=0;(i+j)<sl;j++){
-                if(samp[i+j]==comp[j]){
-                    if(j==cl-1){
-                        // cout<<"afs"<<endl;
+            // cout<<"jizz";
+            // cout<<"F:";for(int i=0;i<=b.length();i++)cout<<f[i]<<" ";cout<<endl;
+            for(int st=0,cn=0;st+cn<(int)a.length();cn++){
+                // cout<<st<<" "<<cn<<endl;
+                if(a[st+cn]==b[cn]){
+                    if(cn==(int)b.length()-1){
                         cnt++;
-                        i+=(cl-fail[j]);
-                        j-=(cl-fail[j]);
-                        continue;
-                    }
-                    else{
-                        continue;
+                        st+=b.length()-f[cn+1];
+                        cn-=b.length()-f[cn+1];
                     }
                 }
                 else{
-                    i+=(j-fail[j]+1);//=fail[j-1]+1;
-                    j=fail[j]-1;
+                    st+=cn-f[cn];
+                    cn-=cn-f[cn]+1;
+                    if(cn<-1)cn=-1;
                 }
             }
-            cout<<cnt<<'\n';
+            cout<<cnt<<endl;
         }
     }
 }
