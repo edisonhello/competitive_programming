@@ -1,40 +1,42 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ull unsigned long long
-#define ll long long
-#define ld long double
-#define PB(x) push_back(x)
-#define MP(x,y) make_pair(x,y)
-#define pii pair<int,int>
-#define vint vector<int>
-#define rz(x) resize(x)
-#define X first
-#define Y second
-// #define m (l+r)/2
-// #define xm (x1+x2)/2
-// #define ym (y1+y2)/2
-#define DE cout<<"de"<<endl;
-#define PQ priority_queue
 
-ll tt,k;
-inline ll rit(){
-    tt=0,k=1;
-    char c;
-    do{
-        c=getchar();
-        if(c=='-')k=-1;
-    }while(c<'0'||c>'9');
-    do{
-        tt=tt*10+c-'0';
-        c=getchar();
-    }while(c>='0'&&c<='9');
-    return tt*k;
-};
-
+inline int _(string &a,string &s){
+    if(s.length()>a.length()) return 0;
+    int cnt=0;
+    int f[10005]={0};
+    f[0]=-1;f[1]=0;
+    for(int i=1,j=1;i<(int)s.length();i++,j=i){
+        while(s[i]!=s[f[j]] && j) j=f[j];
+        f[i+1]=f[j]+1;
+    }
+    for(int i=0,j=0;i+j<(int)a.length();j++){
+        // cout<<"i="<<i<<",j="<<j<<endl;
+        if(a[i+j]==s[j]){
+            if(j==(int)s.length()-1){
+                cnt++;
+                i+=s.length()-f[j+1];
+                j-=s.length()-f[j+1];
+            }
+        }
+        else{
+            i+=j-f[j];
+            j-=j-f[j]+1;
+            if(j<-1)j=-1;
+        }
+    }
+    return cnt;
+}
 
 int main(){
-    // ios_base::sync_with_stdio(0);
-    // cin.tie(0);
-    bitset<2000> b;
-    cout<<b<<endl;
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+
+    int t;cin>>t;while(t--){
+        string a;cin>>a;
+        int n;cin>>n;while(n--){
+            string b;cin>>b;
+            cout<<_(a,b)<<endl;
+        }
+    }
 }
