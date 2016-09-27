@@ -1,42 +1,56 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <utility>
+#include <cstring>
+#include <queue>
+#define pii pair<int, int>
+#define INF 1e9
 using namespace std;
 
-inline int _(string &a,string &s){
-    if(s.length()>a.length()) return 0;
-    int cnt=0;
-    int f[10005]={0};
-    f[0]=-1;f[1]=0;
-    for(int i=1,j=1;i<(int)s.length();i++,j=i){
-        while(s[i]!=s[f[j]] && j) j=f[j];
-        f[i+1]=f[j]+1;
-    }
-    for(int i=0,j=0;i+j<(int)a.length();j++){
-        // cout<<"i="<<i<<",j="<<j<<endl;
-        if(a[i+j]==s[j]){
-            if(j==(int)s.length()-1){
-                cnt++;
-                i+=s.length()-f[j+1];
-                j-=s.length()-f[j+1];
+vector<pii> G[10010];
+int d[10010], n, m, a, b, w, mn, cnt, s[10010], sz[10010], mns, start, node;
+bool v[10010], p;
+
+int main() {
+    while (cin >> n >> m) {
+        if (n == 0 && m == 0) break;
+        for (int i = 0; i <= n; ++i) G[i].clear();
+        for (int i = 0; i <= n; ++i) d[i] = INF;
+        memset(v, false, sizeof(v));
+        for (int i = 0; i < m; ++i) {
+            cin >> a >> b >> w;
+            G[a].push_back(pii(b, w));
+            G[b].push_back(pii(a, w));
+        }
+        d[1] = 0;
+        // v[1] = true;
+        cnt = 0;
+        // start = 1;
+        node = 0;
+        while (node < n) {
+            mn = INF;
+            for (int i = 1; i <= n; ++i) {
+                if (!v[i] && d[i] < mn) {
+                    mn = d[i];
+                    mns = i;
+                }
+            }
+            if(mn==INF)break;
+            node++;
+            cnt += mn;
+            v[mns] = true;
+
+            for (int j = 0; j < G[mns].size(); ++j) {
+                if (!v[G[mns][j].first]) {
+                    if (G[mns][j].second < d[G[mns][j].first]) {
+                        d[G[mns][j].first] = G[mns][j].second;
+                    }
+                }
             }
         }
-        else{
-            i+=j-f[j];
-            j-=j-f[j]+1;
-            if(j<-1)j=-1;
-        }
+        // cout << "node: " << node << endl;
+        if (node == n) cout << cnt << endl;
+        else cout << -1 << endl;
     }
-    return cnt;
-}
-
-int main(){
-    cin.tie(0);
-    ios_base::sync_with_stdio(0);
-
-    int t;cin>>t;while(t--){
-        string a;cin>>a;
-        int n;cin>>n;while(n--){
-            string b;cin>>b;
-            cout<<_(a,b)<<endl;
-        }
-    }
+    return 0;
 }
