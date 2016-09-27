@@ -17,13 +17,13 @@ using namespace std;
 #define PQ priority_queue
 
 int s[10][10];
-bool posi[10];
 int ans;
 
 void put(int x,int y){
+    bool posi[10];
     bool bye=0;
     for(int i=x;i<=9;i++){
-        for(int j=y;j<=9;j++){
+        for(int j=(i==x?y:1);j<=9;j++){
             if(s[i][j]==0){
                 memset(posi,1,sizeof(posi));
                 for(int ii=(i-1)/3*3+1,c=0;c<3;c++,ii++){
@@ -44,7 +44,7 @@ void put(int x,int y){
                 s[i][j]=0;
                 bye=1;break;
             }
-            if(x==9 && y==9){
+            if(i>=9 && j>=9){
                 ans++;
                 for(int ii=1;ii<=9;ii++){
                     for(int jj=1;jj<=9;jj++){
@@ -61,8 +61,8 @@ void put(int x,int y){
 }
 
 int main(){
-    // ios_base::sync_with_stdio(0);
-    // cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
     for(int i=1;i<=9;i++){
         for(int j=1;j<=9;j++){
             cin>>s[i][j];
