@@ -15,8 +15,6 @@ using namespace std;
 // #define ym (y1+y2)/2
 #define DE cout<<"de"<<endl;
 #define PQ priority_queue
-#define F_1 cin.tie(0)
-#define F_2 ios_base::sync_with_stdio(0)
 
 inline int rit(){
     int t=0,k=1;
@@ -33,5 +31,6 @@ inline int rit(){
 }
 
 int main(){
-    F_1;F_2;
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
 }

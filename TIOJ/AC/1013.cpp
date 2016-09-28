@@ -48,34 +48,36 @@ string mp[10]={
     "****.*.*........*",
     "*****************"
 };
-int n,m,t,ans;
+int n,m,t;
 int fx,fy,sx,sy,ex,ey;
 bool gone[20][20],fgone[20][20];
 
 queue<pnt> fq,mq;
 
 void fWalk(){
+    if(fq.empty())return;
     int time = fq.front().len;
     while(fq.size() && fq.front().len==time){
         pnt tmp = fq.front();fq.pop();
         int x = tmp.x,y = tmp.y,len = tmp.len;
-        if(!fgone[x+1][y] && mp[x+1][y]!='!' && x+1 <n){fgone[x+1][y]=1;mp[x+1][y]='*';fq.push({x+1,y,len+1});};
-        if(!fgone[x-1][y] && mp[x-1][y]!='!' && x-1>=0){fgone[x-1][y]=1;mp[x-1][y]='*';fq.push({x-1,y,len+1});};
-        if(!fgone[x][y+1] && mp[x][y+1]!='!' && y+1 <m){fgone[x][y+1]=1;mp[x][y+1]='*';fq.push({x,y+1,len+1});};
-        if(!fgone[x][y-1] && mp[x][y-1]!='!' && y-1>=0){fgone[x][y-1]=1;mp[x][y-1]='*';fq.push({x,y-1,len+1});};
+        if(!fgone[x+1][y] && (mp[x+1][y]=='.' || mp[x+1][y]=='w') && x+1 <n){fgone[x+1][y]=1;mp[x+1][y]='*';fq.push({x+1,y,len+1});};
+        if(!fgone[x-1][y] && (mp[x-1][y]=='.' || mp[x-1][y]=='w') && x-1>=0){fgone[x-1][y]=1;mp[x-1][y]='*';fq.push({x-1,y,len+1});};
+        if(!fgone[x][y+1] && (mp[x][y+1]=='.' || mp[x][y+1]=='w') && y+1 <m){fgone[x][y+1]=1;mp[x][y+1]='*';fq.push({x,y+1,len+1});};
+        if(!fgone[x][y-1] && (mp[x][y-1]=='.' || mp[x][y-1]=='w') && y-1>=0){fgone[x][y-1]=1;mp[x][y-1]='*';fq.push({x,y-1,len+1});};
     }
 }
 
 int meGo(){
+    if(mq.empty())return -1;
     int time = mq.front().len;
     while(mq.size() && mq.front().len==time){
         pnt tmp = mq.front();mq.pop();
-        int x = tmp.x,y = tmp.y,len = tmp.len;
-        if(mp[x][y]=='!')return len;
-        if(!gone[x+1][y] && mp[x+1][y]!='*'){gone[x+1][y]=1;mq.push({x+1,y,len+1});};
-        if(!gone[x-1][y] && mp[x-1][y]!='*'){gone[x-1][y]=1;mq.push({x-1,y,len+1});};
-        if(!gone[x][y+1] && mp[x][y+1]!='*'){gone[x][y+1]=1;mq.push({x,y+1,len+1});};
-        if(!gone[x][y-1] && mp[x][y-1]!='*'){gone[x][y-1]=1;mq.push({x,y-1,len+1});};
+        int x=tmp.x, y=tmp.y, len=tmp.len; if(mp[x][y]=='*') continue;
+        if(mp[x][y]=='!' || (x==ex && y==ey))return len;
+        if(!gone[x+1][y] && mp[x+1][y]!='*'){if(mp[x+1][y]!='!'){mp[x+1][y]='w';}if(mp[x+1][y]=='!'){return len+1;}gone[x+1][y]=1;mq.push({x+1,y,len+1});};
+        if(!gone[x-1][y] && mp[x-1][y]!='*'){if(mp[x-1][y]!='!'){mp[x-1][y]='w';}if(mp[x-1][y]=='!'){return len+1;}gone[x-1][y]=1;mq.push({x-1,y,len+1});};
+        if(!gone[x][y+1] && mp[x][y+1]!='*'){if(mp[x][y+1]!='!'){mp[x][y+1]='w';}if(mp[x][y+1]=='!'){return len+1;}gone[x][y+1]=1;mq.push({x,y+1,len+1});};
+        if(!gone[x][y-1] && mp[x][y-1]!='*'){if(mp[x][y-1]!='!'){mp[x][y-1]='w';}if(mp[x][y-1]=='!'){return len+1;}gone[x][y-1]=1;mq.push({x,y-1,len+1});};
     }
     return -1;
 }
@@ -92,24 +94,26 @@ void S(){
     fq.push({fx,fy,0});
     mp[fx][fy]='*';
     fgone[fx][fy]=1;
-    P();
+    // cout<<"Init map: ";
+    // P();
     for(int time=1;time<t;time++){
         fWalk();
-        P();
+        // P();
     }
-    cout<<"pre gone.\n\n";
+    // P();
+    // cout<<"pre gone.\n\n";
+
     mq.push({sx,sy,0});
     gone[sx][sy]=1;
     int cnt=1200;
-    while(cnt--){
-        ans++;
-        fWalk();
+    while(mq.size()){
         int res = meGo();
         if(res!=-1){
             cout<<res<<endl;
             return;
         }
-        P();
+        fWalk();
+        // P();
     }
     cout<<"Help!\n";
 }
