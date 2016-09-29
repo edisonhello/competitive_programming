@@ -1,12 +1,14 @@
 #include<iostream>
 #include<cmath>
+#include<cstring>
 #define ll long long
 using namespace std;
 
 int n,m;
 const int X=1000000;
 const int Z=1e9+7;
-int djs[2000006];
+int djs[2000006],sz[2000006];
+bool app[2000006];
 // int grps;
 
 int F(int a){
@@ -16,7 +18,9 @@ int F(int a){
 void U(int a,int b){
     a=F(a);
     b=F(b);
+    if(sz[a]>sz[b])swap(a,b);
     djs[a]=b;
+    sz[b]+=sz[a];
     return;
 }
 int C(int a,int b){
@@ -38,12 +42,15 @@ int main(){
     ios_base::sync_with_stdio(0);
 
     cin>>n>>m;
-    for(int i=0;i<2000005;i++)djs[i]=i;
-    // grps=n;
+    for(int i=0;i<2000005;++i){
+        djs[i]=i;
+        sz[i]=1;
+    }
+
     while(m--){
         int a,b,d;
         cin>>a>>b>>d;
-        if(d==0){
+        if(!d){
             if(C(a,b) || C(a+X,b+X)){
                 cout<<0<<'\n';
                 return 0;
@@ -53,7 +60,7 @@ int main(){
             // grps--;
 
         }
-        else if(d==1){
+        else if(d){
             if(C(a+X,b) || C(a,b+X)){
                 cout<<0<<'\n';
                 return 0;
@@ -65,12 +72,20 @@ int main(){
     }
     // cout<<grps<<endl;
 
-    int grps=1;
-    for(int i=1;i<n;i++){
-        if(F(i)-F(i-1)&&abs(F(i)-F(i-1)-X)){
+    int grps=0,ii,i;
+    for(i=0;i<n;++i){
+        ii=F(i);
+        if(!app[ii]){
+            app[ii]=1;
             grps++;
-            break;
         }
     }
-    cout<<_pow(2l,grps-1)<<'\n';
+    for(i=0+X;i<n+X;++i){
+        ii=F(i);
+        if(!app[ii]){
+            app[ii]=1;
+            grps++;
+        }
+    }
+    cout<<_pow(2l,((grps>>1)-1))<<'\n';
 }

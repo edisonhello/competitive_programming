@@ -1,43 +1,44 @@
 #include<bits/stdc++.h>
 using namespace std;
+int n,m,a[1005],fx[1005],stat[1005];
+bool infx[1005];
+
 int main(){
-    int n,m;
-    scanf("%d%d",&n,&m);
-    vector<int> want;
-    queue<int> left;
-    for(int i=0;i<n;i++){
-        int t;cin>>t;
-        want.push_back(t-1);
-        left.push(i);
+    ios_base::sync_with_stdio(0);
+    cin>>n>>m;
+    for(int i=0;i<n;++i){
+        cin>>a[i];
     }
-
-    stack<int> buf;
-
-    for(int i=0;i<n;i++){
-        //printf("now i=%d\n",i);
-        while(1){
-            //printf("loop\n");
-            if(left.size() && want[i]==left.front()){
-                left.pop();
-                //printf("want[i=%d]=left.front=%d\n",i,want[i]);
-                break;
-            }
-            if(buf.size() && buf.top()==want[i]){
-                //printf("buf.top()=want[i=%d]=%d\n",i,want[i]);
-                buf.pop();
-                break;
-            }
-            if(buf.size()<m){
-                buf.push(left.front());
-                //printf("buf.push left.front()=%d\n",left.front());
-                left.pop();
-                continue;
-            }
-            //cout<<"jizz"<<endl;
-            cout<<"no"<<endl;
+    int nowcome=1;
+    int nowwantpt=0;
+    int fxz=0,fxpt=0;;
+    int stt=0;
+    while(nowwantpt<n){
+        while(fxz<m && nowcome<=n){
+            fx[fxpt]=nowcome;
+            infx[nowcome]=1;
+            ++fxz;++fxpt;++nowcome;
+        }
+        if(infx[a[nowwantpt]]){
+            --fxz;
+            ++nowwantpt;
+            continue;
+        }
+        if(stat[stt-1]==a[nowwantpt]){
+            ++nowwantpt;--stt;
+            continue;
+        }
+        while(a[nowwantpt]!=nowcome && nowcome<=n){
+            stat[stt]=nowcome;
+            ++stt;++nowcome;
+        }
+        if(nowcome>n){
+            cout<<"no\n";
             return 0;
         }
+        if(a[nowwantpt]==nowcome){
+            ++nowcome;++nowwantpt;
+        }
     }
-    cout<<"yes"<<endl;
-    return 0;
+    cout<<"yes\n";
 }
