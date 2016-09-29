@@ -1,11 +1,33 @@
-#include<bits/stdc++.h>
-#define ll long long
-#define L(x) log10((long double)(x))
+#include<cstdio>
+#include<stack>
+#define MAX 1005
 using namespace std;
+stack<int> st;
+int n,m,tmp,t,now=1,p[MAX],cnt[MAX];
+bool in[MAX],f;
 
-long double mn;
-int main() {
-    mn=L((1l<<31))+L((1<<30))+L(7);
-    cout<<log10((double)(1l<<60))<<endl;;
-    printf("%.2lfe+%03d\n",pow((long double)10,mn-(int)mn),(int)mn);
+int main(){
+    scanf("%d%d",&n,&m);
+    while(n--){
+        f=false;
+        scanf("%d",&tmp);
+        while(!st.empty()&&in[st.top()])st.pop();
+        while(st.empty()||(!st.empty()&&st.top()<tmp)){
+            st.push(++now);
+            p[now]=t;
+            f=true;
+        }
+        if(f)t++;
+        if(st.top()==tmp)st.pop();
+        else {
+            for(int i=p[tmp];i<t;i++)cnt[i]++;
+            in[tmp]=true;
+        }
+    }
+    f=false;
+    for(int i=0;i<t;i++){
+        if(cnt[i]>m)f=1;
+    }
+    if(f)puts("no");
+    else puts("yes");
 }
