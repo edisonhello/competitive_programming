@@ -1,58 +1,54 @@
 #include<bits/stdc++.h>
-
 using namespace std;
+#define ld long double
+#define DE cout<<"de"<<endl;
+struct P{ld x,y;};
+ostream &operator<<(ostream &ostm,P p){
+    ostm<<p.x<<" "<<p.y;
+    return ostm;
+}
 
-float cross(int x1,int y1,int x2,int y2){
-    return x1*y2-y1*x2;
+ld cross(P a,P b,P m){
+    P va=(P){a.x-m.x,a.y-m.y};
+    P vb=(P){b.x-m.x,b.y-m.y};
+    return va.x*vb.y-va.y*vb.x;
 }
 
 int main(){
-    string sphere;
-    while(getline(cin,sphere) || sphere!="jizz7122"){
-        queue<float> input;
-        stringstream s;
-        while(sphere.length()){
-                int i;
-            for(    i=0;i<sphere.length();i++){         cout<<"jizz";
-                if(sphere[i] == ' '){
-                    string cpy = sphere;
-                    cpy.assign(cpy,0,i);
-                    sphere.assign(sphere,i+1,sphere.length());
-                    //cout<<sphere<<endl;
-                    float tmp;
-                    s << cpy;
-                    s >> tmp;
-                    input.push(tmp);
-                    break;
-                }
-            }
-            if(i == sphere.length())break;
-        }
-        vector<pair<float,float> > pos;
-        while(input.size()){
-            float tmp1 = input.front();input.pop();
-            float tmp2 = input.front();input.pop();
+    // cin.tie(0);
+    ios_base::sync_with_stdio(0);
 
-            pos.push_back(make_pair(tmp1,tmp2));
+    string ss;
+    while(getline(cin,ss)){
+        stringstream sss;
+        sss<<ss;
+        ld x,y;
+        vector<P> S;
+        while(sss>>x>>y){
+            S.push_back((P){x,y});
         }
-
-        float x,y;
         cin>>x>>y;
 
-        bool mn = false;
-        for(int i=0;i<pos.size();i++){
-            float res ;
-            if(i==0)res = cross(pos[pos.size()-1].first-x,pos[pos.size()-1].second-y,pos[0].first-x,pos[0].second-y);
-            else res = cross(pos[i-1].first-x,pos[i-1].second-y,pos[i].first-x,pos[i].second-y);
-            if(res<0){
-                mn = true;
+        if(cross(S[S.size()-1],S[0],(P){x,y})<0){
+            for(int i=1;i<(int)S.size();++i){
+                if(cross(S[i-1],S[i],(P){x,y})>0){
+                    cout<<"Stop\n";
+                    goto end;
+                }
             }
         }
-        if(mn){
-            cout<<"Stop"<<endl;
-        }
         else{
-            cout<<"Hit him\n";
+            for(int i=1;i<(int)S.size();++i){
+                if(cross(S[i-1],S[i],(P){x,y})<0){
+                    cout<<"Stop\n";
+                    goto end;
+                }
+            }
         }
+
+        cout<<"Hit him\n";
+
+        end:
+        getline(cin,ss);
     }
 }
