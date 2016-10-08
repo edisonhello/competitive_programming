@@ -1,8 +1,9 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
-
+struct S{
+    int a,b,c;
+};
 int main() {
-    cout<<-6%4<<endl;
+    S s[3]={{1,2,3},{4,45,6},{423,24,51}};
+    sort(s,s+3,S);
 }

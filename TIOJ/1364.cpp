@@ -14,18 +14,28 @@ using namespace std;
 #define PQ priority_queue
 #define getchar_unlocked getchar
 #define putchar_unlocked putchar
-#define MS0(x) memset((x),0,sizeof(x))
-#define MSB(x) memset((x),0x7f,sizeof(x))
-#define MSM(x) memset((x),0xff,sizeof(x))
+#define S0(x) memset((x),0,sizeof(x))
+#define SB(x) memset((x),0x7f,sizeof(x))
 
-int rit_t,rit_k;
-char rit_c;
 inline int rit();
-
+int n,k,t;
+PQ<int,vector<int>,greater<int>> pq;
 int main(){
     // cin.tie(0);
     // ios_base::sync_with_stdio(0);
+    while(scanf("%d%d",&n,&k)!=EOF){
+        while(pq.size())pq.pop();
+        for(int i=0;i<n;++i){
+            t=rit();
+            pq.push(t);
+            if(pq.size()>k)pq.pop();
+        }
+        printf("%d\n",pq.top());
+    }
 }
+
+int rit_t,rit_k;
+char rit_c;
 
 inline int rit(){
     rit_t=0,rit_k=1;
