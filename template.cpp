@@ -17,6 +17,7 @@ using namespace std;
 #define MS0(x) memset((x),0,sizeof(x))
 #define MSB(x) memset((x),0x7f,sizeof(x))
 #define MSM(x) memset((x),0xff,sizeof(x))
+#define PAR(x,n) for(int ___=0;___<(n);___++)cout<<x[___]<<" ";cout<<endl;
 
 int rit_t,rit_k;
 char rit_c;
