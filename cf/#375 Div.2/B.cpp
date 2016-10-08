@@ -26,6 +26,52 @@ inline int rit();
 int main(){
     // cin.tie(0);
     // ios_base::sync_with_stdio(0);
+    int n;string c;
+    cin>>n>>c;
+    n++;
+    c+='_';
+    string tmp="";
+    int mx=0,inc=0;
+    bool _=0;
+    for(int i=0;i<n;i++){
+        if(c[i]=='_'){
+            if(!_){
+                mx=max(mx,(int)tmp.length());
+            }
+            else{
+                if(tmp!=""){
+                    inc++;
+                }
+            }
+            tmp="";
+        }
+        else if(c[i]=='('){
+            if(!_){
+                mx=max(mx,(int)tmp.length());
+            }
+            else{
+                assert(1==0);
+            }
+            _=1;
+            tmp="";
+        }
+        else if(c[i]==')'){
+            if(!_){
+                assert(1==0);
+            }
+            else{
+                if(tmp!=""){
+                    inc++;
+                }
+            }
+            _=0;
+            tmp="";
+        }
+        else{
+            tmp+=c[i];
+        }
+    }
+    cout<<mx<<" "<<inc<<endl;
 }
 
 
