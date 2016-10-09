@@ -20,105 +20,90 @@ using namespace std;
 #define PAR(x,n) for(int ___=0;___<(n);___++)cout<<x[___]<<" ";cout<<endl;
 
 
-int rit_t,rit_k;
-char rit_c;
-inline int rit();
-struct pnt{int d,t;};
-bool operator > (const pnt &a,const pnt &b){return a.t>b.t;};
-int ts,n,m,s,k[10004],edh,lowcn[10004],lowcv[10004];
+int ts;
+int n,m,st,fi;
+int hei[10004],near[10004];
 vector<int> G[10004];
-bitset<10004> gone;
-PQ<pnt,vector<pnt>,greater<pnt>> pq;
-
-int main(){
-    ts=rit();
-    for(int cs=1;cs<=ts;cs++){
-        n=rit(),m=rit(),s=rit();
-        edh=(1<<30);
-        gone.reset();
-        MSB(lowcn);
-        MSB(lowcv);
-        while(pq.size())pq.pop();
-        for(int i=0;i<n;i++){
-            k[i]=rit();
-            if(k[i]<edh){
-                edh=k[i];
-            }
-            G[i].clear();
-        }
-        // cout<<"k:";for(int i=0;i<n;i++)cout<<k[i]<<" ";cout<<endl;
-        for(int i=0;i<m;i++){
-            int _=rit(),__=rit();
-            G[_].PB(__);
-            G[__].PB(_);
-            if(lowcv[_]>k[__] && k[__]<k[_]){
-                lowcv[_]=k[__];
-                lowcn[_]=__;
-            }
-            if(lowcv[__]>k[_] && k[_]<k[__]){
-                lowcv[__]=k[_];
-                lowcn[__]=_;
-            }
-        }
-        // cout<<"lowcv:";for(int i=0;i<n;i++)cout<<lowcv[i]<<" ";cout<<endl;
-        // cout<<"lowcn:";for(int i=0;i<n;i++)cout<<lowcn[i]<<" ";cout<<endl;
-        int CAR;
-        {
-            int now=s;
-            int cnt=0;
-            while(k[now]!=edh){
-                if(lowcv[now]==0x7f7f7f7f){
-                    break;
-                }
-                now=lowcn[now];
-                cnt++;
-            }
-            if(k[now]==edh){
-                CAR=cnt;
-            }
-            else{
-                CAR=0x789abcde;
-            }
-        }
-        int WAK=0x789abcde;
-        {
-            pq.push({s,0});
-            gone[s]=1;
-            while(pq.size()){
-                if(k[pq.top().d]==edh){
-                    WAK=pq.top().t;
-                    break;
-                }
-                for(int i=0;i<(int)G[pq.top().d].size();i++){
-                    pq.push({G[pq.top().d][i],pq.top().t+1});
-                    gone[G[pq.top().d][i]]=1;
-                }
-                pq.pop();
-            }
-        }
-        // cout<<"CAR:"<<CAR<<", WAK:"<<WAK<<endl;
-        cout<<"Case #"<<cs<<": ";
-        if(WAK==0x789abcde){
-            cout<<"Call 119!\n";
-        }
-        else if(CAR==0x789abcde){
-            cout<<WAK*6<<'\n';
-        }
-        else{
-            cout<<WAK*6-CAR<<'\n';
+void CLEAR(){
+    for(int i=0;i<n;i++){
+        G[i].clear();
+    }
+    n=0,m=0,st=0,fi=0x7fedcba9;
+    MS0(hei);
+    MSM(near);
+}
+void READ(){
+    cin>>n>>m>>st;
+    for(int i=0;i<n;i++){
+        cin>>hei[i];
+        if(hei[i]<fi){
+            fi=hei[i];
+            // cout<<"fi update:"<<fi<<endl;
         }
     }
+    for(int i=0;i<m;i++){
+        int s,t;
+        cin>>s>>t;
+        if(hei[(near[s]==-1?s:near[s])]>hei[t]){
+            near[s]=t;
+        }
+        if(hei[(near[t]==-1?t:near[t])]>hei[s]){
+            near[t]=s;
+        }
+        G[s].PB(t);
+        G[t].PB(s);
+    }
 }
-
-inline int rit(){
-    rit_t=0,rit_k=1;
-    do{
-        rit_c=getchar_unlocked();
-        if(rit_c=='-')rit_k=-1;
-    }while(rit_c<'0'||rit_c>'9');
-    do{
-        rit_t=rit_t*10+rit_c-'0';
-        rit_c=getchar_unlocked();
-    }while(rit_c>='0'&&rit_c<='9');
-    return rit_t*rit_k;
+void SOL(){
+    int CAR=0x7f7f7f7f;{
+        int now=st;
+        int cnt=0;
+        while(hei[now]!=fi&&near[now]!=-1){
+            // cout<<"CAR: going "<<now<<endl;
+            cnt++;
+            now=near[now];
+        }
+        if(hei[now]==fi){
+            CAR=cnt;
+        }
+    }
+    int WAK=0x7f7f7f7f;{
+        queue<pair<int,int>> bfs;
+        bitset<10004> gone;
+        bfs.push({st,0});
+        gone[st]=1;
+        while(bfs.size()){
+            auto fnt=bfs.front();
+            bfs.pop();
+            if(hei[fnt.X]==fi){
+                WAK=fnt.Y*6;
+                break;
+            }
+            for(int i=0;i<(int)G[fnt.X].size();i++){
+                if(!gone[G[fnt.X][i]]){
+                    gone[G[fnt.X][i]]=1;
+                    bfs.push({G[fnt.X][i],fnt.Y+1});
+                }
+            }
+        }
+    }
+    // cout<<CAR<<" "<<WAK<<endl;
+    if(WAK==0x7f7f7f7f){
+        cout<<"Call 119!\n";
+    }
+    else if(CAR==0x7f7f7f7f){
+        cout<<WAK<<'\n';
+    }
+    else{
+        cout<<abs(WAK-CAR)<<'\n';
+    }
+}
+int main(){
+    cin>>ts;
+    for(int cs=1;cs<=ts;cs++){
+        cout<<"Case #"<<cs<<": ";
+        CLEAR();
+        READ();
+        SOL();
+    }
 }
