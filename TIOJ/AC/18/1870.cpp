@@ -4,7 +4,7 @@ using namespace std;
 struct node{
     int bits[20];
     int tot;
-//    change tag;
+    bool tag[20];
 };
 struct change{
     int l,r,x;
@@ -14,116 +14,77 @@ struct change{
 
 int *a;
 node *tree;
-node build   (int l,int r,int id);
-ull  que     (int l,int r,int id,int fl,int fr);
-void update  (int l,int r,int id,change t);
-//void mkchange
 
-vector<change> cg;
-int cnt;
-int main(){
-    ios_base::sync_with_stdio(0);
-cnt=0;
-    int n;
-    scanf("%d",&n);
-    a = new int[n];
-
-    for(int i=0;i<n;i++){
-        cin>>a[i];
+void push(int id){
+    for(int i=0;i<20;i++){
+        if(tree[id].tag[i]){
+            tree[id*2].bits[i] = tree[id*2].tot - tree[id*2].bits[i];
+            tree[id*2+1].bits[i] = tree[id*2+1].tot - tree[id*2+1].bits[i];
+            tree[id*2].tag[i] = !tree[id*2].tag[i];
+            tree[id*2+1].tag[i] = !tree[id*2+1].tag[i];
+        }
+        tree[id].tag[i] = 0;
     }
+}
 
-    tree = new node[4*n];
-    build(0,n-1,1);
-
-    int q;cin>>q;
-    for(int i=0;i<q;i++){
-        int com;cin>>com;
-        if(com == 1){
-            int l,r;cin>>l>>r;
-            ull res = que(0,n-1,1,l-1,r-1);
-            cout<<res<<endl;
-        }
-        if(com == 2){
-    //cout<<"got com2 ";
-            int tl,tr,tx;cin>>tl>>tr>>tx;
-    //cout<<tl<<" to "<<tr<<" wth "<<tx<<endl;
-            change t;
-            t.l=tl-1;
-            t.r=tr-1;
-            t.x=tx;
-    //cout<<"call update"<<endl;
-            update(0,n-1,1,t);
-        }
+void pull(int id){
+    for(int i=0;i<20;i++){
+        tree[id].bits[i] = tree[id*2].bits[i] + tree[id*2+1].bits[i];
     }
 }
 
 ull que(int l,int r,int id,int fl,int fr){
-    if(r< fl || l> fr) return 0;
-    if(r<=fr && l>=fl){
-        ull t = 0;
+    //printf("que %d %d %d %d %d\n",l,r,id,fl,fr);
+    if(fl>r || fr<l)return 0;
+    if(fl<=l&&r<=fr){/*add tag check*/
+        /*bool tag = false;
         for(int i=0;i<20;i++){
-            t += (tree[id].bits[i] << i);
+            if(tree[id].tag[i]){
+                tag = true;
+                break;
+            }
         }
-        return t;
+        if(tag){
+            push(id);
+            pull(id);
+        }*/
+        ull tot = 0;
+        for(int i=0;i<20;i++){
+            tot += ((ull)tree[id].bits[i] << i);
+        }
+        return tot;
     }
+    push(id);
     int mid = (l+r)/2;
     ull t1 = que(l,mid,id*2,fl,fr);
     ull t2 = que(mid+1,r,id*2+1,fl,fr);
+    pull(id);
     return t1 + t2;
-    /*bool cgin = false;
-    for(int i=0;i<cg.size();i++){
-        if(bg[i].l>=)
-    }*/
 }
 
-
-
 void update(int l,int r,int id,change t){
-cnt++;
-    //cout<<"update in, l-r-id-tl-tr-tx ";
-    //printf("%d %d %d %d %d %d\n",l,r,id,t.l,t.r,t.x);
-//if(cnt==150)return;
-    if(l==t.l && r==t.r){
-    //cout<<"range match"<<endl;
-        node tmp;
+    //printf("update %d %d %d %d %d %d\n",l,r,id,t.l,t.r,t.x);
+    if(t.l>r || t.r<l)return;
+    if(l>=t.l&&t.r>=r){
+    //printf("inchange ");
+        bool tmp[20];
+    //for(int tst=0;tst<20;tst++)cout<<tree[id].bits[tst]<<" ";cout<<endl;
         for(int i=0;i<20;i++){
-            tmp.bits[i] = t.x&(1<<i) ? 1 : 0 ;
-            if(tmp.bits[i]){
+            tmp[i] = t.x & (1<<i) ? 1 : 0;
+            if(tmp[i]){
                 tree[id].bits[i] = tree[id].tot - tree[id].bits[i];
+                tree[id].tag[i] = !tree[id].tag[i];
             }
         }
-        if(l == r){
-            return;
-        }
-        int mid = (l+r)/2;
-        change t1 = t;t1.r = mid;
-        change t2 = t;t2.l = mid+1;
-        update(l,mid,id*2,t1);
-        update(mid+1,r,id*2+1,t2);
+    //cout<<"         ";for(int tst=0;tst<20;tst++)cout<<tree[id].bits[tst]<<" ";cout<<endl;
         return;
     }
+
+    push(id);
     int mid = (l+r)/2;
-    if(mid<t.l){
-        update(mid+1,r,id*2+1,t);
-        for(int i=0;i<20;i++){
-            tree[id].bits[i] = tree[id*2].bits[i] + tree[id*2+1].bits[i];
-        }
-        return;
-    }
-    if(mid>=t.r){
-        update(l,mid,id*2,t);
-        for(int i=0;i<20;i++){
-            tree[id].bits[i] = tree[id*2].bits[i] + tree[id*2+1].bits[i];
-        }
-        return;
-    }
-    change t1 = t;t1.r = mid;
-    change t2 = t;t2.l = mid+1;
-    update(l,mid,id*2,t1);
-    update(mid+1,r,id*2+1,t2);
-    for(int i=0;i<20;i++){
-        tree[id].bits[i] = tree[id*2].bits[i] + tree[id*2+1].bits[i];
-    }
+    update(l,mid,id*2,t);
+    update(mid+1,r,id*2+1,t);
+    pull(id);
 }
 
 
@@ -147,4 +108,37 @@ node build(int l,int r,int id){
     }
     t->tot = t1.tot + t2.tot;
     return tree[id] = *t;
+}
+
+int main(){
+    ios_base::sync_with_stdio(0);
+    int n;cin>>n;
+    a = new int[n];
+
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+    tree = new node[4*n];
+    memset(tree, 0, sizeof(tree));
+    build(0,n-1,1);
+
+    int q;cin>>q;
+    for(int i=0;i<q;i++){
+        int com;cin>>com;
+        if(com == 1){
+    //cout<<"com1"<<endl;
+            int l,r;cin>>l>>r;
+            ull res = que(0,n-1,1,l-1,r-1);
+            cout<<res<<endl;
+        }
+        if(com == 2){
+    //cout<<"com2"<<endl;
+            int tl,tr,tx;cin>>tl>>tr>>tx;
+            change t;
+            t.l=tl-1;
+            t.r=tr-1;
+            t.x=tx;
+            update(0,n-1,1,t);
+        }
+    }
 }
