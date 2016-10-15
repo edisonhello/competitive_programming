@@ -57,6 +57,14 @@ struct BIG{
         this->length=i;
     }
 
+    void kill0(BIG &t){
+        t.length;
+        while(t.n[t.length-1]==0){
+            t.length--;
+        }
+        return;
+    }
+
     void operator=(string const &s){
         stringstream ss;
         ss<<s;
@@ -127,48 +135,51 @@ struct BIG{
 		return !(*this<=a);
 	}
 
-	friend BIG operator+(BIG const &a,int b){
+    friend BIG operator+(BIG const &a,int b){
 		BIG t;
 		int i=0;
 		t.n[0]+=b;
-		for(;;i++){
+		for(;i<max((int)a.length,15)+5;i++){
 			t.n[i]+=a.n[i];
-			if(!t.n[i])break;
+			// if(!t.n[i])break;
 			if(t.n[i]>9){
 				t.n[i+1]+=t.n[i]/10;
 				t.n[i]%=10;
 			}
 		}
 		t.length=i;
+        t.kill0(t);
 		return t;
 	}
 	friend BIG operator+(int b,BIG const &a){
 		BIG t;
 		int i=0;
 		t.n[0]+=b;
-		for(;;i++){
+		for(;i<max((int)a.length,15)+5;i++){
 			t.n[i]+=a.n[i];
-			if(!t.n[i])break;
+			// if(!t.n[i])break;
 			if(t.n[i]>9){
 				t.n[i+1]+=t.n[i]/10;
 				t.n[i]%=10;
 			}
 		}
 		t.length=i;
+        t.kill0(t);
 		return t;
 	}
 	friend BIG operator+(BIG const &a,BIG const &b){
 		BIG t;
 		int i=0;
-		for(;;i++){
+		for(;i<max((int)a.length,(int)b.length)+5;i++){
 			t.n[i]+=(a.n[i]+b.n[i]);
-			if(!t.n[i])break;
+			// if(!t.n[i])break;
 			if(t.n[i]>9){
 				t.n[i+1]+=t.n[i]/10;
 				t.n[i]%=10;
 			}
 		}
 		t.length=i;
+        t.kill0(t);
 		return t;
 	}
 	BIG& operator++(){
@@ -280,7 +291,7 @@ struct BIG{
 		return a*b;
 	}
 
-	friend BIG operator/(BIG &a,BIG &b){
+	friend BIG operator/(BIG a,BIG &b){
 		BIG t;
 		int mxl=a.length-b.length+1;
 		// cout<<mxl<<endl;

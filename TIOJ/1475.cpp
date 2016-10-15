@@ -27,9 +27,42 @@ int rit_t,rit_k;
 char rit_c;
 inline int rit();
 
+int n,a[105],s,WAY[10005];
+vint dp[10005];
+vint better(vint ori,vint frm,int add,int nowW){
+    int oriTot=0;
+    for(int i:ori)oriTot+=i;
+    assert(oriTot==0 || oriTot==nowW);
+    frm.PB(a[add]);
+    int newTot=0;
+    for(int i:frm)newTot+=i;
+    if(newTot!=nowW)return (vint)(0);
+    if(S(ori)>S(frm))return ori;
+    if(S(frm)>S(ori)){
+        WAY[nowW]=S(frm)*(S(frm)-1)/2...? //BS
+    }
+    else{
+        WAY[nowW]
+        return frm;
+    }
+}
 int main(){
-    // cin.tie(0);
-    // ios_base::sync_with_stdio(0);
+    n=rit();
+    for(int i=0;i<n;++i){
+        a[i]=rit();
+    }
+    s=rit();
+    sort(a,a+n);
+    for(int i=0;i<n;i++){
+        for(int w=0;w<=s;w++){
+            if(w<a[i])continue;
+            dp[w]=better(dp[w],dp[w-a[i]],i,w);
+        }
+    }
+    if(S(dp[w])){
+        printf("%d %d\n",)
+    }
+    else printf("0 0\n");
 }
 
 inline int rit(){
