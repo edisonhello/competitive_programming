@@ -23,9 +23,12 @@ using namespace std;
 #define PVC(x) for(auto ___:(x))cout<<___<<" ";cout<<endl;
 #define PAR(x,n) for(int ___=0;___<(n);___++)cout<<x[___]<<" ";cout<<endl;
 
-int rit_t,rit_k;
-char rit_c;
+char __c;bool __m;int __t;
 inline int rit();
+template<typename varType>
+inline bool rit(varType &inp);
+template<typename varType,typename ...Args>
+inline bool rit(varType &inp,Args &...args);
 
 int main(){
     // cin.tie(0);
@@ -33,14 +36,36 @@ int main(){
 }
 
 inline int rit(){
-    rit_t=0,rit_k=1;
+    __t=0,__m=0;
     do{
-        rit_c=getchar();
-        if(rit_c=='-')rit_k=-1;
-    }while(rit_c<'0'||rit_c>'9');
+        __c=getchar();
+    }while((__c<'0'||__c>'9')&&(__c!='-'));
+    if(__c=='-')__m=1;
     do{
-        rit_t=rit_t*10+rit_c-'0';
-        rit_c=getchar();
-    }while(rit_c>='0'&&rit_c<='9');
-    return rit_t*rit_k;
+        __t=__t*10+__c-'0';
+        __c=getchar();
+    }while(__c>='0'&&__c<='9');
+    if(__m)__t=-__t;
+    return __t;
+}
+
+template<typename varType,typename ...Args>
+inline bool rit(varType &inp,Args &...args){
+    return rit(inp)&&rit(args...);
+}
+
+template<typename varType>
+inline bool rit(varType &inp){
+    inp=0;__m=0;
+    do{
+        __c=getchar();
+        if(__c==-1)return false;
+    }while((__c<'0'||__c>'9')&&__c!='-');
+    if(__c=='-')__m=1;
+    do{
+        inp=inp*10+__c-'0';
+        __c=getchar();
+    }while(__c>='0'&&__c<='9');
+    if(__m)inp=-inp;
+    return true;
 }
