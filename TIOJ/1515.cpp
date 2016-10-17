@@ -31,15 +31,18 @@ template<typename varType,typename ...Args>
 inline bool rit(varType &inp,Args &...args);
 struct __{int x,y,n,r,l,llcp;} _[200005];
 
-int n,lat[200005];
+int n,lat[200005],hei[200005],mxh;
 string s;
 bool c1(const __ &a,const __ &b){return (a.x==b.x?a.y<b.y:a.x<b.x);}
 bool c2(const __ &a,const __ &b){return a.n<b.n;}
 
+char G(int a,int b){
+    return (a+b>=n?'-':s[a+b]);
+}
+
 int main(){
     ios_base::sync_with_stdio(0);
-    cin>>n;
-    getline(cin,s);
+    cin>>n>>s;
     // n=s.length();
     for(int i=0;i<n;++i){
         _[i].n=i;
@@ -74,16 +77,34 @@ int main(){
             _[i].x=_[i].r;
         }
         sort(_,_+n,c2);
-        // for(int i=0;i<n;++i)cout<<_[i].r<<" ";cout<<endl;
     }
     sort(_,_+n,c1);
-    // for(int i=0;i<n;++i)cout<<_[i].n<<endl;//;cout<<endl;
     for(int i=0;i<n;++i){
-        lat[_[i].l]=i;
+        lat[_[i].l]=i+1;
     }
-    for(int i=0;i<n;++i){
-        LCP?
+    // cout<<"n ";for(int i=0;i<n;++i)cout<<_[i].n<<' ';cout<<endl;
+    // cout<<"l ";for(int i=0;i<n;++i)cout<<_[i].l<<' ';cout<<endl;
+    // cout<<"lat ";for(int i=1;i<=n;++i)cout<<lat[i]<<' ';cout<<endl;
+    for(int i=2,lcpl=0;i<n;++i,lcpl=lcpl<0?0:lcpl){
+        // LCP
+        while(G(_[lat[i]-2].n,lcpl)==G(_[lat[i]-1].n,lcpl))++lcpl;
+        hei[i]=lcpl;
+        mxh=max(mxh,hei[i]);
+        --lcpl;
     }
+    // cout<<"_[i].n ";for(int i=1;i<=n;++i)cout<<_[i].n<<' ';cout<<endl;
+    // cout<<"_[i].l ";for(int i=1;i<=n;++i)cout<<_[i].l<<' ';cout<<endl;
+    // cout<<"lat[i] ";for(int i=1;i<=n;++i)cout<<lat[i]<<' ';cout<<endl;
+    // cout<<"hei[i] ";for(int i=1;i<=n;++i)cout<<hei[i]<<' ';cout<<endl;
+    // cout<<endl;
+    // for(int i=1;i<=n;++i){
+    //     cout<<"h:"<<hei[i]<<" ";
+    //     for(int j=0;j<n;++j){
+    //         cout<<G(j,_[lat[i]-1].n);
+    //     }
+    //     cout<<endl;
+    // }
+    cout<<mxh<<'\n';
     // for(int i=0;i<n;++i)cout<<
 }
 
