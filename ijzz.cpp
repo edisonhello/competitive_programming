@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define ll long long
 #define ld long double
 #define X first
 #define Y second
@@ -29,63 +30,28 @@ inline bool rit(varType &inp);
 template<typename varType,typename ...Args>
 inline bool rit(varType &inp,Args &...args);
 
-int n;
-bool pm[1000005];
-bitset<1000005> v;
-stack<int> ans;
-void init(){
-    pm[1]=1;
-    for(int i=2;i<1000003;++i){
-        for(int j=2*i;j<1000003;j+=i){
-            pm[j]=1;
-        }
-    }
-}
-
-int dfs(int n){
-    // cout<<n<<endl;
-    if(n==0)return 1;
-    for(int i=n;i>0;--i){
-        if(!pm[i]&&!v[i]){
-            v[i]=1;
-            // cout<<"get "<<i<<" , left=";
-            if(dfs(n-i)){
-                ans.push(i);
-                return 1;
-            }
-            v[i]=0;
-        }
-    }
-    return 0;
-}
-
+int m,n,ms[1002],ns[1002],dp[1002][1002];
 int main(){
-    int ts=rit();
-    init();
-    // for(int i=1;i<=10;++i)cout<<pm[i]<<" ";cout<<endl;
-    while(ts--){
-        n=rit();
-        v.reset();
-        if(pm[n]) printf("0\n");
-        else{
-            if(n==2)printf("2\n");
-            else if(n==3)printf("3\n");
+    // cin.tie(0);
+    // ios_base::sync_with_stdio(0);
+    rit(m,n);
+    for(int i=1;i<=m;++i){
+        ms[i]=rit();
+    }
+    for(int i=1;i<=n;++i){
+        ns[i]=(rit()^1);
+    }
+    for(int i=1;i<=m;i++){
+        for(int j=1;j<=n;j++){
+            if(ms[i]==ns[j]){
+                dp[i][j]=dp[i-1][j-1]+1;
+            }
             else{
-                v[n]=1;
-                if(dfs(n)){
-                    while(ans.size()){
-                        printf("%d",ans.top());
-                        ans.pop();
-                        if(ans.size())printf(" ");
-                    }
-                    printf("\n");
-                }
-                else{
-                    printf("%d\n",n);
-                }
+                dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
             }
         }
     }
+    printf("%d\n",dp[m][n]);
 }
 
 inline int rit(){
