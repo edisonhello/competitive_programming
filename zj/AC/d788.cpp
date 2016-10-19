@@ -33,6 +33,32 @@ inline bool rit(varType &inp,Args &...args);
 int main(){
     // cin.tie(0);
     // ios_base::sync_with_stdio(0);
+    int n;
+    while(rit(n)){
+        int bit[300005]={0};
+        for(int ji=0;ji<n;ji++){
+            int t=rit();
+            t=n+1-t;
+            // cout<<"new t="<<t<<endl;
+            int st=0;
+            for(int i=1,j=t;i<=n;i<<=1){
+                if(i&j){
+                    st+=bit[j];
+                    j-=i;
+                }
+            }
+            ++bit[t];
+            for(int i=1;i<n;i<<=1){
+                if(i&t){
+                    t+=i;
+                    ++bit[t];
+                }
+            }
+            // for(int i=1;i<=n;i++)cout<<bit[i]<<" ";cout<<endl;
+            printf("%d\n",st+1);
+            // cout<<st+1<<endl;
+        }
+    }
 }
 
 

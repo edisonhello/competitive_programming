@@ -30,9 +30,25 @@ inline bool rit(varType &inp);
 template<typename varType,typename ...Args>
 inline bool rit(varType &inp,Args &...args);
 
+vector<int> x,y;
+
 int main(){
     // cin.tie(0);
     // ios_base::sync_with_stdio(0);
+    int ts=rit();while(ts--){
+        int n=rit();
+        x.clear();y.clear();
+        for(int i=0;i<n;++i){
+            int t=rit();x.PB(t);t=rit();y.PB(t);
+        }
+        sort(x.begin(),x.end());sort(y.begin(),y.end());
+        ll ans=0;
+        for(int i=0;i<(n>>1);++i){
+            ans+=x[n-1-i]-x[i];
+            ans+=y[n-1-i]-y[i];
+        }
+        printf("%lld\n",ans);
+    }
 }
 
 

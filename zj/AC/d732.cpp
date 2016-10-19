@@ -30,9 +30,25 @@ inline bool rit(varType &inp);
 template<typename varType,typename ...Args>
 inline bool rit(varType &inp,Args &...args);
 
+int n,k,a[100005];
+
 int main(){
     // cin.tie(0);
     // ios_base::sync_with_stdio(0);
+    rit(n,k);
+    for(int i=0;i<n;i++){
+        a[i]=rit();
+    }
+    for(int i=0;i<k;i++){
+        int t=rit();
+        auto res=lower_bound(a,a+n,t);
+        if(*res==t){
+            printf("%d\n",res-a+1);
+        }
+        else{
+            printf("0\n");
+        }
+    }
 }
 
 

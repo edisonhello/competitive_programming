@@ -30,9 +30,18 @@ inline bool rit(varType &inp);
 template<typename varType,typename ...Args>
 inline bool rit(varType &inp,Args &...args);
 
+int n,x,y,z;
 int main(){
     // cin.tie(0);
-    // ios_base::sync_with_stdio(0);
+    // ios_bse::sync_with_stdio(0);
+    n=rit();
+    while(n--){
+        rit(x,y,z);
+        x-=y;
+        if(x<=0)printf("1\n");
+        else if(z>=y)printf("Poor Snail\n");
+        else printf("%d\n",x/(y-z)+1);
+    }
 }
 
 

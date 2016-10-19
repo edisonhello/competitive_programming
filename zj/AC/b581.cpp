@@ -23,31 +23,20 @@ using namespace std;
 #define PVC(x) for(auto ___:(x))cout<<___<<" ";cout<<endl;
 #define PAR(x,n) for(int ___=0;___<(n);___++)cout<<x[___]<<" ";cout<<endl;
 
-int _(string &a,string &b){
-    if(b.length()>a.length())return 0;
-    int f[10005]={0};
-    f[0]=-1,f[1]=0;
-    for(int i=1,j=1;i<(int)b.length();i++,j=i){
-        while(b[i]!=b[f[j]]&&j)j=f[j];
-        f[i+1]=f[j]+1;
-    }
-    int cnt=0;
-    for(int i=0,j=0;i+j<(int)a.length();++j){
-        if(a[i+j]==b[j]){if(j==(int)b.length()-1){
-            ++cnt;i+=b.length()-f[j+1];j-=b.length()-f[j+1];
-        }}
-        else{
-            i+=j-f[j];j-=j-f[j]+1;if(j<-1)j=-1;
-        }
-    }
-    return cnt;
-}
 int main(){
     // cin.tie(0);
     ios_base::sync_with_stdio(0);
-    int ts;cin>>ts;while(ts--){
-        string s;cin>>s;int n;cin>>n;while(n--){
-            string t;cin>>t;cout<<_(s,t)<<'\n';
+    int ts;
+    cin>>ts;
+    string s;
+    getline(cin,s);
+    while(ts--){
+        getline(cin,s);
+        stringstream ss(s);
+        int t,cnt=0;
+        while(ss>>t){
+            cnt+=t;
         }
+        cout<<cnt<<'\n';
     }
 }
