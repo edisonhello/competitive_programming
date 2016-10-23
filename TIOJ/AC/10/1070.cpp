@@ -35,13 +35,13 @@ string err[]={
     "Circular password is not allowed.\n"
 };
 string noerr="Password is valid.\n";
-string specs="~!@#$%%^&*()_+|`-=\\{}[]:\";\'<>?,./";
+string specs="~!@#$%%^&*()_+|`-=\\{}[]:\";\'<>?,./ ";
 
 string s,ss;
 int main(){
     // cin.tie(0);
     ios_base::sync_with_stdio(0);
-    while(cin>>s>>ss){
+    while(getline(cin,s)&&getline(cin,ss)){
         if(s==ss&&s=="END"){
             break;
         }
