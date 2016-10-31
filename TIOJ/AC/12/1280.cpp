@@ -5,7 +5,7 @@ using namespace std;
 struct p{int x,y;}a[10005];
 int n,tb[10005],ctb;
 bool cmp_x(const p &a,const p &b){
-    return a.x<b.x;
+    return a.x!=b.x?a.x<b.x:a.y<b.y;
 }
 int cross(int i,int j,int k){
     return (a[i].x-a[j].x)*(a[i].y-a[k].y)-(a[i].x-a[k].x)*(a[i].y-a[j].y);
