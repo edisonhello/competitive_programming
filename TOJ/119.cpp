@@ -11,7 +11,6 @@ int main(){
         int a,b;cin>>a>>b;
         if(abs(b-a)>7){
             cout<<"I QUIT!\n";
-            while(q--){cin>>a>>b;};
             break;
         }
         swap(ar[a],ar[b]);
