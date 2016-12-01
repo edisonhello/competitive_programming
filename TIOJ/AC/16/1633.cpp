@@ -1,5 +1,4 @@
 #include<iostream>
-#include<algorithm>
 #include<random>
 #include<ctime>
 using namespace std;
@@ -22,7 +21,8 @@ struct node{
         if(this->tag){
             if(this->l)this->l->tag^=1;
             if(this->r)this->r->tag^=1;
-            swap(this->l,this->r);
+            node *tmp=this->l;
+            this->l=this->r,this->r=tmp;
             this->tag=0;
         }
     }
@@ -38,7 +38,7 @@ node *merge(node *a,node *b){
         return a;
     }
     else{
-        b->l=merge(b->l,a);
+        b->l=merge(a,b->l);
         b->pull();
         return b;
     }
@@ -70,20 +70,6 @@ void print(node *now){
     if(now->r)print(now->r);
 }
 
-int deep=1;
-void printInfo(node *now){
-    for(int i=0;i<(deep>>1);++i)cout<<" ";
-    if(!now){
-        cout<<"NULL"<<endl;
-        --deep;
-        return;
-    }
-    cout<<"now at "<<now<<", val:"<<now->val<<", tag:"<<now->tag<<endl;
-    deep+=2;
-    printInfo(now->l);
-    printInfo(now->r);
-}
-
 void read(int &n,int &m){
     // cin.tie(0);
     ios_base::sync_with_stdio(0);
@@ -106,16 +92,13 @@ void solve(int &m){
             split(root,l-1,a,b);
             split(b,r-l+1,c,d);
             // cout<<a<<" "<<c<<" "<<d<<endl;
-            print(a);cout<<" ";
-            print(c);cout<<" ";
-            print(d);cout<<endl;
             c->tag^=1;
             b=merge(a,c);
             root=merge(b,d);
         }
         else if(c[0]=='S'){
             cin>>l>>r>>ll>>rr;
-            if(ll<l){swap(l,ll);swap(r,rr);}
+            if(ll<l){l^=ll;ll^=l;l^=ll;r^=rr;rr^=r;r^=rr;}
             node *a,*b,*c,*d,*e,*f;
             split(root,l-1,a,f);
             split(f,r-l+1,b,e);
@@ -131,8 +114,6 @@ void solve(int &m){
             d=merge(a,b);
             root=merge(d,e);
         }
-        deep=0;
-        printInfo(root);
         // print(root);
         // cout<<endl;
     }
@@ -141,7 +122,7 @@ void solve(int &m){
 
 int main(){
     int n,m;
-    srand(7122);
+    srand(7134);
     read(n,m);
     build(n);
     solve(m);
