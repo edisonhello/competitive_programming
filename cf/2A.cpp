@@ -1,34 +1,56 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<algorithm>
+#include<map>
+#include<vector>
+#include<utility>
+#include<queue>
+#include<cstring>
 using namespace std;
 
-map<string,int> h;
-map<int,string> uh;
-vector<int> pts;
-vector<pair<string,int> > moves;
-// stack<pair<string,int> > hist;
+map<string,int> PtoI;
+map<int,string> ItoP;
 
-int getn(string n){
-    if(h.find(n)==h.end()){
-        h[n] = h.size();
-        uh[h[n]] = n;
+int pt[1005],kk[1005];
+vector<pair<int,int>> rc;
+queue<int> fst;
+
+int getID(string &s){
+    auto it=PtoI.find(s);
+    if(it==PtoI.end()){
+        PtoI[s]=PtoI.size();
+        ItoP[PtoI.size()]=s;
+        // cout<<"insert "<<s<<" for "<<PtoI.size()-1<<endl;
+        // return PtoI.size()-1;
     }
-    return h[n];
+    // cout<<"get id of "<<s<<" : "<<" "<<PtoI[s]<<endl;
+    return PtoI[s];
 }
 
 int main(){
-    int n;
-    cin>>n;
-    pts.resize(n);
-
-    for(int i=0;i<n;i++){
-        string name;int pt;
-        cin>>name>>pt;
-        int namen = getn(name);
-        pts[namen] += pt;
-        moves.push_back(make_pair(name,pt));
+    string s;int inp,sc,sid;cin>>inp;while(inp--){
+        cin>>s>>sc;
+        sid=getID(s);
+        rc.push_back({sid,sc});
+        pt[sid]+=sc;
     }
-
-    for(auto i:h){
-        ;
+    int mxpnt=-99999999;
+    for(int i=0;i<(int)PtoI.size();++i){
+        mxpnt=max({mxpnt,pt[i]});
     }
+    // cout<<mxpnt<<endl;
+    memset(pt,0,sizeof(pt));
+    for(auto &p:rc){
+        if(pt[p.first]>=mxpnt && pt[p.first]+p.second<mxpnt){
+            ++kk[p.first];
+        }
+        if(pt[p.first]<mxpnt && pt[p.first]+p.second>=mxpnt){
+            fst.push(p.first);
+        }
+        pt[p.first]+=p.second;
+    }
+    while(fst.size() && kk[fst.front()]){
+        --kk[fst.front()];
+        fst.pop();
+    }
+    cout<<ItoP[fst.front()]<<endl;
 }
