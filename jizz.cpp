@@ -1,9 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
-map<int,int> m;
+// pair<int,*priority_queue<int,vector<int>,less<int>>> p;
+pair<int,(*int)> p
 int main(){
-    ++m[2];
-    ++m[3];
-    ++m[3];
-    cout<<m.begin()->first<<" "<<m.begin()->second<<endl;
+
 }
