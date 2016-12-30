@@ -1,191 +1,214 @@
-#include<iostream>
-#include<vector>
 #include<algorithm>
-#include<cstring>
-#include<cstdlib>
+#include<iostream>
 #include<iomanip>
+#include<cstring>
+#include<vector>
 using namespace std;
 
-int n,m,vil[20005],q,djs[20005],tot,cnt,Sekai;
-struct {int u,v;bool c;} edge[60005];
-struct {char c;int a,b;} hist[250005];
+int n,m,vi[20005],q,d[20005],peop,qs,Sekai;
+struct {char t;int a,b;} hist[250005];
+struct {bool c;int u,v;} edge[60006];
 
-int Find(int x){if(djs[x]==x)return x;return djs[x]=Find(djs[x]);}
-inline void Union(int x,int y){x=Find(x),y=Find(y);if(x!=y)djs[x]=y;}
-inline bool Check(int x,int y){return Find(x)==Find(y);}
+int F(int x){if(d[x]==x)return x;return d[x]=F(d[x]);}
+inline bool C(int x,int y){return F(x)==F(y);}
+inline void U(int x,int y){x=F(x),y=F(y);if(x==y)return;d[x]=y;}
 
 struct node{
     node *l,*r;
-    int val,sz,key;
-    node():l(NULL),r(NULL),val(0),sz(1){key=rand();};
-    node(int v):l(NULL),r(NULL),val(v),sz(1){key=rand();};
-    inline int lz(){return l?l->sz:0;}
-    inline int rz(){return r?r->sz:0;}
-} *treap[20005];
-inline void pull(node *now){now->sz=now->lz()+now->rz()+1;}
+    int val,sz;
+    int lz(){return l?l->sz:0;}
+    int rz(){return r?r->sz:0;}
+    node():l(NULL),r(NULL),val(0),sz(1){};
+    node(int v):l(NULL),r(NULL),val(v),sz(1){};
+} *root[20005];
 
-node *merge(node *a,node *b){
-    if(!a)return b;
-    if(!b)return a;
-    if(a->key>b->key){
-        a->r=merge(a->r,b);
-        pull(a);
-        return a;
+inline void psz(node *now){now->sz=now->lz()+now->rz()+1;}
+inline void rot(node *&now){
+    node *tmp;
+    if(now->lz()>now->rz()){
+        tmp=now->l;
+        now->l=tmp->r;
+        tmp->r=now;
+        now=tmp;
     }
-    else{
-        b->l=merge(a,b->l);
-        pull(b);
-        return b;
-    }
-}
-void split(node *now,int k,node *&a,node *&b){
-    if(!now){a=b=NULL;return;}
-    if(now->val>=k){
-        b=now;
-        split(now->l,k,a,b->l);
-        pull(b);
-    }
-    else{
-        a=now;
-        split(now->r,k,a->r,b);
-        pull(a);
+    else if(now->rz()>now->lz()){
+        tmp=now->r;
+        now->r=tmp->l;
+        tmp->l=now;
+        now=tmp;
     }
 }
+inline void pull(node *now){
+    if(now->l && now->r)rot(now);
+    if(now->l)psz(now->l);
+    if(now->r)psz(now->r);
+    psz(now);
+}
+
+void insert(node *&now,int v){
+    // cout<<"inserting "<<now<<" "<<(now?now->val:-1)<<" "<<v<<endl;
+    if(!now)now=new node(v);
+    else if(now->val>v)insert(now->l,v);
+    else insert(now->r,v);
+    pull(now);
+}
+
+void del(node *&now,int x){
+    if(!now)return;
+    if(now->val==x){
+        node *tmp;
+        if(now->l && now->r){
+            tmp=now;
+            if(!now->l->r){
+                now=now->l;
+                delete tmp;
+            }
+            else{
+                node *pr=now->l;
+                tmp=now->l->r;
+                while(tmp->r){pr=tmp;tmp=tmp->r;}
+                now->val=tmp->val;
+                pr->r=tmp->l;
+                delete tmp;
+            }
+        }
+        else if(now->l){
+            tmp=now;
+            now=now->l;
+            delete tmp;
+        }
+        else if(now->r){
+            tmp=now;
+            now=now->r;
+            delete tmp;
+        }
+        else{
+            tmp=now;
+            now=NULL;
+            delete tmp;
+        }
+    }
+    else if(now->val<x)del(now->r,x);
+    else del(now->l,x);
+}
+
+void modify(int x,int k){
+    // cout<<"b4msz:"<<root[F(x)]->sz<<" ";
+    del(root[F(x)],vi[x]);
+    // cout<<"delsz"<<root[F(x)]->sz<<" ";
+    vi[x]=k;
+    insert(root[F(x)],vi[x]);
+    // cout<<"inssz"<<root[F(x)]->sz<<endl;
+}
+
+void merge(node *now,node *bemg){
+    if(bemg->l)merge(now,bemg->l);
+    if(bemg->r)merge(now,bemg->r);
+    insert(now,bemg->val);
+    delete bemg;
+}
+
 int getK(node *now,int k){
     if(!now)return 0;
-    if(k==now->sz-now->lz()){
-        return now->val;
-    }
-    if(k<=now->rz()){
-        return getK(now->r,k);
-    }
+    if(now->rz()>=k)return getK(now->r,k);
+    if(now->rz()+1==k)return now->val;
     return getK(now->l,k-1-now->rz());
 }
 
-void del(node *now){
+void printTreap(node *now){
     if(!now)return;
-    if(now->l)del(now->l);
-    if(now->r)del(now->r);
+    if(now->l){cout<<"(";printTreap(now->l);cout<<")";}
+    cout<<now->val;
+    if(now->r){cout<<"(";printTreap(now->r);cout<<")";}
+}
+
+void proc(){
+    while(q--){
+        // printTreap(root[1]);cout<<endl;
+        auto &now=hist[q];
+        // cout<<"doing "<<now.t<<" "<<now.a<<" "<<now.b<<endl;
+        if(now.t=='Q'){
+            peop+=getK(root[F(now.a)],now.b);
+            ++qs;
+            // cout<<"Q! "<<peop<<" "<<qs<<endl;
+        }
+        else if(now.t=='C'){
+            modify(now.a,now.b);
+        }
+        else if(now.t=='D'){
+            auto eg=edge[now.a];
+            if(C(eg.u,eg.v))continue;
+            if(root[F(eg.u)]->sz > root[F(eg.v)]->sz){ // jizz?
+                merge(root[F(eg.u)],root[F(eg.v)]);
+                root[F(eg.v)]=NULL;
+                d[eg.v]=eg.u;
+            }
+            else{
+                merge(root[F(eg.v)],root[F(eg.u)]);
+                root[F(eg.u)]=NULL;
+                d[eg.u]=eg.v;
+            }
+        }
+    }
+}
+
+void print(){
+    cout<<"Sekai "<<(++Sekai)<<": ";
+    #define ld long double
+    cout<<fixed<<setprecision(6)<<(ld)peop/(ld)qs<<endl;
+}
+
+void init(){
+    for(int i=0;i<n;++i)d[i]=i;
+    for(int i=0;i<m;++i)if(edge[i].c){
+        U(edge[i].u,edge[i].v);
+    }
+    // cout<<"djs:";for(int i=0;i<n;++i)cout<<d[i]<<" ";cout<<endl;
+    for(int i=0;i<n;++i){
+        insert(root[F(i)],vi[i]);
+    }
+    // cout<<"tsz:";for(int i=0;i<n;++i)cout<<(root[i]?root[i]->sz:0)<<" ";cout<<endl;
+}
+
+void read(){
+    for(int i=0;i<n;++i)cin>>vi[i];
+    for(int i=0;i<m;++i){
+        cin>>edge[i].u>>edge[i].v;
+        edge[i].c=1;
+    }
+    while(cin>>hist[q].t && hist[q].t!='E'){
+        if(hist[q].t=='Q')cin>>hist[q].a>>hist[q].b;
+        else if(hist[q].t=='C'){
+            cin>>hist[q].a>>hist[q].b;
+            swap(vi[hist[q].a],hist[q].b);
+        }
+        else if(hist[q].t=='D'){
+            cin>>hist[q].a;
+            edge[hist[q].a].c=0;
+        }
+        ++q;
+    }
+}
+void clearTreap(node *now){
+    if(!now)return;
+    clearTreap(now->l);
+    clearTreap(now->r);
     delete now;
 }
-
-bool isLeaf(node *now){
-    if(!now)return 0;
-    if(!now->l && !now->r)return 1;
-    return 0;
+void clear(){
+    for(int i=0;i<n;++i)clearTreap(root[i]);
+    memset(hist,0,sizeof(hist));
+    memset(edge,0,sizeof(edge));
+    memset(vi,0,sizeof(vi));
+    memset(d,0,sizeof(d));
+    q=peop=qs=0;
 }
-node *getNode(node *now){
-    if(!now)return NULL;
-    node *tmp;
-    if(now->l){
-        if(isLeaf(now->l)){
-            tmp=now->l;
-            now->l=NULL;
-            return tmp;
-        }
-        return getNode(now->l);
-    }
-    if(now->r){
-        if(isLeaf(now->r)){
-            tmp=now->r;
-            now->r=NULL;
-            return tmp;
-        }
-        return getNode(now->r);
-    }
-    return now; // ?????
-}
-
 int main(){
-    ios_base::sync_with_stdio(0);
-    Sekai=1;
     while(cin>>n>>m, n){
-        memset(vil,0,sizeof(vil));
-        memset(edge,0,sizeof(edge));
-        memset(hist,0,sizeof(hist));
-        q=0,tot=0,cnt=0;
-        for(int i=0;i<n;++i)djs[i]=i;
-        for(int i=0;i<n;++i)del(treap[i]),treap[i]=NULL;
-
-        for(int i=0;i<n;++i)cin>>vil[i];
-        for(int i=0;i<m;++i)cin>>edge[i].u>>edge[i].v,edge[i].c=1;
-        while(cin>>hist[q].c,hist[q].c!='E'){
-            if(hist[q].c=='Q')cin>>hist[q].a>>hist[q].b;
-            else if(hist[q].c=='C'){
-                cin>>hist[q].a>>hist[q].b;
-                swap(hist[q].b,vil[hist[q].a]);
-            }
-            else if(hist[q].c=='D')cin>>hist[q].a,edge[hist[q].a].c=0;
-            ++q;
-        }
-
-        for(int i=0;i<m;++i)if(edge[i].c){
-            Union(edge[i].u,edge[i].v);
-        }
-
-        for(int i=0;i<n;++i){
-            node *a,*b,*t;
-            split(treap[Find(i)],vil[i],a,b);
-            t=merge(a,new node(vil[i]));
-            treap[Find(i)]=merge(t,b);
-        }
-
-        for(int i=q-1;i>=0;--i){
-            auto &now=hist[i];
-            if(now.c=='C'){
-                node *a,*t,*b,*c;
-                split(treap[Find(now.a)],vil[now.a]  ,a,t);
-                split(                 t,vil[now.a]+1,b,c); // remember +-
-                if(b->sz>1){
-                    t=merge(b->l,b->r);
-                    b=merge(a,t);
-                    treap[Find(now.a)]=merge(b,c);
-                }
-                else treap[Find(now.a)]=merge(a,c);
-                vil[now.a]=now.b;
-                split(treap[Find(now.a)],vil[now.a],a,b);
-                t=merge(a,new node(vil[i]));
-                treap[Find(now.a)]=merge(t,b);
-            }
-            else if(now.c=='D'){
-                edge[now.a].c=1;
-                if(Check(edge[now.a].u,edge[now.a].v))continue;
-                if(!treap[Find(edge[now.a].u)] || !treap[Find(edge[now.a].v)])continue;
-                if(treap[Find(edge[now.a].u)]->sz > treap[Find(edge[now.a].v)]->sz){
-                    node *tmp,*a,*b,*t;
-                    while(!isLeaf(treap[Find(edge[now.a].v)]) && (tmp=getNode(treap[Find(edge[now.a].v)]))){
-                        split(treap[Find(edge[now.a].u)],tmp->val,a,b);
-                        t=merge(a,tmp);
-                        treap[Find(edge[now.a].u)]=merge(t,b);
-                    }
-                    tmp=treap[Find(edge[now.a].v)];
-                    treap[Find(edge[now.a].v)]=NULL;
-                    split(treap[Find(edge[now.a].u)],tmp->val,a,b);
-                    t=merge(a,tmp);
-                    treap[Find(edge[now.a].u)]=merge(t,b);
-                    djs[Find(edge[now.a].v)]=Find(edge[now.a].u);
-                }
-                else{
-                    node *tmp,*a,*b,*t;
-                    while(!isLeaf(treap[Find(edge[now.a].u)]) && (tmp=getNode(treap[Find(edge[now.a].u)]))){
-                        split(treap[Find(edge[now.a].v)],tmp->val,a,b);
-                        t=merge(a,tmp);
-                        treap[Find(edge[now.a].v)]=merge(t,b);
-                    }
-                    tmp=treap[Find(edge[now.a].u)];
-                    treap[Find(edge[now.a].u)]=NULL;
-                    split(treap[Find(edge[now.a].v)],tmp->val,a,b);
-                    t=merge(a,tmp);
-                    treap[Find(edge[now.a].v)]=merge(t,b);
-                    djs[Find(edge[now.a].u)]=Find(edge[now.a].v);
-                }
-            }
-            else if(now.c=='Q'){
-                tot+=getK(treap[Find(now.a)],now.b);
-                ++cnt;
-            }
-        }
-        cout<<"Sekai "<<Sekai++<<": ";
-        cout<<fixed<<setprecision(6)<<(long double)tot/(long double)cnt<<endl;
+        clear();
+        read();
+        init();
+        proc();
+        print();
     }
 }
