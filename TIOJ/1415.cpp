@@ -2,12 +2,13 @@
 #include<algorithm>
 #include<queue>
 using namespace std;
+#define int long long
 #define ll long long
 
 priority_queue<int,vector<int>,less<int>> pql;
 priority_queue<int,vector<int>,greater<int>> pqg;
 
-int main(){
+main(){
 int t;while(cin>>t){
     ll ans=0;
     while(pql.size())pql.pop();
@@ -19,8 +20,8 @@ int t;while(cin>>t){
             int t;cin>>t;
             pql.push(t);
             pqg.push(t);
-            while((int)pql.size()>5005)pql.pop();
-            while((int)pqg.size()>5005)pqg.pop();
+            // while((int)pql.size()>5005)pql.pop();
+            // while((int)pqg.size()>5005)pqg.pop();
         }
         if(pql.size() && pqg.size()){
             ans+=(int)(pql.top()-pqg.top());
