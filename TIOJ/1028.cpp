@@ -1,8 +1,7 @@
-#include<iostream>
+#include<cstdio>
 #include<algorithm>
 #include<vector>
 #include<stack>
-
 using namespace std;
 
 int G[15][15],bt[15][15],want[15];
@@ -10,15 +9,15 @@ int G[15][15],bt[15][15],want[15];
 vector<int> nowmnl,tmp;
 int mn;
 
-bool cmp(){
+void cmp(){
     for(int i=0;i<(int)min(nowmnl.size(),tmp.size());++i){
         if(tmp[i]<nowmnl[i]){
             nowmnl=tmp;
-            return 1;
+            return;
         }
-        if(tmp[i]>nowmnl[i])return 0;
+        if(tmp[i]>nowmnl[i])return;
     }
-    if(tmp.size()<nowmnl.size()){nowmnl=tmp;return 1;}
+    if(tmp.size()<nowmnl.size())nowmnl=tmp;
 }
 void BT(int i,int j){
     tmp.push_back(i);
@@ -29,57 +28,57 @@ void BT(int i,int j){
     }
 }
 
-int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);
-    int n;cin>>n;
-    int m;cin>>m;
+main(){
+    int n,m,a,b,t,i,j,k,len;
+    scanf("%d%d",&n,&m);
     while(m--){
-        int a,b,t;cin>>a>>b>>t;
+        scanf("%d%d%d",&a,&b,&t);
         G[a][b]=G[b][a]=t;
     }
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(!G[i][j])G[i][j]=11111111;
+    for(i=0;i<n;++i){
+        for(j=0;j<n;++j){
+            if(!G[i][j])G[i][j]=(1<<29);
             bt[i][j]=j;
         }
     }
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
+    for(i=0;i<n;++i){
+        for(j=0;j<n;++j){
             if(i==j){G[i][j]=0;continue;}
-            for(int k=0;k<n;++k){
+            for(k=0;k<n;++k){
                 if(G[i][k]+G[k][j]<G[i][j]){
-                    G[i][j]=G[i][k]+G[k][j];
-                    bt[i][j]=k;
+                    G[j][i]=G[i][j]=G[i][k]+G[k][j];
+                    bt[i][j]=bt[j][i]=k;
                 }
             }
         }
     }
-
+    //
     // for(int i=0;i<n;++i){
     //     for(int j=0;j<n;++j){
-    //         cout<<G[i][j]<<" ";
+    //         printf("%d ",G[i][j]);
     //     }
-    //     cout<<endl;
+    //     puts("");
     // }
     // for(int i=0;i<n;++i){
     //     for(int j=0;j<n;++j){
-    //         cout<<bt[i][j]<<" ";
+    //         printf("%d ",bt[i][j]);
     //     }
-    //     cout<<endl;
+    //     puts("");
     // }
 
-    int k;cin>>k;
-    for(int i=0;i<k;++i)cin>>want[i];
+    scanf("%d",&k);
+    for(i=0;i<k;++i)scanf("%d",&want[i]);
     sort(want+1,want+k);
     mn=0x7f7f7f7f;
     do{
-        // cout<<"af"<<endl;
         tmp.clear();
-        int len=0;
-        for(int i=1;i<k;++i){
-            BT(want[i-1],want[i]);
+        len=0;
+        for(i=1;i<k;++i){
             len+=G[want[i-1]][want[i]];
+        }
+        if(len>mn)continue;
+        for(i=1;i<k;++i){
+            BT(want[i-1],want[i]);
         }
         tmp.push_back(want[k-1]);
         if(len<mn){
@@ -87,10 +86,14 @@ int main(){
             mn=len;
         }
         else if(len==mn){
-            if(cmp())mn=len;
+            cmp();
         }
     }while(next_permutation(want+1,want+k));
 
-    cout<<"Minimum travel distance: "<<mn<<endl<<"Travel route:";
-    for(int i:nowmnl)cout<<" "<<i;cout<<endl;
+    printf("Minimum travel distance: %d\nTravel route:",mn);
+    for(int i=0;i<(int)nowmnl.size();++i){
+        if(i && nowmnl[i-1]==nowmnl[i])continue;
+        printf(" %d",nowmnl[i]);
+    }
+    puts("");
 }
