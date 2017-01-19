@@ -10,8 +10,8 @@ int main(){
         dp[1][i]=dp[i][1]=1;
     }
     for(int i=2;i<15;++i){
-        for(int int j=i;j<15;++j){
-            
+        for(int j=i;j<15;++j){
+
         }
     }
 
