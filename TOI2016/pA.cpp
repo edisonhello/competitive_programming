@@ -39,33 +39,32 @@ int main(){
             cout<<q.front();q.pop();
             if(q.size())cout<<" ";
         }
-        cout<<'\n';
+        cout<<endl;
     }
     if(c==3){
         memset(cac,-1,sizeof(cac));
         int ptr=0;
         for(i=0;i<pt;++i){
-            cout<<"pss:"<<h[i]<<endl;
-            auto it=mp.find(h[i]);
-            if(it!=mp.end()){
-                cout<<"already in\n";
-                ++(it->second.X);
+            // cout<<"pss:"<<h[i]<<endl;
+            auto mpit=mp.find(h[i]);
+            if(mpit!=mp.end()){
+                ++(mpit->second.X);
                 q.push(h[i]);
             }
             else{
                 q.push(h[i]);
-                if((int)mp.size()<=n){
+                if((int)mp.size()<n){
                     cac[ptr++]=h[i];
                     mp[h[i]]={1,ptr-1};
                 }
                 else{
                     while(q.size()){
-                        auto itt=mp.find(q.front());
-                        --(itt->second.X);
-                        if(itt->second.X==0){
-                            cac[itt->second.Y]=h[i];
-                            it->second={1,itt->second.Y};
-                            mp.erase(itt);
+                        auto it=mp.find(q.front());
+                        --(it->second.X);
+                        if(it->second.X==0){
+                            cac[it->second.Y]=h[i];
+                            mp[h[i]]={1,it->second.Y};
+                            mp.erase(it);
                             break;
                         }
                         q.pop();
@@ -78,6 +77,6 @@ int main(){
             if(i)cout<<" ";
             cout<<cac[i];
         }
-        cout<<'\n';
+        cout<<endl;
     }
 }
