@@ -5,6 +5,8 @@
 *.o
 *.exe
 *.h
+*.in
+*.out
 /IOI 2015
 *.swp
 *.doc
