@@ -79,13 +79,13 @@ template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){dequ
 inline int lowbit(int &x){return x&-x;}
 inline ll lowbit(ll &x){return x&-x;}
 template<typename T>
-inline T _pow(T b,int n){
+inline T mp(T b,int n){
     T a=1; while(n){
         if(n&1)a*=b; b*=b,n>>=1;
     } return a;
 }
 template<typename T>
-inline T _pow(T b,int n,T mod){
+inline T mp(T b,int n,T mod){
     T a=1%mod; while(n){
         if(n&1)a=a*b%mod; b=b*b%mod,n>>=1;
     } return a;
@@ -93,12 +93,12 @@ inline T _pow(T b,int n,T mod){
 
 inline int gtx(){
     const int N=1048576;
-    static char __buffer[N];
-    static char *__p=__buffer,*__end=__buffer;
-    if(__p==__end){
-        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-        __p=__buffer;
-    } return *__p++;
+    static char buffer[N],*p,*end; p=end=buffer;
+    if(p==end) {
+        if((end=buffer+fread(buffer,1,N,stdin))==buffer)return EOF;
+        p=buffer;
+    }
+    return *p++;
 }
 
 template<typename T>
@@ -112,32 +112,44 @@ inline bool rit(T& x){
 template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
-inline void pit(int x){printf("%d",x);}
-inline void pln(ll x){printf("%I64d",x);}
+inline void pit(int &x){printf("%d",x);}
+inline void pln(ll &x){printf("%I64d",x);}
 template<typename ...Args>
-inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
+inline void pit(int &x,Args& ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
-inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
+inline void pln(ll &x,Args& ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+int mx,mxs;
+vint ans;
 
-int main(){
-    // freopen("in","r",stdin);
-    // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
-        }
-        pq.push({1,0});
-        while(pq.size()){
-
-        }
+void sol(int lft,int st){
+    int cnt=0,cpyst=st;
+    while(lft>=st){
+        lft-=st;
+        ++st; ++cnt;
     }
+    if(cnt>mx){
+        mx=cnt,mxs=cpyst;
+    }
+}
+void pnt(int lft,int st){
+    pit(mx);el;
+    while(lft>=st){
+        ans.pb(st);
+        lft-=st;
+        ++st;
+    }
+    ans.back()+=lft;
+    for(auto &i:ans)pit(i),spc;el;
+}
+int main(){
+    int n;rit(n);
+    for(int i=1;i<=n;++i){
+        sol(n,i);
+    }
+    pnt(n,mxs);
 }

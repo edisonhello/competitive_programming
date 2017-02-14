@@ -26,13 +26,15 @@ using namespace std;
 #define X first
 #define Y second
 #define SZ(x) ((int)(x).size())
+#define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define PB(x) push_back(x)
+#define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
 #define endl '\n'
-#define ln puts("");
+#define el putchar('\n')
+#define spc putchar(' ')
 #define mid ((l+r)>>1)
 #define xm ((x1+x2)/2)
 #define ym ((y1+y2)/2)
@@ -51,13 +53,18 @@ using namespace std;
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
+#define DEB(...) printf(__VA_ARGS__)
+#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__)
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
+#define DEB(...) ;
+#define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #endif
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
@@ -72,27 +79,26 @@ template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){dequ
 inline int lowbit(int &x){return x&-x;}
 inline ll lowbit(ll &x){return x&-x;}
 template<typename T>
-inline T mp(T b,int n){
+inline T _pow(T b,int n){
     T a=1; while(n){
         if(n&1)a*=b; b*=b,n>>=1;
     } return a;
 }
 template<typename T>
-inline T mp(T b,int n,T mod){
+inline T _pow(T b,int n,T mod){
     T a=1%mod; while(n){
         if(n&1)a=a*b%mod; b=b*b%mod,n>>=1;
     } return a;
 }
 
-#define getchar gtx
 inline int gtx(){
     const int N=1048576;
-    static char buffer[N],*p,*end; p=end=buffer;
-    if(p==end) {
-        if((end=buffer+fread(buffer,1,N,stdin))==buffer)return EOF;
-        p=buffer;
-    }
-    return *p++;
+    static char __buffer[N];
+    static char *__p=__buffer,*__end=__buffer;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
 }
 
 template<typename T>
@@ -106,17 +112,18 @@ inline bool rit(T& x){
 template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
-inline void pit(int &x){printf("%d",x);}
-inline void pll(ll &x){printf("%lld",x);}
+inline void pit(int x){printf("%d",x);}
+inline void pln(ll x){printf("%I64d",x);}
 template<typename ...Args>
-inline void pit(int &x,Args& ...args){printf("%d ",x);pit(args...);}
+inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
-inline void pll(ll &x,Args& ...args){printf("%lld ",x);pit(args...);}s
+inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-
+    // freopen("in","r",stdin);
+    // freopen("out","w",stdout);
 }

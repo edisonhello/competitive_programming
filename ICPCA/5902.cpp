@@ -118,26 +118,91 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-
+// https://icpcarchive.ecs.baylor.edu/external/59/p5902.pdf
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+struct node{
+    node *l,*r,*p;
+    int v,pri,sz;
+    int lz(){return l?l->sz:0;}
+    int rz(){return r?r->sz:0;}
+    node():l(NULL),r(NULL),p(NULL),v(0){pri=rand();};
+    node(int val):l(NULL),r(NULL),p(NULL),v(val){pri=rand();};
+} *root;
+void pull(node *now){now->sz = now->lz()+now->rz()+1;}
+void fixParent(node *now){
+    if(!now)return ;
+    if(now->l)now->l->p=now;
+    if(now->r)now->r->p=now;
+}
+node *merge(node *&a,node *&b){
+    if(!a)return b; if(!b)return a;
+    if(a->pri > b->pri){
+        a->r = merge(a->r,b);
+        a->r->p=a; pull(a);
+        return a;
+    }
+    else{
+        b->l = merge(a,b->l);
+        b->l->p=b; pull(b);
+        return b;
+    }
+}
+void split(node *&now,int sz,node *&a,node *&b){
+    if(!now){a=b=NULL;return;}
+    else if(sz <= now->lz()){
+        b=now;
+        split(now->l,sz,a,b->l);
+        fixParent(b), pull(b);
+    }
+    else{
+        a=now;
+        split(now->r,sz-now->lz()-1,a->r,b);
+        fixParent(a), pull(a);
+    }
+}
+void deleteTree(node *now){
+    if(!now)return;
+    deleteTree(now->l), deleteTree(now->r);
+    delete now;
+}
+int getPos(node *now,int nsz){
+    if(!now->p)return nsz;
+    if(now->p->l==now)return getPos(now->p,nsz+1);
+    if(now->p->r==now)return getPos(now->p,nsz+1+now->p->lz());
+}
+void printTree(node *now){
+    if(!now)return ;
+    if(now->l){printf("(");printTree(now->l);printf(")");}
+    pit(now->v);
+    if(now->r){printf("(");printTree(now->r);printf(")");}
+}
+node *rec[100009];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
+    srand(time(NULL));
+    int ts;rit(ts);while(ts--){
+        int n,m;rit(n,m);
+        deleteTree(root); root=NULL;
+        for(int i=1;i<=n;++i)deleteTree(rec[i]), rec[i]=NULL;
+        for(int i=1;i<=n;++i){
+            rec[i]=new node(i);
+            root=merge(root,rec[i]);
+        }
+        printTree(root);el;
         while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+            int mv; rit(mv);
+            int pos=getPos(rec[mv],1);
+            node *a,*b,*c,*t;
+            LOG("\n");
+            split(root,pos,a,t), split(t,1,b,c);
+            t=merge(a,c); root=merge(b,t);
+            pit(pos-1);spc;
         }
-        pq.push({1,0});
-        while(pq.size()){
-
-        }
+        el;
     }
 }
