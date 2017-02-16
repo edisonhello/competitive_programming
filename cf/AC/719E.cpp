@@ -123,23 +123,103 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+struct Fib{
+    ll ar[2][2];
+    Fib(){
+        memset(ar,0,sizeof(ar));
+    }
+    Fib operator+(const Fib &a)const{
+        Fib rt=*this;
+        rt.ar[0][0]+=a.ar[0][0]; rt.ar[0][0]%=mod;
+        rt.ar[0][1]+=a.ar[0][1]; rt.ar[0][1]%=mod;
+        rt.ar[1][0]+=a.ar[1][0]; rt.ar[1][0]%=mod;
+        rt.ar[1][1]+=a.ar[1][1]; rt.ar[1][1]%=mod;
+        return rt;
+    }
+    Fib operator*(const Fib &a)const{
+        Fib rt;
+        rt.ar[0][0]=this->ar[0][0]*a.ar[0][0] + this->ar[0][1]*a.ar[1][0]; rt.ar[0][0]%=mod;
+        rt.ar[0][1]=this->ar[0][0]*a.ar[0][1] + this->ar[0][1]*a.ar[1][1]; rt.ar[0][1]%=mod;
+        rt.ar[1][0]=this->ar[1][0]*a.ar[0][0] + this->ar[1][1]*a.ar[1][0]; rt.ar[1][0]%=mod;
+        rt.ar[1][1]=this->ar[1][0]*a.ar[0][1] + this->ar[1][1]*a.ar[1][1]; rt.ar[1][1]%=mod;
+        return rt;
+    }
+    operator bool(){
+        if(ar[0][0]>1 || ar[1][1]>1)return 1;
+        if(ar[1][0]>0 || ar[0][1]>0)return 1;
+        return 0;
+    }
+    ll gt(){return ar[1][0];}
+} I,Fib1;
+Fib fibpow(int n,Fib a=I,Fib b=Fib1){
+    while(n>0){
+        if(n&1)a=a*b;
+        b=b*b;
+        n>>=1;
+    }
+    return a;
+}
+struct node{
+    node *l,*r;
+    Fib val,tag;
+    node():l(NULL),r(NULL){memset(&val,0,sizeof(Fib)); tag=I;};
+} *root;
+
+int a[100005];
+
+void build(node *now,int l,int r){
+    now->tag=I;
+    if(l==r){
+        now->val=fibpow(a[l]);
+        return ;
+    }
+    now->l=new node(), now->r=new node();
+    build(now->l,l,mid), build(now->r,mid+1,r);
+    now->val = now->l->val + now->r->val;
+    // cout<<"DE  "<<l<<" "<<r<<" "<<now->val.gt()<<endl;
+}
+void push(node *now){
+    if(now->tag){
+        if(now->l)now->l->tag = now->l->tag*now->tag, now->l->val = now->l->val*now->tag;
+        if(now->r)now->r->tag = now->r->tag*now->tag, now->r->val = now->r->val*now->tag;
+        now->tag=I;
+    }
+}
+void modify(node *now,int l,int r,int ml,int mr,Fib v){
+    push(now);
+    if(r<ml || mr<l)return;
+    if(ml<=l&&r<=mr){
+        now->val = now->val*v;
+        now->tag = now->tag*v;
+        return ;
+    }
+    modify(now->l,l,mid,ml,mr,v), modify(now->r,mid+1,r,ml,mr,v);
+    now->val = now->l->val + now->r->val;
+}
+ll query(node *now,int l,int r,int ql,int qr){
+    push(now);
+    if(r<ql || qr<l)return 0;
+    if(ql<=l&&r<=qr){
+        return now->val.gt();
+    }
+    return (query(now->l,l,mid,ql,qr)+query(now->r,mid+1,r,ql,qr))%mod;
+}
 
 int main(){
-    // freopen("in","r",stdin);
-    // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+    I.ar[0][0]=I.ar[1][1]=1, I.ar[0][1]=I.ar[1][0]=0;
+    Fib1.ar[0][0]=Fib1.ar[1][0]=Fib1.ar[0][1]=1, Fib1.ar[1][1]=0;
+    int n,m;rit(n,m);
+    for(int i=1;i<=n;++i)rit(a[i]);
+    build(root=new node(),1,n);
+    while(m--){
+        int tp,l,r,x;rit(tp);
+        if(tp==1){
+            rit(l,r,x);
+            modify(root,1,n,l,r,fibpow(x));
         }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
+        else{
+            rit(l,r);
+            pln(query(root,1,n,l,r));el;
         }
     }
 }

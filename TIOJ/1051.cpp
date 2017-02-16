@@ -84,7 +84,7 @@ inline T mp(T b,int n,T mod){
     } return a;
 }
 
-#define getchar gtx
+// #define getchar gtx
 inline int gtx(){
     const int N=1048576;
     static char buffer[N],*p,*end; p=end=buffer;
@@ -107,11 +107,8 @@ template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
 inline void pit(int &x){printf("%d",x);}
-inline void pll(ll &x){printf("%lld",x);}
 template<typename ...Args>
 inline void pit(int &x,Args& ...args){printf("%d ",x);pit(args...);}
-template<typename ...Args>
-inline void pll(ll &x,Args& ...args){printf("%lld ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
@@ -121,8 +118,8 @@ int a[666],b[666],dp[666][666];
 
 int getMax(int x,int y,int v){
     int mx=0;
-    for(int i=1;i<=x;++i){
-        for(int j=1;j<=y;++j){
+    for(int i=1;i<x;++i){
+        for(int j=1;j<y;++j){
             if(b[j]<v){
                 mx=max(mx,dp[i][j]);
             }
@@ -134,24 +131,28 @@ int getMax(int x,int y,int v){
 int main(){
     int ts;rit(ts);while(ts--){
         int n;rit(n);
-        for(int i=n;i;--i)rit(a[i]);
-        for(int i=n;i;--i)rit(b[i]);
+        // for(int i=n;i;--i)rit(a[i]);
+        // for(int i=n;i;--i)rit(b[i]);
+        for(int i=1;i<=n;++i)rit(a[i]);
+        for(int i=1;i<=n;++i)rit(b[i]);
         int lcis=0;
         for(int i=1;i<=n;++i){
             for(int j=1;j<=n;++j){
                 if(a[i]==b[j]){
                     dp[i][j]=getMax(i,j,b[j])+1;
-                    lcis=max(lcis,dp[i][j]);l
+                    lcis=max(lcis,dp[i][j]);
                 }
+                pit(dp[i][j]);putchar(' ');
             }
+            ln;
         }
-        cout<<lcis<<endl;
+        pit(lcis);ln;
     }
 }
 
-// 不是是
 // 如果a[i] == b[j] 那麼dp[i][j] = max{dp[x][y]|(x,y)<(i,j), y[j] < b[j]}
 // 如果a[i] != b[j] 那麼dp[i][j] = 0 嗎
+// 不是是
 // dp[i][j]的意思是以a[i],b[j]結尾的LCIS長度
 // 啊這樣是O(NMM)嘛 你要想辦法把max那一步做到O(1)
 // 那就邊DP邊預處理就好了

@@ -3,7 +3,7 @@
 #include<cstdlib>
 #include<cstring>
 #include<cmath>
-#include<ctime>
+// #include<ctime>
 #include<algorithm>
 #include<iostream>
 #include<iomanip>
@@ -40,13 +40,14 @@ using namespace std;
 #define ym ((y1+y2)/2)
 #define SS stringstream
 #define PQ priority_queue
+#define PRF(...) printf(__VA_ARGS__)
 #define MS0(x) memset((x),0,sizeof(x))
 #define MSB(x) memset((x),0x7f,sizeof(x))
 #define MSM(x) memset((x),0xff,sizeof(x))
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
-#define FASTCPP ios_base::sync_with_stdio(0); cin.tie(0)
+#define CIO ios_base::sync_with_stdio(0);
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -123,23 +124,51 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+int G[111][111],n,ans,t,itm[111],lw[111];
+
+void dfs(int now,int p){
+    // PDE2(now,ctg);
+    itm[now]=lw[now]=++t;
+    int ch=0; bool dea=0;
+    for(int i=1;i<=n;++i){
+        if(i==now || i==p || !G[now][i])continue;
+        // if(!itm[i])dfs(i,now),++ch;
+        // lw[now]=min({lw[now],lw[i]});
+        // if(lw[i]>=itm[now])++dea;
+        if(!itm[i]){
+            dfs(i,now); ++ch;
+            lw[now]=min(lw[now],lw[i]);
+            if(lw[i]>=itm[now])++dea;
+        }
+        else if(i!=p){
+            lw[now]=min(lw[now],itm[i]);
+        }
+    }
+    if(lw[now]<=itm[now] && ((ch>=1 && p)||(!p && ch>1)) && dea){
+        ++ans;
+        // cout<<"ans ++ at "<<now<<endl;
+    }
+}
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+    while(scanf("%d ",&n),n){ // PDE1(n);
+        memset(G,0,sizeof(G));
+        ans=t=0;
+        for(int i=1;i<=n;++i){
+            itm[i]=lw[i]=0;
         }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
+        string s;
+        while(getline(cin,s) && s[0]!='0'){
+            SS ss(s);
+            int st,ed;ss>>st;
+            while(ss>>ed)G[st][ed]=G[ed][st]=1;
         }
+        // LOG("finish output\n");
+        dfs(1,0);
+        // for(int i=1;i<=n;++i)cout<<itm[i]<<" ";cout<<endl;
+        // for(int i=1;i<=n;++i)cout<<lw[i]<<" ";cout<<endl;
+        pit(ans),el;
     }
 }

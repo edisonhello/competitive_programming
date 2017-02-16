@@ -128,8 +128,8 @@ struct node{
     int v,pri,sz;
     int lz(){return l?l->sz:0;}
     int rz(){return r?r->sz:0;}
-    node():l(NULL),r(NULL),p(NULL),v(0){pri=rand();};
-    node(int val):l(NULL),r(NULL),p(NULL),v(val){pri=rand();};
+    node():l(NULL),r(NULL),p(NULL),v(0),sz(1){pri=rand();};
+    node(int val):l(NULL),r(NULL),p(NULL),v(val),sz(1){pri=rand();};
 } *root;
 void pull(node *now){now->sz = now->lz()+now->rz()+1;}
 void fixParent(node *now){
@@ -169,12 +169,13 @@ void deleteTree(node *now){
     delete now;
 }
 int getPos(node *now,int nsz){
+    PDE2(now->v,nsz);
     if(!now->p)return nsz;
-    if(now->p->l==now)return getPos(now->p,nsz+1);
+    if(now->p->l==now)return getPos(now->p,nsz);
     if(now->p->r==now)return getPos(now->p,nsz+1+now->p->lz());
 }
 void printTree(node *now){
-    if(!now)return ;
+    if(!now)return;
     if(now->l){printf("(");printTree(now->l);printf(")");}
     pit(now->v);
     if(now->r){printf("(");printTree(now->r);printf(")");}
@@ -188,20 +189,19 @@ int main(){
     int ts;rit(ts);while(ts--){
         int n,m;rit(n,m);
         deleteTree(root); root=NULL;
-        for(int i=1;i<=n;++i)deleteTree(rec[i]), rec[i]=NULL;
+        for(int i=1;i<=n;++i)rec[i]=NULL;
         for(int i=1;i<=n;++i){
             rec[i]=new node(i);
             root=merge(root,rec[i]);
         }
-        printTree(root);el;
         while(m--){
+            // printTree(root);el;
             int mv; rit(mv);
-            int pos=getPos(rec[mv],1);
+            int pos=getPos(rec[mv],rec[mv]->lz()+1);
             node *a,*b,*c,*t;
-            LOG("\n");
-            split(root,pos,a,t), split(t,1,b,c);
+            split(root,pos-1,a,t), split(t,1,b,c);
             t=merge(a,c); root=merge(b,t);
-            pit(pos-1);spc;
+            pit(pos-1);if(m)spc;
         }
         el;
     }

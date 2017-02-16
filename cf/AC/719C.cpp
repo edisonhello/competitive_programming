@@ -123,23 +123,91 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+
+int find5=0,pos;
+int findMaxSecond(string s,int n){
+    pos=s.find('.');
+    for(int i=pos+1;i<n;++i){
+        if(s[i]=='4' && !find5){
+            find5=i;
+        }
+        else if(find5 && s[i]<'4'){
+            PDE1(i);
+            find5=0;
+        }
+        else if(find5 && s[i]>='5'){
+            return i-find5+1;
+        }
+        else if(!find5 && s[i]>='5'){
+            find5=i;
+            return 1;
+        }
+    }
+    if(find5)return n-find5;
+    return 0;
+}
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+    int n,t;cin>>n>>t;
+    string g;cin>>g;
+    int mxs=findMaxSecond(g,n);
+    PDE3(find5,pos,mxs);
+    if(mxs==0){
+        cout<<g<<endl;
+        return 0;
+    }
+    if(mxs==1){
+        if(find5==pos+1){
+            --pos;
+            ++g[pos];
+            while(g[pos]>'9' && pos>0){
+                g[pos]-=10;
+                ++g[pos-1];
+                --pos;
+            }
+            if(pos==0 && g[pos]>'9'){
+                g[pos]-=10;
+                cout<<1<<g.substr(0,find5-1)<<endl;
+            }
+            else cout<<g.substr(0,find5-1)<<endl;
         }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
+        else{
+            ++g[find5-1];
+            cout<<g.substr(0,find5)<<endl;
+        }
+        return 0;
+    }
+    if(mxs>t){
+        find5+=mxs-1;
+        PDE2(find5,mxs);
+        while(t>0){
+            find5--;
+            ++g[find5];
+            --t;
+        }
+        cout<<g.substr(0,find5+1)<<endl;
+        return 0;
+    }
+    else{
+        if(find5==pos+1){
+            --pos;
+            ++g[pos];
+            while(g[pos]>'9' && pos>0){
+                g[pos]-=10;
+                ++g[pos-1];
+                --pos;
+            }
+            if(pos==0 && g[pos]>'9'){
+                g[pos]-=10;
+                cout<<1<<g.substr(0,find5-1)<<endl;
+            }
+            else cout<<g.substr(0,find5-1)<<endl;
+        }
+        else{
+            ++g[find5-1];
+            cout<<g.substr(0,find5)<<endl;
         }
     }
 }
