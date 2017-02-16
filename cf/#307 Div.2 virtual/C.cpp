@@ -122,34 +122,21 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+PQ<pii,vector<pii>,greater<pii>> pq;
+int ps[100005];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
-        }
-        cout<<"Case "<<(++ks)<<": ";
+    int n,m;cin>>n>>m;
+    for(int i=0;i<m;++i)pq.push({0,0});
+    for(int i=1;i<=n;++i)cin>>ps[i];
+    int mxTime=0,pos=0;
+    while(pos<=n){
+        if(pq.top().Y==pos){
 
+        }
     }
 }

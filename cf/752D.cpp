@@ -122,34 +122,35 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
+const ll p=47903;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
+ll getHash(string &s){
+    ll base=1,hsh=0;
+    for(char c:s){
+        hsh=(hsh+base*c)%mod;
+        base=base*p%mod;
     }
+    return hsh%mod;
 }
-ll getPath()
+
+struct str{ll hash;int i;};
+str ht[100005],iht[100005];
+bool cmphsh(const str &a,const str &b){return a.hash<b.hash;}
+ll bt[100005];
+map<ll,vector<int,ll>> mp;
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
-        }
-        cout<<"Case "<<(++ks)<<": ";
-
+    int n,k;cin>>n>>k;
+    for(int i=0;i<n;++i){
+        string s;int beau;cin>>s>>beau;
+        bt[i]=beau;
+        ht[i]=getHash(s); reverse(s.begin(),s.end());
+        iht[i]=getHash(s);
+        mp[ht[i]].push_back({i,beau});
+        mp[iht[i]].push_back({i,beau});
     }
+
 }

@@ -122,34 +122,40 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
-
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+const ll mod=1e9+7;
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    string s;while(getline(cin,s)){cout<<s<<endl;
+        SS ss(s);
+        int a[33]={0},b[33]={0},n=0;
+        for(;ss>>a[n];++n)b[n]=a[n];
+        sort(b,b+n);
+        for(int i=0;i<n;++i){
+            for(int j=0;j<n;++j){
+                if(b[j]==a[i]){
+                    a[i]=j+1;
+                    break;
+                }
+            }
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        for(int i=n-1;i>=0;--i){
+            if(a[i]==i+1)continue;
+            for(int j=0;j<i;++j){
+                if(a[j]==i+1){
+                    if(j==0){
+                        cout<<n-i<<" ";
+                        reverse(a,a+i+1);
+                    }
+                    else{
+                        cout<<n-j<<" "<<n-i<<" ";
+                        reverse(a,a+j+1);
+                        reverse(a,a+i+1);
+                    }
+                }
+            }
+        }
+        cout<<0<<endl;
     }
 }

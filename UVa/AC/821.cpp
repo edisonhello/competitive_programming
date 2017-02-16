@@ -122,34 +122,41 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+int G[111][111];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    int ks=0;
+    string s;while(getline(cin,s)){
+        if(s[0]=='0')break;
+        SS ss(s);
+        memset(G,0x3f,sizeof(G));
+        int a,b;while(ss>>a>>b,a){
+            G[a][b]=1;
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        for(int k=1;k<=100;++k){
+            for(int i=1;i<=100;++i){
+                for(int j=1;j<=100;++j){
+                    G[i][j]=min(G[i][j],G[i][k]+G[k][j]);
+                }
+            }
+        }
+        int cnt=0,cntl=0;
+        for(int i=1;i<=100;++i){
+            for(int j=1;j<=100;++j){
+                // cout<<G[i][j]<<" ";
+                if(i==j)continue;
+                if(G[i][j]<111){
+                    ++cnt;
+                    cntl+=G[i][j];
+                    LOG("from %d to %d, %d\n",i,j,G[i][j]);
+                }
+            }
+            // cout<<endl;
+        }
+        printf("Case %d: average length between pages = %.3lf clicks\n",++ks,(double)cntl/(double)cnt);
     }
 }

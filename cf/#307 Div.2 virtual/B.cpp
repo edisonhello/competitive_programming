@@ -122,34 +122,52 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+string sa,sb,sc;
+int a[55],b[55],c[55],ta[55];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
-        }
-        cout<<"Case "<<(++ks)<<": ";
-
+    cin>>sa>>sb>>sc;
+    for(char c:sa)a[c-'a']++;
+    for(char c:sb)b[c-'a']++;
+    for(char _:sc)c[_-'a']++;
+    int aCanMaxAfrB=999999,aCanMaxAfrC=999999;
+    for(int i=0;i<26;++i){
+        if(b[i])aCanMaxAfrB=min(aCanMaxAfrB,a[i]/b[i]);
+        if(c[i])aCanMaxAfrC=min(aCanMaxAfrC,a[i]/c[i]);
     }
+    PDE2(aCanMaxAfrB,aCanMaxAfrC);
+    if(aCanMaxAfrB>0){
+        int ans=0,cB=0,cC=0;
+        for(int Bs=0;Bs<=aCanMaxAfrB;++Bs){
+            int mxLeftC=999999;
+            for(int i=0;i<26;++i){
+                ta[i]=a[i]-Bs*b[i];
+                if(c[i])mxLeftC=min(mxLeftC,ta[i]/c[i]);
+            }
+            if(Bs+mxLeftC > ans){
+                ans=Bs+mxLeftC;
+                cB=Bs,cC=mxLeftC;
+            }
+        }
+        for(int i=0;i<cB;++i)cout<<sb;
+        for(int i=0;i<cC;++i)cout<<sc;
+        for(int i=0;i<26;++i){
+            ta[i]=a[i]-cB*b[i]-cC*c[i];
+            for(int j=0;j<ta[i];++j)cout<<(char)(i+'a');
+        }
+    }
+    else{
+        int cC=aCanMaxAfrC,cB=0;
+        for(int i=0;i<cC;++i)cout<<sc;
+        for(int i=0;i<26;++i){
+            ta[i]=a[i]-cB*b[i]-cC*c[i];
+            for(int j=0;j<ta[i];++j)cout<<(char)(i+'a');
+        }
+    }
+    cout<<endl;
 }
+// 24710758 00:24:33 AC

@@ -122,34 +122,67 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
+ld G[33][33];
+int tb[33][33];
 
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
+int getL(int st,int ed){
+    PDE3(st,ed,tb[st][ed]);
+    if(tb[st][ed]==-99)return 1;
+    return getL(st,tb[st][ed])+getL(tb[st][ed],ed);
 }
-ll getPath()
-
+void TB(int st,int ed){
+    if(tb[st][ed]==-99){cout<<st<<" ";return;}
+    TB(st,tb[st][ed]); TB(tb[st][ed],ed);
+}
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    int n;while(cin>>n){
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=n;++j){
+                if(i==j){
+                    G[i][j]=1.0;
+                    continue;
+                }
+                cin>>G[i][j]; G[i][j]=log10(G[i][j]);
+                PDE3(i,j,G[i][j]);
+                tb[i][j]=-99;
+            }
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        for(int k=1;k<=n;++k){
+            for(int i=1;i<=n;++i){
+                for(int j=1;j<=n;++j){
+                    if(i==j)continue;
+                    if(G[i][j]<G[i][k]*G[k][j]){
+                        G[i][j]=G[i][k]*G[k][j];
+                        tb[i][j]=k;
+                    }
+                }
+            }
+        }
+        // for(int i=1;i<=n;++i){
+        //     for(int j=1;j<=n;++j){
+        //         cout<<G[i][j]<<" ";
+        //     }
+        //     cout<<endl;
+        // }
+        int minLen=9999,sti=-1,edi=-1;
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=n;++j){
+                if(i==j)continue;
+                if(G[i][j]+G[j][i]<0)continue;
+                int le=getL(i,j)+getL(j,i);
+                PDE3(i,j,le);
+                if(le<minLen){
+                    minLen=le;
+                    sti=i,edi=j;
+                }
+            }
+        }
+        PDE2(sti,edi);
+        if(~sti && ~edi){TB(sti,edi);TB(edi,sti); cout<<sti<<endl;}
+        else cout<<"no arbitrage sequence exists"<<endl;
     }
 }

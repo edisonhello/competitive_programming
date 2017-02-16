@@ -122,34 +122,29 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+vector<pii> mat[10005];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    int n,m;while(cin>>n>>m){
+        for(int i=0;i<=m;++i)mat[i].clear();
+        for(int i=1;i<=n;++i){
+            int ce;cin>>ce;// mat[i].resize(ce);
+            vector<pii> tmp; tmp.resize(ce);
+            for(int j=0;j<ce;++j)cin>>tmp[j].X;
+            for(int j=0;j<ce;++j)cin>>tmp[j].Y;
+            for(int j=0;j<ce;++j)mat[tmp[j].X].push_back({i,tmp[j].Y});
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        pit(m,n),el;
+        for(int i=1;i<=m;++i){
+            pit((int)mat[i].size());
+            for(pii pi:mat[i])spc,pit(pi.X);el;
+            bool fso=1;for(pii pi:mat[i]){
+                if(!fso)spc;pit(pi.Y);fso=0;
+            }el;
+        }
     }
 }

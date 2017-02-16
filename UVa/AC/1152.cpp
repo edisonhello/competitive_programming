@@ -122,34 +122,32 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+int a[4004],b[4004],c[4004],d[4004],n,t[16000008];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    int ts;rit(ts);while(ts--){
+        rit(n);
+        for(int i=0;i<n;++i)rit(a[i],b[i],c[i],d[i]);
+        int pos=0;
+        for(int i=0;i<n;++i){
+            for(int j=0;j<n;++j){
+                t[pos++]=-a[i]-b[j];
+            }
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        sort(t,t+n*n);
+        int ans=0;
+        for(int i=0;i<n;++i){
+            for(int j=0;j<n;++j){
+                int di=lower_bound(t,t+n*n,c[i]+d[j])-lower_bound(t,t+n*n,c[i]+d[j]+1);
+                // PDE1(di);
+                ans+=di;
+            }
+        }
+        pit(-ans);el;
+        if(ts)el;
     }
 }

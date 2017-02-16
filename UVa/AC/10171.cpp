@@ -122,34 +122,62 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=20437;
+const ll mod=1e9+7;
 
-string mp[11];
-int totLen,n;
-
-pii findPos(char c){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            if(mp[i][j]==c)return {i,j};
-        }
-    }
-}
-ll getPath()
+int Y[33][33],M[33][33];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0;while(rit(n),n){
-        for(int i=0;i<n;++i)cin>>mp[i];
-        ll totWaz=1; bool imp=0; totLen=0;
-        for(int i=0;i<n-1;++i){
-            pii ipos=findPos(i+'A'),
-                jpos=findPos(i+'B');
-            ll itoj=getPath(ipos,jpos);
-            if(itoj==?){imp=1;break;}
-            totWaz=totWaz*itoj%mod;
+    int n;while(cin>>n,n){
+        {
+            for(int i=0;i<26;++i){
+                for(int j=0;j<26;++j){
+                    Y[i][j]=M[i][j]=1e8;
+                }
+                Y[i][i]=M[i][i]=0;
+            }
         }
-        cout<<"Case "<<(++ks)<<": ";
-
+        while(n--){
+            char ag,tp,st,ed;int eg;
+            cin>>ag>>tp>>st>>ed>>eg; st-='A',ed-='A';
+            if(ag=='Y'){
+                Y[st][ed]=min(Y[st][ed],eg);
+                if(tp=='B')Y[ed][st]=min(Y[ed][st],eg);
+            }
+            else{
+                M[st][ed]=min(M[st][ed],eg);
+                if(tp=='B')M[ed][st]=min(M[ed][st],eg);
+            }
+        }
+        for(int i=0;i<26;++i)Y[i][i]=M[i][i]=0;
+        for(int k=0;k<26;++k){
+            for(int i=0;i<26;++i){
+                for(int j=0;j<26;++j){
+                    Y[i][j]=min(Y[i][j],Y[i][k]+Y[k][j]);
+                    M[i][j]=min(M[i][j],M[i][k]+M[k][j]);
+                }
+            }
+        }
+        char st,ed;cin>>st>>ed; st-='A',ed-='A';
+        int mineg=1e8-1;
+        set<char> ans;
+        for(int i=0;i<26;++i){
+            if(mineg>Y[st][i]+M[ed][i]){
+                mineg=Y[st][i]+M[ed][i];
+            }
+        }
+        for(int i=0;i<26;++i){
+            if(mineg==Y[st][i]+M[ed][i]){
+                ans.insert(i+'A');
+            }
+        }
+        if(ans.size()){
+            cout<<mineg;
+            for(char c:ans){
+            cout<<" "<<c;
+        }}
+        else cout<<"You will never meet.";
+        cout<<endl;
     }
 }
