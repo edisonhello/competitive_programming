@@ -123,23 +123,71 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+int startB(int n,int b,int r,string &s){
+    int ans=0;
+    int cb=0,cr=0;
+    for(int i=0;i<n;++i){
+        if(i%2==0 && s[i]!='b'){
+            ++ans;
+            ++cb;
+        }
+        if(i%2 && s[i]!='r'){
+            ++ans;
+            ++cr;
+        }
+    }
+    return ans-min(cb,cr);
+}
+int startR(int n,int b,int r,string &s){
+    int ans=0;
+    int cb=0,cr=0;
+    for(int i=0;i<n;++i){
+        if(i%2==0 && s[i]!='r'){
+            ++ans;
+            ++cb;
+        }
+        if(i%2 && s[i]!='b'){
+            ++ans;
+            ++cr;
+        }
+    }
+    return ans-min(cb,cr);
+}
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
-        }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
-        }
+    int n;string s;
+    cin>>n>>s;
+    int b=0,r=0;
+    for(char c:s){
+        if(c=='b')++b;
+        else ++r;
     }
+    int ans=min({startB(n,b,r,s),startR(n,b,r,s)});
+    // if(abs(r-b)>1){
+    //
+    // }
+    // else{
+    //     if(r==b){
+    //         for(int i=0;i<n;++i){
+    //             if(!(i&1)){
+    //                 if(s[i]!='r')++ans;
+    //             }
+    //         }
+    //         ans=min(ans,n/2-ans);
+    //     }
+    //     else if(r>b){
+    //         for(int i=0;i<n;++i){
+    //             if(!(i&1)){
+    //                 if(s[i]!='r')++ans;
+    //             }
+    //         }
+    //     }
+    //     else{
+    //
+    //     }
+    // }
+    printAns:;
+    cout<<ans<<endl;
 }

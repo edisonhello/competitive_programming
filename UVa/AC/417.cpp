@@ -40,14 +40,13 @@ using namespace std;
 #define ym ((y1+y2)/2)
 #define SS stringstream
 #define PQ priority_queue
-#define PRF(...) printf(__VA_ARGS__)
 #define MS0(x) memset((x),0,sizeof(x))
 #define MSB(x) memset((x),0x7f,sizeof(x))
 #define MSM(x) memset((x),0xff,sizeof(x))
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
-#define CIO ios_base::sync_with_stdio(0);
+#define FASTCPP ios_base::sync_with_stdio(0); cin.tie(0)
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -124,7 +123,50 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+map<string,int> mp;
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
+	int cnt=1;
+	for(char a='a';a<='z';++a){
+		mp[string(1,a)]=cnt; ++cnt;
+	}
+	{string tmp(2,0);for(char a='a';a<='z';++a){ tmp[0]=a;
+		for(char b=a+1;b<='z';++b){ tmp[1]=b;
+			mp[tmp]=cnt; ++cnt;
+		}
+	}}
+	{string tmp(3,0);for(char a='a';a<='z';++a){ tmp[0]=a;
+		for(char b=a+1;b<='z';++b){ tmp[1]=b;
+			for(char c=b+1;c<='z';++c){ tmp[2]=c;
+				mp[tmp]=cnt; ++cnt;
+			}
+		}
+	}}
+	{string tmp(4,0);for(char a='a';a<='z';++a){ tmp[0]=a;
+		for(char b=a+1;b<='z';++b){ tmp[1]=b;
+			for(char c=b+1;c<='z';++c){ tmp[2]=c;
+				for(char d=c+1;d<='z';++d){ tmp[3]=d;
+					mp[tmp]=cnt; ++cnt;
+				}
+			}
+		}
+	}}
+	{string tmp(5,0);for(char a='a';a<='z';++a){ tmp[0]=a;
+		for(char b=a+1;b<='z';++b){ tmp[1]=b;
+			for(char c=b+1;c<='z';++c){ tmp[2]=c;
+				for(char d=c+1;d<='z';++d){ tmp[3]=d;
+					for(char e=d+1;e<='z';++e){ tmp[4]=e;
+						mp[tmp]=cnt; ++cnt;
+					}
+				}
+			}
+		}
+	}}
+	// FASTCPP;
+	string inp;while(cin>>inp){
+        auto it=mp.find(inp);
+        if(it==mp.end())cout<<0<<endl;
+        else cout<<it->Y<<endl;
+	}
 }

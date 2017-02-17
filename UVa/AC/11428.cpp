@@ -123,23 +123,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
-
+map<ll,pii> mp;
+ll p3(ll x){return x*x*x;}
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+    for(ll i=1;p3(i+1)-p3(i)<=10000;++i){
+        for(ll j=i+1;p3(j)-p3(i)<=10000;++j){
+            auto it=mp.find(p3(j)-p3(i));
+            if(it==mp.end())mp[p3(j)-p3(i)]={j,i};
+            else{
+                if(it->Y.X>j){
+                    it->Y={j,i};
+                }
+            }
         }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
-        }
+    }
+    int n;while(rit(n),n){
+        auto it=mp.find(n);
+        if(it!=mp.end())pit(it->Y.X,it->Y.Y),el;
+        else printf("No solution\n");
     }
 }

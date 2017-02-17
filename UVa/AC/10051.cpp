@@ -40,13 +40,14 @@ using namespace std;
 #define ym ((y1+y2)/2)
 #define SS stringstream
 #define PQ priority_queue
+#define PRF(...) printf(__VA_ARGS__)
 #define MS0(x) memset((x),0,sizeof(x))
 #define MSB(x) memset((x),0x7f,sizeof(x))
 #define MSM(x) memset((x),0xff,sizeof(x))
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
-#define FASTCPP ios_base::sync_with_stdio(0); cin.tie(0)
+#define CIO ios_base::sync_with_stdio(0);
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -123,23 +124,56 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vint G[505];
-bitset<505> v;
-PQ<pii,vector<pii>,greater<pii>> pq;
+int clr[505][10],dp[505][10];
+pii cfr[505][10];
 
 int main(){
     // freopen("in","r",stdin);
     // freopen("out","w",stdout);
-    int ks=0,n,m;while(rit(n,m),n){
-        while(m--){
-            int a,b,l;rit(a,b,l);
-            G[a].pb({b,l}); G[b].pb({a,l});
+    int ks=0;
+    int n;rit(n);do{
+        for(int i=1;i<=n;++i){
+            for(int j=0;j<6;++j){
+                rit(clr[i][j]);
+                dp[i][j]=0;
+                cfr[i][j]={0,0};
+            }
         }
-        pq.push({1,0});
-        while(pq.size()){
-            while(v[pq.top().X])pq.pop();
-            v[pq.top().X]=1;
-            
+        int mx=0; pii mxat={0,0};
+        for(int i=n-1;i>0;--i){
+            for(int j=0;j<6;++j){
+                for(int k=i+1;k<=n;++k){
+                    for(int l=0;l<6;++l){
+                        if(clr[i][j^1]==clr[k][l] && dp[i][j]<dp[k][l]+1){
+                            dp[i][j]=dp[k][l]+1;
+                            cfr[i][j]={k,l};
+                        }
+                    }
+                }
+                if(dp[i][j]>mx){
+                    mx=dp[i][j];
+                    mxat={i,j};
+                }
+            }
         }
-    }
+        // for(int i=1;i<=n;++i){
+        //     for(int j=0;j<6;++j){
+        //         pit(dp[i][j]),spc;
+        //     }el;
+        // }
+        PRF("Case #%d\n",++ks);
+        pit(mx+1);el;
+        // PDE1(mxat);
+        do{
+            pit(mxat.X),spc;
+            if(mxat.Y==0)PRF("front");
+            if(mxat.Y==1)PRF("back");
+            if(mxat.Y==2)PRF("left");
+            if(mxat.Y==3)PRF("right");
+            if(mxat.Y==4)PRF("top");
+            if(mxat.Y==5)PRF("bottom");el;
+            mxat=cfr[mxat.X][mxat.Y];
+        }while(mxat.X);
+        rit(n);if(n)el;else break;
+    }while(1);
 }
