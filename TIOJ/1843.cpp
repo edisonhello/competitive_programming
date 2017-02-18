@@ -6,7 +6,7 @@
 using namespace std;
 
 int n,m,vi[20005],q,d[20005],peop,qs,Sekai;
-struct {char t;int a,b;} hist[250005];
+struct {char t;int a,b;} hist[310005];
 struct {bool c;int u,v;} edge[60006];
 
 int F(int x){if(d[x]==x)return x;return d[x]=F(d[x]);}
@@ -39,6 +39,8 @@ inline void rot(node *&now){
     }
 }
 inline void pull(node *now){
+    if(now->l)psz(now->l);
+    if(now->r)psz(now->r);
     if(now->l && now->r)rot(now);
     if(now->l)psz(now->l);
     if(now->r)psz(now->r);
@@ -46,7 +48,6 @@ inline void pull(node *now){
 }
 
 void insert(node *&now,int v){
-    // cout<<"inserting "<<now<<" "<<(now?now->val:-1)<<" "<<v<<endl;
     if(!now)now=new node(v);
     else if(now->val>v)insert(now->l,v);
     else insert(now->r,v);
@@ -196,7 +197,7 @@ void clearTreap(node *now){
     delete now;
 }
 void clear(){
-    for(int i=0;i<n;++i)clearTreap(root[i]);
+    for(int i=0;i<n;++i)clearTreap(root[i]),root[i]=NULL;
     memset(hist,0,sizeof(hist));
     memset(edge,0,sizeof(edge));
     memset(vi,0,sizeof(vi));
