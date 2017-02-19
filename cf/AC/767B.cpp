@@ -48,15 +48,17 @@ using namespace std;
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define CIO ios_base::sync_with_stdio(0);
+#define FIN freopen("in","r",stdin)
+#define FOUT freopen("out","w",stdout)
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
-#define DEB(...) printf(__VA_ARGS__)
-#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__)
-#define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__)
+#define DEB(...) printf(__VA_ARGS__),fflush(stdout)
+#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
+#define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -124,14 +126,27 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int dp[555][555];
-
+ll a[1000006];
 int main(){
-    // freopen("in","r",stdin);
-    // freopen("out","w",stdout);
-    int ts;cin>>ts;for(int ks=1;ks<=ts;++ks){
-        int n,r;cin>>n>>r;
-        for(int i=0;i<n;++i){for(int j=0;j<n;++j)dp[i][j]=1e7;dp[i][i]=0;}
-        while(r--){int u,v;cin>>u>>v;if(u!=v)dp[u][v]=dp[v][u]=1;}
+    // FIN, FOUT;
+    ll ts,tf,t;int n;cin>>ts>>tf>>t;cin>>n;
+    for(int i=0;i<n;++i){
+        cin>>a[i];
+    } a[n]=tf-t+1;
+    sort(a,a+n+1);
+    ll wtm=ts-(a[0]-1),ctm=a[0]-1,epttm=ts+t;
+    PDE4(0,wtm,ctm,epttm);
+    int i=1;
+    for(;i<=n;++i){
+        if(epttm+t>tf)break;
+        if(a[i]>=tf)break;
+        if(wtm > epttm-(a[i]-1)){
+            wtm = epttm-(a[i]-1);
+            ctm = a[i]-1;
+            if(ctm<=0)break;
+        }
+        PDE4(i,wtm,ctm,epttm);
+        epttm+=t;
     }
+    cout<<ctm<<endl;
 }

@@ -35,9 +35,6 @@ using namespace std;
 #define endl '\n'
 #define el putchar('\n')
 #define spc putchar(' ')
-#define mid ((l+r)>>1)
-#define xm ((x1+x2)/2)
-#define ym ((y1+y2)/2)
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
