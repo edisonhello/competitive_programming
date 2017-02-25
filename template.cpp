@@ -47,6 +47,7 @@ using namespace std;
 #define CIO ios_base::sync_with_stdio(0);
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define FLH fflush(stdout)
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -56,6 +57,9 @@ using namespace std;
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
+#define FIN freopen("in","r",stdin)
+#define FOUT freopen("out","w",stdout)
+#define FLH fflush(stdout)
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -65,6 +69,15 @@ using namespace std;
 #define WHR() ;
 #define LOG(...) ;
 #define getchar gtx
+#ifdef WEA
+#define FIN freopen("in","r",stdin)
+#define FOUT freopen("out","w",stdout)
+#define FLH fflush(stdout)
+#else
+#define FIN ;
+#define FOUT ;
+#define FLH ;
+#endif
 #endif
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
@@ -124,5 +137,5 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    // FIN, FOUT;
+    //
 }

@@ -47,6 +47,7 @@ using namespace std;
 #define CIO ios_base::sync_with_stdio(0);
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define FLH fflush(stdout)
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -64,7 +65,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
-#define getchar gtx
+// #define getchar gtx
 #endif
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
@@ -91,42 +92,23 @@ inline T _pow(T b,int n,T mod){
     } return a;
 }
 
-inline int gtx(){
-    const int N=1048576;
-    static char __buffer[N];
-    static char *__p=__buffer,*__end=__buffer;
-    if(__p==__end){
-        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-        __p=__buffer;
-    } return *__p++;
-}
 
-template<typename T>
-inline bool rit(T& x){
-    char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c-'0');
-    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
-    if(fg)x=-x; return true;
-}
-template<typename T,typename ...Args>
-inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
-
-inline void pit(int x){printf("%d",x);}
-inline void pln(ll x){printf("%I64d",x);}
-template<typename ...Args>
-inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
-template<typename ...Args>
-inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int cst[100005];
-
 int main(){
-    FIN;
-    int n; rit(n);
-    for(int i=0;i<n;++i)rit(cst[i]),cst[i]%=100;
+    // FIN;
+    bool fg=0;
+    char c;
+    while(c=getchar()){
+        if(!~c)break;
+        if(c=='\"'){
+            if(fg)printf("\'\'");
+            else printf("``");
+            fg^=1;
+        }
+        else putchar(c);
+    }
 }
