@@ -91,18 +91,6 @@ template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){dequ
 
 inline int lowbit(int &x){return x&-x;}
 inline ll lowbit(ll &x){return x&-x;}
-template<typename T>
-inline T _pow(T b,int n){
-    T a=1; while(n){
-        if(n&1)a*=b; b*=b,n>>=1;
-    } return a;
-}
-template<typename T>
-inline T _pow(T b,int n,T mod){
-    T a=1%mod; while(n){
-        if(n&1)a=a*b%mod; b=b*b%mod,n>>=1;
-    } return a;
-}
 
 inline int gtx(){
     const int N=1048576;
