@@ -45,8 +45,6 @@ using namespace std;
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define CIO ios_base::sync_with_stdio(0);
-#define FIN freopen("in","r",stdin)
-#define FOUT freopen("out","w",stdout)
 #define FLH fflush(stdout)
 
 #ifdef WEAK
@@ -59,7 +57,6 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define FLH fflush(stdout)
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -72,11 +69,9 @@ using namespace std;
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define FLH fflush(stdout)
 #else
 #define FIN ;
 #define FOUT ;
-#define FLH ;
 #endif
 #endif
 
@@ -125,5 +120,5 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    // 
+    //
 }
