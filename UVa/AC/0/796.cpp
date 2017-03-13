@@ -28,7 +28,6 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -54,10 +53,9 @@ using namespace std;
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
-#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
-#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
-#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
-#define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
+#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
+#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
+#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -68,7 +66,6 @@ using namespace std;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
-#define PDE5(a,b,c,d,e) ;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
@@ -127,76 +124,48 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
+inline int meow(){
+    string s;cin>>s;
+    s=s.substr(1,s.length()-2);
+    SS ss(s); int rt; ss>>rt; return rt;
+}
+vector<vint> G;
+vector<pii> ans;
 
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
+
+int timer;
+vint low,num;
+
+void dfs(int now,int pa){
+    low[now]=num[now]=++timer;
+    // PDE3(now,low[now],num[now]);
+    for(auto i:G[now]){
+        if(i==pa)continue;
+        if(!num[i])dfs(i,now);
+        low[now]=min(low[now],low[i]);
+        if(low[i]>num[now])ans.push_back({now,i});
     }
+    // PDE3(now,low[now],num[now]);
 }
+
 int main(){
     int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
+        G.clear(); ans.clear();
+        low.clear(), num.clear(); timer=0;
+
+        G.resize(n); low.resize(n), num.resize(n);
+        for(int i=0;i<n;++i){
+            int stp;cin>>stp;
+            int conCnt=meow();
+            while(conCnt--){
+                int ed;cin>>ed;
+                G[stp].pb(ed);
             }
         }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
-                }
-            }
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
-            }
-        }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
-        }
+        for(int i=0;i<n;++i)if(!num[i])dfs(i,i);
+        for(auto &i:ans)if(i.X>i.Y)swap(i.X,i.Y);
+        sort(ans.begin(),ans.end());
+        printf("%d critical links\n",ans.size());
+        for(auto i:ans)printf("%d - %d\n",i.X,i.Y);el;
     }
 }

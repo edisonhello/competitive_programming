@@ -28,7 +28,6 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -48,16 +47,11 @@ using namespace std;
 #define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
-#define tm Ovuvuevuevue
-#define y2 Enyetuenwuevue
-#define Ugbemugbem Osas
-
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
-#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
-#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
-#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
-#define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
+#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
+#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
+#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -68,7 +62,6 @@ using namespace std;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
-#define PDE5(a,b,c,d,e) ;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
@@ -121,82 +114,56 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
+void JIZZ(){cout<<"NO\n";exit(0);}
+string nm[3333];
+map<string,vint> mp;
+bool u2[1234];
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
-
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
-    }
-}
 int main(){
-    int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
+    int n;cin>>n;
+    for(int i=0;i<n;++i){
+        string s,t; cin>>s>>t;
+        nm[i]=s.substr(0,3);
+        nm[i+n]=s.substr(0,2)+t[0];
+        mp[nm[i]].pb(i);
+    }
+    for(auto it:mp){
+        if(it.Y.size()>1u){
+            for(auto i:it.Y){
+                u2[i]=1;
             }
         }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
-                }
+    }
+    mp.clear();
+    for(int i=0;i<n;++i){
+        if(u2[i]){
+            auto it=mp.find(nm[i+n]);
+            if(it==mp.end()){
+                mp[nm[i+n]].pb(i);
+            }
+            else JIZZ();
+        }
+    }
+    bool upd=1;
+    while(upd){
+        upd=0;
+        for(int i=0;i<n;++i){
+            if(u2[i])continue;
+            auto it=mp.find(nm[i]);
+            if(it!=mp.end()){
+                it=mp.find(nm[i+n]);
+                if(it!=mp.end())JIZZ();
+                mp[nm[i+n]].pb(i); u2[i]=1; upd=1;
             }
         }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
-            }
-        }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
-        }
+    }
+    cout<<"YES\n";
+    for(int i=0;i<n;++i){
+        if(u2[i])cout<<nm[i+n]<<endl;
+        else cout<<nm[i]<<endl;
     }
 }

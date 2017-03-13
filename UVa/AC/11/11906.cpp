@@ -57,7 +57,6 @@ using namespace std;
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
-#define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -68,7 +67,6 @@ using namespace std;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
-#define PDE5(a,b,c,d,e) ;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
@@ -127,76 +125,49 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
+int mp[123][123];
+bool v[123][123];
+struct jizz{int x,y;};
+int dx[8],dy[8];
 
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
-    }
-}
 int main(){
-    int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
+    int ts,ks=0;cin>>ts;while(ts--){
+        MS0(mp), MS0(v); MS0(dx); MS0(dy);
+        int r,c,m,n;cin>>r>>c>>m>>n;bool spec;if(n<m)swap(n,m);
+        queue<jizz> jz; jz.push({0,0}); v[0][0]=1; mp[0][0]=2;
+        if(m==n)
+        dx[0]=dx[1]=m, dx[2]=dx[3]=-m,
+        dy[0]=dy[2]=m, dy[1]=dy[3]=-m, spec=1;
+        else if(m==0)
+        dx[0]=n, dx[2]=-n, dy[1]=n, dy[3]=-n, spec=1;
+        else if(m!=n)
+        dx[0]=dx[1]=m, dx[4]=dx[5]=-m,
+        dx[2]=dx[3]=n, dx[6]=dx[7]=-n,
+        dy[0]=dy[4]=n, dy[1]=dy[5]=-n,
+        dy[2]=dy[6]=m, dy[3]=dy[7]=-m, spec=0;
+        int wts;cin>>wts;while(wts--){
+            int x,y;cin>>x>>y;mp[x][y]=-1;
+        }
+        while(jz.size()){
+            jizz t=jz.front(); jz.pop();
+            for(int i=0;i<(spec?4:8);++i){
+                int tx=t.x+dx[i], ty=t.y+dy[i];
+                if(tx>=r || tx<0 || ty>=c || ty<0)continue;
+                if(mp[tx][ty]==-1)continue;
+                ++mp[t.x][t.y];
+                if(v[tx][ty])continue;
+                jz.push({tx,ty}); v[tx][ty]=1;
             }
         }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
-                }
+        int ev=0,od=0;
+        for(int i=0;i<r;++i){
+            for(int j=0;j<c;++j){
+                if(mp[i][j]==-1)continue;
+                if(mp[i][j]==0)continue;
+                if(mp[i][j]&1)++od;
+                else ++ev;
             }
         }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
-            }
-        }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
-        }
+        printf("Case %d: %d %d\n",++ks,ev,od);
     }
 }

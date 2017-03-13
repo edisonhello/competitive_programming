@@ -57,7 +57,6 @@ using namespace std;
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
-#define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -68,7 +67,6 @@ using namespace std;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
-#define PDE5(a,b,c,d,e) ;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
@@ -127,76 +125,18 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
-
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
-    }
-}
+int dp[111][111];
 int main(){
-    int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
+    string s,t;int ks=0;while(getline(cin,s) && s!="#"){
+        getline(cin,t); MS0(dp);
+        for(int i=0;i<LN(s);++i){
+            for(int j=0;j<LN(t);++j){
+                if(s[i]==t[j])dp[i+1][j+1]=dp[i][j]+1;
+                else dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j]);
             }
         }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
-                }
-            }
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
-            }
-        }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
-        }
+        int ans=dp[LN(s)][LN(t)];
+        if(!LN(s)||!LN(t))ans=0;
+        printf("Case #%d: you can visit at most %d cities.\n",++ks,ans);
     }
 }

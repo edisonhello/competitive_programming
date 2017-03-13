@@ -127,76 +127,17 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
-
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
-    }
-}
-int main(){
-    int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
-            }
+int main(){ CIO;
+    int ts;cin>>ts;while(ts--){
+        int pay[322]={0},cnt[322]={0};
+        int n,p,my=0; char c; cin>>n;
+        while(n--)cin>>c>>p, pay[c]+=p;
+        cin>>n; cin.ignore();
+        while(n--){
+            string s; getline(cin,s);
+            for(char &c:s)++cnt[c];
         }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
-                }
-            }
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
-        }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
-            }
-        }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
-        }
+        for(int i=0;i<322;++i)my+=pay[i]*cnt[i];
+        cout<<my/100<<'.'<<(my%100<10?"0":"")<<my%100<<"$"<<endl;
     }
 }

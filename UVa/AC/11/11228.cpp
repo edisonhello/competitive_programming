@@ -57,7 +57,6 @@ using namespace std;
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
-#define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -68,7 +67,6 @@ using namespace std;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
 #define PDE4(a,b,c,d) ;
-#define PDE5(a,b,c,d,e) ;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
@@ -127,76 +125,54 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ld ex[22][22];
-int md[22][22];
-vint ans;
-
-int getL(int i,int j){
-    // PDE2(i,j);FLH;
-    if(md[i][j]==-1)return 0;
-    return getL(i,md[i][j])+1+getL(md[i][j],j);
-}
-void trace(int i,int j){
-    if(md[i][j]==-1)ans.pb(i);
-    else{
-        trace(i,md[i][j]);
-        ans.pb(i);
-        trace(md[i][j],j);
+ld x[1111],y[1111];
+struct edge{int u,v;ld w;};
+vector<edge> eg;
+struct disjointSet{
+    std::vector<int> djs;
+    void init(int size){
+        djs.resize(size);
+        for(int i=0;i<size;++i)djs[i]=i;
     }
-}
-int main(){
-    int n;while(cin>>n){
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)ex[i][j]=1.0;
-                else cin>>ex[i][j];
-                md[i][j]=-1;
-            }
-        }
-        LOG("\n");FLH;
-        for(int k=1;k<=n;++k){
-            for(int i=1;i<=n;++i){
-                for(int j=1;j<=n;++j){
-                    if(i==j || j==k || i==k)continue;
-                    if(ex[i][j]<ex[i][k]*ex[k][j]){
-                        ex[i][j]=ex[i][k]*ex[k][j];
-                        md[i][j]=k;
-                    }
+    int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
+    void U(int x,int y){djs[F(x)]=F(y);}
+    bool C(int x,int y){return F(x)==F(y);}
+} djs;
+
+int main(){ CIO;
+    auto cmp=[](const edge &a,const edge &b)->bool{return a.w<b.w;};
+    int ts,ks=0;cin>>ts;while(ts--){
+        eg.clear();
+        int n,r;cin>>n>>r;
+        for(int i=0;i<n;++i)cin>>x[i]>>y[i];
+        for(int i=0;i<n;++i){
+            for(int j=i+1;j<n;++j){
+                ld d=sqrt((x[j]-x[i])*(x[j]-x[i])+(y[j]-y[i])*(y[j]-y[i]));
+                if(d<((ld)r)+eps){
+                    LOG("build edge %d %d\n",i,j);
+                    eg.push_back({i,j,d});
                 }
             }
         }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<ex[i][j]<<" ";
-            }cout<<endl;
+        sort(eg.begin(),eg.end(),cmp);
+        djs.init(n); int blocks=n; ld road=0.0,rail=0.0;
+        for(auto i:eg){
+            if(djs.C(i.u,i.v))continue;
+            djs.U(i.u,i.v); --blocks; road+=i.w;
         }
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                cout<<md[i][j]<<" ";
-            }cout<<endl;
-        }
-        LOG("\n");FLH;
-        int mnL=9999; pii rec={-1,-1};
-        for(int i=1;i<=n;++i){
-            for(int j=1;j<=n;++j){
-                if(i==j)continue;
-                if(ex[i][j]*ex[j][i]>1.01-eps){
-                    int L=getL(i,j);
-                    if(L>n)break;
-                    if(L<mnL){
-                        mnL=L;
-                        rec={i,j};
-                    }
-                }
+        eg.clear();
+        for(int i=0;i<n;++i){
+            for(int j=i+1;j<n;++j){
+                if(djs.C(i,j))continue;
+                ld d=sqrt((x[j]-x[i])*(x[j]-x[i])+(y[j]-y[i])*(y[j]-y[i]));
+                eg.push_back({i,j,d});
             }
         }
-        LOG("\n");FLH;
-        if(rec==(pii){-1,-1})puts("no arbitrage sequence exists");
-        else{
-            ans.clear();
-            trace(rec.X,rec.Y);
-            for(int i:ans)cout<<i<<" ";
-            cout<<rec.Y<<endl;
+        sort(eg.begin(),eg.end(),cmp);
+        for(auto i:eg){
+            if(djs.C(i.u,i.v))continue;
+            djs.U(i.u,i.v); rail+=i.w;
         }
+        cout<<"Case #"<<(++ks)<<": "<<blocks<<" "<<fixed<<setprecision(0)<<road<<" "<<rail<<endl;
     }
 }
