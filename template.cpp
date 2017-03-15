@@ -33,14 +33,15 @@ using namespace std;
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
-#define endl '\n'
 #define el putchar('\n')
 #define spc putchar(' ')
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
+#define MS(x,v) memset((x),(v),sizeof(x))
 #define MS0(x) memset((x),0,sizeof(x))
-#define MSB(x) memset((x),0x7f,sizeof(x))
+#define MSB(x) memset((x),0x3f,sizeof(x))
+#define MSBB(x) memset((x),0x7f,sizeof(x))
 #define MSM(x) memset((x),0xff,sizeof(x))
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
@@ -50,7 +51,8 @@ using namespace std;
 
 #define tm Ovuvuevuevue
 #define y2 Enyetuenwuevue
-#define Ugbemugbem Osas
+#define left Ugbemugbem
+#define Osas
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -72,6 +74,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define endl '\n'
 #define getchar gtx
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
@@ -91,8 +94,7 @@ template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queu
 template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
-inline int lowbit(int &x){return x&-x;}
-inline ll lowbit(ll &x){return x&-x;}
+#define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
     const int N=1048576;
