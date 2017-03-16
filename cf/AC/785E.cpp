@@ -39,11 +39,11 @@ using namespace std;
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
 #define MS(x,v) memset((x),(v),sizeof(x))
-// #define MS0(x) memset((x),0,sizeof(x))
-// #define MSB(x) memset((x),0x3f,sizeof(x))
-// #define MSBB(x) memset((x),0x7f,sizeof(x))
-// #define MSM(x) memset((x),0xff,sizeof(x))
-// #define MSMB(x) memset((x),0x80,sizeof(x))
+#define MS0(x) memset((x),0,sizeof(x))
+#define MSB(x) memset((x),0x3f,sizeof(x))
+#define MSBB(x) memset((x),0x7f,sizeof(x))
+#define MSM(x) memset((x),0xff,sizeof(x))
+#define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define CIO ios_base::sync_with_stdio(0);
@@ -51,7 +51,8 @@ using namespace std;
 
 #define tm Ovuvuevuevue
 #define y2 Enyetuenwuevue
-#define Ugbemugbem Osas
+#define left Ugbemugbem
+#define Osas
 
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
@@ -128,40 +129,153 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int ind[100009];
-vint G[100009],iG[100009],topu;
-int belong[100009];
-bool v[100009];
+struct node{
+    node *l,*r;
+    int v,sz;
+    node():l(NULL),r(NULL),v(0),sz(1){};
+    node(int val):l(NULL),r(NULL),v(val),sz(1){};
+    int lz(){return l?l->sz:0;}
+    int rz(){return r?r->sz:0;}
+};
+void printTree(node *now);
+void psz(node *now){
+    if(!now)return;
+    now->sz=now->lz()+now->rz()+1;
+}
+void rot(node *&now,int dir){
+    if(dir==1){
+        node *tmp=now->l;
+        now->l=tmp->r;
+        tmp->r=now;
+        now=tmp;
+    }
+    else{
+        node *tmp=now->r;
+        now->r=tmp->l;
+        tmp->l=now;
+        now=tmp;
+    }
+}
+void pull(node *&now){
+    if(!now)return;
+    if(now->lz()>now->rz()+1)rot(now,1);
+    else if(now->rz()>now->lz()+1)rot(now,2);
+    psz(now->l), psz(now->r), psz(now);
+}
+void insert(node *&now,int v){
+    if(!now)now=new node(v);
+    else{
+        if(now->v>v)insert(now->l,v);
+        else insert(now->r,v);
+        pull(now);
+    }
+}
+void remove(node *&now){
+    if(!now->l && !now->r){
+        delete now; now=0; return;
+    }
+    if(now->rz()>now->lz()){
+        rot(now,2);
+        remove(now->l);
+        pull(now);
+    }
+    else{
+        rot(now,1);
+        remove(now->r);
+        pull(now);
+    }
+}
+void remove(node *&now,int v){
+    if(now->v>v)remove(now->l,v);
+    else if(now->v<v)remove(now->r,v);
+    else remove(now);
+    pull(now);
+}
+int bigger(node *now,int v){
+    if(!now)return 0;
+    if(now->v==v)return now->rz();
+    if(now->v>v)return bigger(now->l,v)+1+now->rz();
+    return bigger(now->r,v);
+}
 
-void dfs1(int now){
-    v[now]=1;
-    for(int i:G[now])if(!v[i])dfs1(i);
-    topu.pb(now);
+void printTree(node *now){
+    if(!now)return;
+    if(now->l)cout<<"(",printTree(now->l),cout<<")";
+    cout<<now->v;
+    if(now->r)cout<<"(",printTree(now->r),cout<<")";
 }
-void dfs2(int now,int sccn){
-    v[now]=1; belong[now]=sccn;
-    for(int i:G[now])if(!v[i])dfs2(i,sccn);
+
+int n,a[200009];
+node *BIT[200009];
+ll ni;
+
+void add(int x,int v){
+    while(x<=n){
+        insert(BIT[x],v);
+        x+=lowbit(x);
+    }
 }
+void mns(int x,int v){
+    while(x<=n){
+        remove(BIT[x],v);
+        x+=lowbit(x);
+    }
+}
+int query(int x,int v){
+    int rt=0;
+    while(x>0){
+        rt+=bigger(BIT[x],v);
+        x-=lowbit(x);
+    } return rt;
+}
+// int meow(int x,int v){
+//     int leftBig=query(x,v);
+//     return leftBig+v-x+leftBig;
+// }
 
 int main(){
-    int ts;cin>>ts;while(ts--){
-        int n,m;cin>>n>>m;
-        for(int i=0;i<=n;++i)ind[i]=0,G[i].clear(),iG[i].clear();topu.clear();
-        while(m--){
-            int u,v;cin>>u>>v;
-            G[u].pb(v), G[v].pb(u);
-        }
-        MS(v,0); for(int i=1;i<=n;++i)if(!v[i])dfs1(i);
-        int sccs=0; MS(v,0); for(int i=n-1;i>=0;--i)if(!v[topu[i]])dfs2(topu[i],sccs++);
-        MS(v,0);
-        for(int i=1;i<=n;++i){
-            for(int ii:G[i]){
-                if(belong[i]==belong[ii])continue;
-                ind[belong[ii]]++;
+    int q;cin>>n>>q;
+    for(int i=1;i<=n;++i)add(i,i),a[i]=i;
+    while(q--){
+        int l,r; cin>>l>>r; if(l==r)goto jump; if(l>r)swap(l,r);
+        // ni-=query(r,a[r])+query(l,a[l]);
+        if(a[l]<a[r]){
+            {
+                int l_left_big=query(l,a[l]);
+                int l_right_small=a[l]-l+l_left_big;
+                ni-=l_left_big+l_right_small; mns(l,a[l]);
+                int r_left_big=query(r,a[r]);
+                int r_right_small=a[r]-r+r_left_big;
+                ni-=r_left_big+r_right_small; mns(r,a[r]);
+            }
+            {
+                int l_left_big=query(l,a[r]);
+                int l_right_small=a[r]-l+l_left_big-1;
+                ni+=l_left_big+l_right_small; add(l,a[r]);
+                int r_left_big=query(r,a[l]);
+                int r_right_small=a[l]-r+r_left_big;
+                ni+=r_left_big+r_right_small; add(r,a[l]);
             }
         }
-        int ans=0;
-        for(int i=0;i<sccs;++i)if(!ind[i])++ans;
-        cout<<ans<<endl;
+        else{
+            {
+                int l_left_big=query(l,a[l]);
+                int l_right_small=a[l]-l+l_left_big;
+                ni-=l_left_big+l_right_small; mns(l,a[l]);
+                int r_left_big=query(r,a[r]);
+                int r_right_small=a[r]-r+r_left_big+1;
+                ni-=r_left_big+r_right_small; mns(r,a[r]);
+            }
+            {
+                int l_left_big=query(l,a[r]);
+                int l_right_small=a[r]-l+l_left_big;
+                ni+=l_left_big+l_right_small; add(l,a[r]);
+                int r_left_big=query(r,a[l]);
+                int r_right_small=a[l]-r+r_left_big;
+                ni+=r_left_big+r_right_small; add(r,a[l]);
+            }
+        }
+        swap(a[l],a[r]);
+        jump:cout<<ni<<endl;
     }
 }
