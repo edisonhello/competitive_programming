@@ -129,43 +129,44 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-bool ct[11][11];
-ll dp[11][11][1<<13]; //uldr
-
 int main(){
-    int ts,ks=0;cin>>ts;while(ts--){
-        int n,m;cin>>n>>m;
-        for(int i=0;i<n;++i)for(int j=0;j<m;++j)cin>>ct[i][j];
-        dp[n-1][m][0]=1;
-        for(int i=n-1;i>=0;--i){
-            for(int j=0;j<(1<<m);++j)dp[i][m][j<<1]=dp[i+1][0][j];
-            for(int j=m;j>0;--j){
-                for(int type=0;type<(1<<m+1);++type){
-                    int d=(1<<m)&type,r=(1<<m-1)&type;
-                    if(!d && !r){
-                        if(!ct[i][j-1])dp[i][j-1][type]+=dp[i][j][type];
-                        else dp[i][j-1][type|(1<<m)|(1<<m-1)]+=dp[i][j][type];
-                    }
-                    if(d && !r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-d)|(1<<m-1)]+=dp[i][j][type];
-                        }
-                    }
-                    if(!d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-r)|(1<<m)]+=dp[i][j][type];
-                        }
-                    }
-                    if(d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type-d-r]+=dp[i][j][type];
-                        }
-                    }
-                }
+    int n;cin>>n;
+    string s;cin>>s;
+    ll ans=0;
+    for(int i=0;i<n;++i){
+        if(s[i]!='V'){
+            continue;
+        }
+        vector<int> dtoh;
+        int j;
+        for(j=i;j<n;++j){
+            if(s[j]=='K')dtoh.push_back(j-i);
+            if(s[j]!='V'&&s[j]!='K')break;
+        }
+        if(j==n){
+            int cnt=0;
+            for(int i:dtoh){
+                ans+=i-cnt;
+                cnt++;
             }
         }
-        cout<<"Case "<<(++ks)<<": "<<dp[0][0][0]%mod<<endl;
+        else{
+            int dp[75][75]={0};
+            int meow=999999999;
+            for(int ii=0;ii<dtoh.size();++ii){
+                for(int jj=0;jj<=ii;++jj){
+                    dp[ii+1][jj]=dp[ii][jj]+j-i-dtoh[ii];
+                    dp[ii+1][jj+1]=min(dp[ii+1][jj],dp[ii][jj]+dtoh[ii]-jj);
+                    PDE3(dp[ii+1][jj],dp[ii][jj]+j-i-dtoh[ii],jj?(dp[ii][jj-1]+dtoh[ii]-jj):0);
+                    PDE3(ii,jj,dtoh[ii]);
+                    if(ii==dtoh.size()-1)meow=min({meow,dp[ii+1][jj],dp[ii+1][jj+1]});
+                }
+            }
+            // cout<<meow<<endl;
+            ans+=meow;
+        }
+        i=j;
     }
+    cout<<ans<<endl;
 }
+// 25623023 107:47 WA 9

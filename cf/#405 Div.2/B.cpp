@@ -123,49 +123,43 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"NO";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-bool ct[11][11];
-ll dp[11][11][1<<13]; //uldr
+struct disjointSet{
+    std::vector<int> djs;
+    void init(int size){
+        djs.resize(size);
+        for(int i=0;i<size;++i)djs[i]=i;
+    }
+    int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
+    void U(int x,int y){djs[F(x)]=F(y);}
+    bool C(int x,int y){return F(x)==F(y);}
+} djs;
+int sz[150009];
+
+int deg[150009];
 
 int main(){
-    int ts,ks=0;cin>>ts;while(ts--){
-        int n,m;cin>>n>>m;
-        for(int i=0;i<n;++i)for(int j=0;j<m;++j)cin>>ct[i][j];
-        dp[n-1][m][0]=1;
-        for(int i=n-1;i>=0;--i){
-            for(int j=0;j<(1<<m);++j)dp[i][m][j<<1]=dp[i+1][0][j];
-            for(int j=m;j>0;--j){
-                for(int type=0;type<(1<<m+1);++type){
-                    int d=(1<<m)&type,r=(1<<m-1)&type;
-                    if(!d && !r){
-                        if(!ct[i][j-1])dp[i][j-1][type]+=dp[i][j][type];
-                        else dp[i][j-1][type|(1<<m)|(1<<m-1)]+=dp[i][j][type];
-                    }
-                    if(d && !r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-d)|(1<<m-1)]+=dp[i][j][type];
-                        }
-                    }
-                    if(!d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-r)|(1<<m)]+=dp[i][j][type];
-                        }
-                    }
-                    if(d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type-d-r]+=dp[i][j][type];
-                        }
-                    }
-                }
-            }
-        }
-        cout<<"Case "<<(++ks)<<": "<<dp[0][0][0]%mod<<endl;
+    int n,m;cin>>n>>m;
+    djs.init(n+1); int block=n;
+    while(m--){
+        int u,v;cin>>u>>v;
+        ++deg[u], ++deg[v];
+        if(djs.C(u,v))continue;
+        --block; djs.U(u,v);
     }
+    for(int i=1;i<=n;++i){
+        sz[djs.F(i)]++;
+    }
+    for(int i=1;i<=n;++i){
+        if(deg[i]+1!=sz[djs.F(i)])JIZZ();
+    }
+    cout<<"YES\n";
 }
+// 25607104 06:28 WA 7
+// 25608297 10:44 AC
+//          115:58 Unsuccessful hack

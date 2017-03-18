@@ -129,43 +129,23 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-bool ct[11][11];
-ll dp[11][11][1<<13]; //uldr
-
+vector<string> name;
+int nmc[55];
 int main(){
-    int ts,ks=0;cin>>ts;while(ts--){
-        int n,m;cin>>n>>m;
-        for(int i=0;i<n;++i)for(int j=0;j<m;++j)cin>>ct[i][j];
-        dp[n-1][m][0]=1;
-        for(int i=n-1;i>=0;--i){
-            for(int j=0;j<(1<<m);++j)dp[i][m][j<<1]=dp[i+1][0][j];
-            for(int j=m;j>0;--j){
-                for(int type=0;type<(1<<m+1);++type){
-                    int d=(1<<m)&type,r=(1<<m-1)&type;
-                    if(!d && !r){
-                        if(!ct[i][j-1])dp[i][j-1][type]+=dp[i][j][type];
-                        else dp[i][j-1][type|(1<<m)|(1<<m-1)]+=dp[i][j][type];
-                    }
-                    if(d && !r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-d)|(1<<m-1)]+=dp[i][j][type];
-                        }
-                    }
-                    if(!d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type]+=dp[i][j][type];
-                            dp[i][j-1][(type-r)|(1<<m)]+=dp[i][j][type];
-                        }
-                    }
-                    if(d && r){
-                        if(ct[i][j-1]){
-                            dp[i][j-1][type-d-r]+=dp[i][j][type];
-                        }
-                    }
-                }
-            }
+    int n,k;cin>>n>>k;
+    for(int i='a';i<='z';++i)name.pb("A"+string(1,i));
+    for(int i='a';i<='z';++i)name.pb("B"+string(1,i));
+    for(int i=0;i<k-1;++i)nmc[i]=i;
+    for(int i=k-1;i<n;i++){
+        string s;cin>>s;
+        if(s=="YES"){
+            nmc[i]=i;
         }
-        cout<<"Case "<<(++ks)<<": "<<dp[0][0][0]%mod<<endl;
+        else{
+            nmc[i]=nmc[i-k+1];
+        }
     }
+    for(int i=0;i<n;++i)cout<<name[nmc[i]]<<" ";cout<<endl;
 }
+// 25610776 21:14 AC
+//          59:52 Unsuccessful hack
