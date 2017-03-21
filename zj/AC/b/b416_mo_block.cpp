@@ -148,17 +148,18 @@ void ers(int x){
 }
 int getAns(int l,int r){
     int lblock=(l-1)/blockSize,
-        rblock=r/blockSize;
-    // cout<<"get ans for "<<l<<" "<<r<<" , blockSize: "<<blockSize<<endl;
-    // cout<<"lblock: "<<lblock<<" , rblock: "<<rblock<<endl;
-    // cout<<"1g1g: "<<l<<"~"<<min(blockSize*lblock,r+1)-1<<" , "<<max(rblock*blockSize,l)<<"~"<<r<<endl;
-    // for(int i=1;i<=10;++i)cout<<cnt[i]<<" ";cout<<endl;
-    // for(int i=0;i<5;++i)cout<<block[i]<<" ";cout<<endl;
+        rblock=(r+1)/blockSize;
     int rt=0;
-    for(int i=lblock+1;i<=rblock;++i)rt+=block[i];
+    // cout<<"between "<<l<<"~"<<r<<" , block: "<<lblock<<"~"<<rblock<<endl;
+    // for(int i=1;i<=10;++i)cout<<cnt[i]<<" ";el;
+    // for(int i=0;i<3;++i)cout<<block[i]<<" ";el;
+    if(lblock>rblock-2){
+        for(int i=l;i<=r;++i)rt+=cnt[i];
+        return rt;
+    }
+    for(int i=lblock+1;i<rblock;++i)rt+=block[i];
     for(int i=l;i<min(blockSize*(lblock+1),r+1);++i)rt+=cnt[i];
-    for(int i=max((rblock+1)*blockSize,l);i<=r;++i)rt+=cnt[i];
-    // cout<<"rt: "<<rt<<endl;
+    for(int i=max(rblock*blockSize,l);i<=r;++i)rt+=cnt[i];
     return rt;
 }
 
@@ -175,7 +176,7 @@ int main(){
         q[i].block=q[i].l/lim;
         q[i].i=i;
     }
-    blockSize=(int)ceil(pow(n,0.625));
+    blockSize=(int)ceil(sqrt(n));
     sort(q,q+m);
     int L=1,R=0;
     for(int i=0;i<m;++i){

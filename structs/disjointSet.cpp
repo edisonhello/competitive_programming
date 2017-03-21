@@ -17,6 +17,7 @@ struct disjointSet{
         for(int i=0;i<size;++i)djs[i]=i,sz[i]=1;
     }
     int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
-    void U(int x,int y){x=F(x),y=F(y);if(sz[x]>sz[y])swap(x,y);djs[x]=y;}
+    void U(int x,int y){x=F(x),y=F(y);if(x==y)return;if(sz[x]>sz[y])swap(x,y);djs[x]=y;sz[y]+=sz[x];}
     bool C(int x,int y){return F(x)==F(y);}
+    int size(int x){return sz[F(x)];}
 };
