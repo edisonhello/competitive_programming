@@ -132,20 +132,24 @@ string s,t;
 int n;
 
 bool DC(int sl,int sr,int tl,int tr){
-    // PDE4(sl,sr,tl,tr);
+    if(tr-tl!=sr-sl)return 0;
+    PDE4(sl,sr,tl,tr);
     if(sl>tl){
-        if(nmlz(spfx[sr]-spfx[sl-1]) == nmlz((tpfx[tr]-tpfx[tl-1])*ppw[sl-tl])){
+        if(nmlz(spfx[sr]-spfx[sl-1]) == nmlz(tpfx[tr]-tpfx[tl-1])*ppw[sl-tl]%mod){
             return 1;
         }
     }
     else{
-        if(nmlz((spfx[sr]-spfx[sl-1])*ppw[tl-sl]) == nmlz(tpfx[tr]-tpfx[tl-1])){
+        if(nmlz(spfx[sr]-spfx[sl-1])*ppw[tl-sl]%mod == nmlz(tpfx[tr]-tpfx[tl-1])){
             return 1;
         }
     }
-    if((sr-sl)%2==0)return 0;
+    if(sl==sr)return 0;
+    if((sr-sl)%2==0 && sr!=sl)return 0;
+    if((tr-tl)%2==0 && tr!=tl)return 0;
     int sm=(sl+sr)>>1, tm=(tl+tr)>>1;
     if(DC(sl,sm,tm+1,tr) && DC(sm+1,sr,tl,tm))return 1;
+    if(DC(sl,sm,tl,tm) && DC(sm+1,sr,tm+1,tr))return 1;
     return 0;
 }
 
@@ -161,4 +165,4 @@ int main(){
     if(DC(0,n-1,0,n-1))cout<<"YES\n";
     else cout<<"NO\n";
 }
-// == WTF 2B
+// == 560D
