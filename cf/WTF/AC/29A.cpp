@@ -129,45 +129,7 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-// struct disjointSet{
-//     std::vector<int> djs;
-//     void init(int size){
-//         djs.resize(size);
-//         for(int i=0;i<size;++i)djs[i]=i;
-//     }
-//     int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
-//     void U(int x,int y){djs[F(x)]=F(y);}
-//     bool C(int x,int y){return F(x)==F(y);}
-// } djs;
-
-vector<pii> G[222];
-bool v[11111];
-
 int main(){
-    int n,m;while(cin>>n>>m){
-        path.clear(); MS(v,0);
-        for(int i=0;i<n;++i)G[i].clear();
-        for(int i=0;i<m;++i){
-            int u,v;cin>>u>>v;
-            G[u].push_back({v,i});
-            G[v].push_back({u,i});
-        }
-        for(int i=0;i<n;++i){
-            if(G[i].size()&1){
-                cout<<"Not Possible\n";
-                goto nexT;
-            }
-        }
-        for(int i=0;i<n;++i){
-            if(G[i].empty())continue;
-            dfs(i);
-            if(path[0]==i){
-                cout<<"Possible\n";
-            }
-
-            goto nexT;
-        }
-        cout<<"Not Possible\n";
-        nexT:;
-    }
+    ll m,n;cin>>n>>m;
+    cout<<(min(n,m)-1)*2<<endl;
 }

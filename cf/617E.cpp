@@ -97,22 +97,22 @@ template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){dequ
 #define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
-    const int N=1048576;
-    static char __buffer[N];
-    static char *__p=__buffer,*__end=__buffer;
-    if(__p==__end){
-        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-        __p=__buffer;
-    } return *__p++;
+const int N=1048576;
+static char __buffer[N];
+static char *__p=__buffer,*__end=__buffer;
+if(__p==__end){
+    if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+    __p=__buffer;
+} return *__p++;
 }
 
 template<typename T>
 inline bool rit(T& x){
-    char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c-'0');
-    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
-    if(fg)x=-x; return true;
+char c=0; bool fg=0;
+while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+c=='-' ? (fg=1,x=0) : (x=c-'0');
+while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
+if(fg)x=-x; return true;
 }
 template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
@@ -129,166 +129,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct node{
-    int v;
-    bool vis;
-};
-vector<node> D[111];
-int in[maxv],out[maxv];
+int n,m,k,a[100009],p[100009],ans[100009],cnt[1000009];
+struct Q{int l,r,b,i;} q[100009];
+ll cans;
 
-struct edge{int v,cap;};
-vector<edge> eg;
-vint G[111];
-int s,t,vcnt,lv[111],q[111];
-
-void addEdge(int u,int v,int c){
-    G[u].pb(eg.size());
-    eg.pb({v,c});
-    G[v].pb(eg.size());
-    eg.pb({u,0});
+void add(int x){
+LOG("add %d\n",x);
+++cnt[x];
+cans+=cnt[x^k];
+}
+void ers(int x){
+LOG("ers %d\n",x);
+--cnt[x];
+cans-=cnt[x^k];
 }
 
-bool bfs(){
-    MS(lv,0);
-    int l=0,r=0;
-    q[r++]=S; lv[S]=1;
-    while(r>l){
-        int u=q[l++];
-        for(int i=0;i<G[u].size();++i){
-            auto &e=eg[G[u][i]];
-            if(!lv[e.v] && e.cap){
-                lv[e.v]=lv[u]+1;
-                q[r++]=e.v;
-            }
-        }
-    } return lv[T];
+int main(){
+cin>>n>>m>>k;
+for(int i=1;i<=n;++i)cin>>a[i],p[i]=p[i-1]^a[i];
+int lim=(int)ceil(sqrt(n));
+for(int i=0;i<m;++i){
+    int l,r;cin>>l>>r;
+    q[i]={l-1,r,l/lim,i};
 }
-
-int cur[111];
-int dfs(int u,int a)
-{
-    if(u==T || !a)return a;
-    int flow=0,f;
-    for(int &i=cur[u];i<G[u].size();i++){
-        auto &e=eg[G[u][i]];
-        if(lv[e.v]==lv[u]+1 && (f=dfs(e.v,min(e.cap,a)))){
-            flow+=f;
-            a-=f;
-            e.cap-=f;
-            edges[G[u][i]^1].cap+=f;
-            if(!a)break;
-        }
-    } return flow;
+sort(q,q+m,[](const Q &a,const Q &b)->bool{return a.b==b.b?a.r<b.r:a.b<b.b;});
+int L=0,R=-1;
+for(int i=0;i<m;++i){
+    // cout<<q[i].l<<" "<<q[i].r<<endl;
+    while(L<q[i].l)ers(p[L++]);
+    while(L>q[i].l)add(p[--L]);
+    while(R>q[i].r)ers(p[R--]);
+    while(R<q[i].r)add(p[++R]);
+    ans[q[i].i]=cans;
+    // for(int ii=0;ii<7;++ii)cout<<cnt[ii]<<" ";el;
 }
-
-int maxFlow(){
-    int flow=0;
-    while(bfs()){
-        MS(cur,0);
-        flow+=dfs(S,999999999);
-    } return flow;
-}
-
-int build(){
-    int del=0;
-    for(int i=1,d;i<=V;i++){
-        if((in[i]+out[i])&1)return -1;
-        if(out[i]<in[i]){
-            d=(in[i]-out[i])>>1; del+=d;
-            addEdge(i,T,d);
-        }
-        else if(in[i]<out[i]){
-            d=(out[i]-in[i])>>1;
-            addEdge(S,i,d);
-        }
-    } return del;
-}
-
-int djs[111],cnt;
-int F(int x){return x==djs[x]?x:djs[x]=F(djs[x]);}
-bool v[111];
-
-void init(){
-    S=0; T=V+1; vcnt=T+1;
-    for(int i=1; i<=V;i++)D[i].clear(),in[i]=out[i]=0;
-    for(int i=0;i<=T;i++)G[i].clear();
-    for(int i=1;i<=V;i++)djs[i]=i;
-    eg.clear(); MS(v,0);
-    cnt=0;
-}
-
-bool read(){
-    cin>>V>>E;
-    init();
-    for(int i=0,u,v;i<E;i++){
-        char ch; cin>>u>>v>>ch;
-        if(ch=='U')addEdge(u,v,1);
-        else D[u].pb({v,false});
-        if(!v[u])cnt++,vis[u] = true;
-        if(!v[v])cnt++,vis[v] = true;
-        int s1 = Find(u),s2 = Find(v);
-        if(s1 != s2) {
-            cnt--;
-            djs[s1] = s2;
-        }
-        out[u]++; in[v]++;
-    }
-    return cnt == 1;
-}
-
-void reBuild()
-{
-    for(int u = 1; u <= V; u++){
-        for(int i = 0; i < G[u].size(); i++){
-            Edge &e = edges[G[u][i]];
-            if(e.cap) {
-                int v0 = edges[G[u][i]^1].v, v1 = e.v;
-                if(v0&&v0<=V&&v1&&v1<=V) D[v0].PB({v1,false});
-            }
-        }
-    }
-}
-
-stack<int> ans;
-void Euler(int u)
-{
-    for(int i = 0; i < D[u].size(); i++){
-        if(D[u][i].vis) continue;
-        D[u][i].vis = true;
-        int v = D[u][i].v;
-        Euler(v);
-        ans.push(v);
-    }
-}
-
-void solve()
-{
-    if(read()) {
-        int totFlow = build();
-        if(~totFlow  && totFlow <= MaxFlow()) {
-            reBuild();
-            memset(cur,0,sizeof(int)*(vcnt));
-            Euler(1);
-            printf("1");
-            while(ans.size()){
-                printf(" %d",ans.top());
-                ans.pop();
-            }
-            putchar(‘\n‘);
-            return;
-        }
-    }
-    puts("No euler circuit exist");
-}
-
-int main()
-{
-    //freopen("in.txt","r",stdin);
-    int Test; scanf("%d",&Test);
-
-    while(Test--){
-        solve();
-        if(Test) putchar(‘\n‘);
-    }
-    return 0;
+for(int i=0;i<m;++i)cout<<ans[i]<<endl;
 }

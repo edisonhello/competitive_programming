@@ -123,172 +123,24 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"0";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct node{
-    int v;
-    bool vis;
-};
-vector<node> D[111];
-int in[maxv],out[maxv];
-
-struct edge{int v,cap;};
-vector<edge> eg;
-vint G[111];
-int s,t,vcnt,lv[111],q[111];
-
-void addEdge(int u,int v,int c){
-    G[u].pb(eg.size());
-    eg.pb({v,c});
-    G[v].pb(eg.size());
-    eg.pb({u,0});
-}
-
-bool bfs(){
-    MS(lv,0);
-    int l=0,r=0;
-    q[r++]=S; lv[S]=1;
-    while(r>l){
-        int u=q[l++];
-        for(int i=0;i<G[u].size();++i){
-            auto &e=eg[G[u][i]];
-            if(!lv[e.v] && e.cap){
-                lv[e.v]=lv[u]+1;
-                q[r++]=e.v;
-            }
-        }
-    } return lv[T];
-}
-
-int cur[111];
-int dfs(int u,int a)
-{
-    if(u==T || !a)return a;
-    int flow=0,f;
-    for(int &i=cur[u];i<G[u].size();i++){
-        auto &e=eg[G[u][i]];
-        if(lv[e.v]==lv[u]+1 && (f=dfs(e.v,min(e.cap,a)))){
-            flow+=f;
-            a-=f;
-            e.cap-=f;
-            edges[G[u][i]^1].cap+=f;
-            if(!a)break;
-        }
-    } return flow;
-}
-
-int maxFlow(){
-    int flow=0;
-    while(bfs()){
-        MS(cur,0);
-        flow+=dfs(S,999999999);
-    } return flow;
-}
-
-int build(){
-    int del=0;
-    for(int i=1,d;i<=V;i++){
-        if((in[i]+out[i])&1)return -1;
-        if(out[i]<in[i]){
-            d=(in[i]-out[i])>>1; del+=d;
-            addEdge(i,T,d);
-        }
-        else if(in[i]<out[i]){
-            d=(out[i]-in[i])>>1;
-            addEdge(S,i,d);
-        }
-    } return del;
-}
-
-int djs[111],cnt;
-int F(int x){return x==djs[x]?x:djs[x]=F(djs[x]);}
-bool v[111];
-
-void init(){
-    S=0; T=V+1; vcnt=T+1;
-    for(int i=1; i<=V;i++)D[i].clear(),in[i]=out[i]=0;
-    for(int i=0;i<=T;i++)G[i].clear();
-    for(int i=1;i<=V;i++)djs[i]=i;
-    eg.clear(); MS(v,0);
-    cnt=0;
-}
-
-bool read(){
-    cin>>V>>E;
-    init();
-    for(int i=0,u,v;i<E;i++){
-        char ch; cin>>u>>v>>ch;
-        if(ch=='U')addEdge(u,v,1);
-        else D[u].pb({v,false});
-        if(!v[u])cnt++,vis[u] = true;
-        if(!v[v])cnt++,vis[v] = true;
-        int s1 = Find(u),s2 = Find(v);
-        if(s1 != s2) {
-            cnt--;
-            djs[s1] = s2;
-        }
-        out[u]++; in[v]++;
+int a[111],f1=-1,l1=-1;
+ll ans=1;
+int main(){
+    int n;cin>>n;
+    for(int i=0;i<n;++i)cin>>a[i];
+    for(int i=0;i<n;++i)if(a[i]==1){f1=i;break;}
+    for(int i=n-1;i>=0;--i)if(a[i]==1){l1=i;break;}
+    if(f1==-1)JIZZ();
+    for(int i=f1+1,j;i<l1;i=j){
+        for(j=i+1;j<l1;++j)if(a[j]!=a[i])break;
+        if(a[i]==1)continue;
+        ans*=(j-i+1);
     }
-    return cnt == 1;
-}
-
-void reBuild()
-{
-    for(int u = 1; u <= V; u++){
-        for(int i = 0; i < G[u].size(); i++){
-            Edge &e = edges[G[u][i]];
-            if(e.cap) {
-                int v0 = edges[G[u][i]^1].v, v1 = e.v;
-                if(v0&&v0<=V&&v1&&v1<=V) D[v0].PB({v1,false});
-            }
-        }
-    }
-}
-
-stack<int> ans;
-void Euler(int u)
-{
-    for(int i = 0; i < D[u].size(); i++){
-        if(D[u][i].vis) continue;
-        D[u][i].vis = true;
-        int v = D[u][i].v;
-        Euler(v);
-        ans.push(v);
-    }
-}
-
-void solve()
-{
-    if(read()) {
-        int totFlow = build();
-        if(~totFlow  && totFlow <= MaxFlow()) {
-            reBuild();
-            memset(cur,0,sizeof(int)*(vcnt));
-            Euler(1);
-            printf("1");
-            while(ans.size()){
-                printf(" %d",ans.top());
-                ans.pop();
-            }
-            putchar(‘\n‘);
-            return;
-        }
-    }
-    puts("No euler circuit exist");
-}
-
-int main()
-{
-    //freopen("in.txt","r",stdin);
-    int Test; scanf("%d",&Test);
-
-    while(Test--){
-        solve();
-        if(Test) putchar(‘\n‘);
-    }
-    return 0;
+    cout<<ans<<endl;
 }
