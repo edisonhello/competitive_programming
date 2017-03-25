@@ -32,7 +32,7 @@ int main(){
         int check=s[8]-'0',meow=0;
         for(int i=0;i<8;++i)meow+=(s[i]-'0')*(8-i);
         for(int i='A';i<='Z';++i){
-            if((m[i]+meow)%10==check)cout<<(char)i;
+            if(10-((m[i]+meow)%10)==check)cout<<(char)i;
         } cout<<endl;
     }
 }

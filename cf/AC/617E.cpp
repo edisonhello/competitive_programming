@@ -100,10 +100,10 @@ inline int gtx(){
 const int N=1048576;
 static char __buffer[N];
 static char *__p=__buffer,*__end=__buffer;
-if(__p==__end){
-    if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-    __p=__buffer;
-} return *__p++;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
 }
 
 template<typename T>
@@ -129,39 +129,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int n,m,k,a[100009],p[100009],ans[100009],cnt[1000009];
+int n,m,k,a[100009],p[100009],cnt[1060009];
 struct Q{int l,r,b,i;} q[100009];
-ll cans;
+ll cans,ans[100009];
 
 void add(int x){
-LOG("add %d\n",x);
-++cnt[x];
-cans+=cnt[x^k];
+    LOG("add %d\n",x);
+    cans+=cnt[x^k];
+    ++cnt[x];
 }
 void ers(int x){
-LOG("ers %d\n",x);
---cnt[x];
-cans-=cnt[x^k];
+    LOG("ers %d\n",x);
+    --cnt[x];
+    cans-=cnt[x^k];
 }
 
 int main(){
-cin>>n>>m>>k;
-for(int i=1;i<=n;++i)cin>>a[i],p[i]=p[i-1]^a[i];
-int lim=(int)ceil(sqrt(n));
-for(int i=0;i<m;++i){
-    int l,r;cin>>l>>r;
-    q[i]={l-1,r,l/lim,i};
-}
-sort(q,q+m,[](const Q &a,const Q &b)->bool{return a.b==b.b?a.r<b.r:a.b<b.b;});
-int L=0,R=-1;
-for(int i=0;i<m;++i){
-    // cout<<q[i].l<<" "<<q[i].r<<endl;
-    while(L<q[i].l)ers(p[L++]);
-    while(L>q[i].l)add(p[--L]);
-    while(R>q[i].r)ers(p[R--]);
-    while(R<q[i].r)add(p[++R]);
-    ans[q[i].i]=cans;
-    // for(int ii=0;ii<7;++ii)cout<<cnt[ii]<<" ";el;
-}
-for(int i=0;i<m;++i)cout<<ans[i]<<endl;
+    cin>>n>>m>>k;
+    for(int i=1;i<=n;++i)cin>>a[i],p[i]=p[i-1]^a[i];
+    int lim=(int)ceil(sqrt(n));
+    for(int i=0;i<m;++i){
+        int l,r;cin>>l>>r;
+        q[i]={l-1,r,l/lim,i};
+    }
+    sort(q,q+m,[](const Q &a,const Q &b)->bool{return a.b==b.b?a.r<b.r:a.b<b.b;});
+    int L=0,R=-1;
+    for(int i=0;i<m;++i){
+        // cout<<q[i].l<<" "<<q[i].r<<endl;
+        while(L<q[i].l)ers(p[L++]);
+        while(L>q[i].l)add(p[--L]);
+        while(R>q[i].r)ers(p[R--]);
+        while(R<q[i].r)add(p[++R]);
+        ans[q[i].i]=cans;
+        // for(int ii=0;ii<7;++ii)cout<<cnt[ii]<<" ";el;
+    }
+    for(int i=0;i<m;++i)cout<<ans[i]<<endl;
 }
