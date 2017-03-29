@@ -54,6 +54,11 @@ using namespace std;
 #define left Ugbemugbem
 #define Osas
 
+#define YES cout<<"YES"<<endl
+#define NO cout<<"NO"<<endl
+#define Yes cout<<"Yes"<<endl
+#define No cout<<"No"<<endl
+
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
