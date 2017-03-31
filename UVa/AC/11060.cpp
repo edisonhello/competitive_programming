@@ -152,20 +152,18 @@ int main(){
             string a,b;cin>>a>>b;
             G[mp[a]].pb(mp[b]); ind[mp[b]]++;
         }
-        queue<int> q; vint tp;
-        for(int i=0;i<n;++i)if(ind[i]==0)q.push(i);
-        while(q.size()){
-            tp.pb(q.front());
-            for(auto i:G[q.front()]){
-                ind[i]--;
-                if(ind[i]==0)q.push(i);
+        vint tp;
+        for(int _=0;_<n;++_){
+            for(int i=0;i<n;++i){
+                if(ind[i])continue;
+                tp.pb(i);
+                for(auto ii:G[i])ind[ii]--;
+                ind[i]=-1;
+                break;
             }
-            q.pop();
         }
         cout<<"Case #"<<(++ks)<<": Dilbert should drink beverages in this order:";
-        for(int i:tp){
-            cout<<" "<<imp[i];
-        }
-        cout<<".\n";FLH;
+        for(int i:tp)cout<<" "<<imp[i];
+        cout<<".\n\n";
     }
 }
