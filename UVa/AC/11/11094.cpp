@@ -148,23 +148,27 @@ struct disjointSet{
 } djs;
 
 string mp[22];
+char meow;
+
 int main(){
     int n,m;
     while(cin>>n>>m){
         for(int i=0;i<n;++i)cin>>mp[i];
+        int x,y;cin>>x>>y;meow=mp[x][y];
         djs.init(999);
         for(int i=0;i<n;++i){
             for(int j=0;j<m;++j){
-                if(mp[i][j]!='l')continue;
-                if(i && mp[i-1][j]=='l')djs.U((i-1)*20+j,i*20+j);
-                if(j && mp[i][j-1]=='l')djs.U(i*20+j-1,i*10+j);
+                if(mp[i][j]!=meow)continue;
+                if(i && mp[i-1][j]==meow)djs.U((i-1)*20+j,i*20+j);
+                if(j && mp[i][j-1]==meow)djs.U(i*20+j-1,i*20+j);
+                if(!j&& mp[i][m-1]==meow)djs.U(i*20+j,i*20+(m-1));
             }
         }
-        int x,y;cin>>x>>y;
         int ban=djs.F(x*20+y);
         int mx=0;
         for(int i=0;i<n;++i){
             for(int j=0;j<m;++j){
+                if(mp[i][j]!=meow)continue;
                 if(djs.F(i*20+j)==ban)continue;
                 mx=max(mx,djs.size(i*20+j));
             }
