@@ -136,25 +136,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct disjointSet{
+    std::vector<int> djs;
+    void init(int size){
+        djs.resize(size);
+        for(int i=0;i<size;++i)djs[i]=i;
+    }
+    int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
+    void U(int x,int y){djs[F(x)]=F(y);}
+    bool C(int x,int y){return F(x)==F(y);}
+} djs;
 int a[1006];
+vector<int> num;
 
 int main(){
     int n;while(cin>>n){
-        for(int i=0;i<n;++i)cin>>a[i];
-        int cnt=0;
-        for(int i=0;i<n;++i){
-            if(a[i]!=i+1){
-                for(int j=i+1;j<n;++j){
-                    if(a[j]==i+1){
-                        for(int ii=i,jj=j;jj>ii;++ii,--jj){
-                            swap(a[ii],a[jj]);
-                        }
-                        ++cnt;
-                        break;
-                    }
-                }
-            }
+        djs.init(n+5); num.clear();
+        for(int i=1;i<=n;++i){
+            cin>>a[i];
+            num.pb(a[i]);
         }
-        cout<<"Minimum exchange operations : "<<cnt<<endl;
+        sort(num.begin(),num.end());
+        for(int i=1;i<=n;++i){
+            a[i]=lower_bound(num.begin(),num.end(),a[i])-num.begin()+1;
+            djs.U(a[i],i);
+        }
+        set<int> s;
+        for(int i=1;i<=n;++i)s.insert(djs.F(i));
+        cout<<"Minimum exchange operations : ";
+        cout<<n-(int)s.size()<<endl;
     }
 }
