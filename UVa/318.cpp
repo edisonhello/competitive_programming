@@ -1,81 +1,145 @@
-#include<bits/stdc++.h>
-
-
-
+#include<cassert>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<ctime>
+#include<algorithm>
+#include<iostream>
+#include<iomanip>
+#include<sstream>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#include<unordered_map>
+#include<unordered_set>
+#include<bitset>
+#include<vector>
+#include<utility>
 
 using namespace std;
-int lng[505][505],n,m;
-bool gone[505];
-int t;
-bool warp;
-priority_queue<pair<int,int>, vector<pair<int,int> >, greater<pair<int,int> > > que;
 
-void solve(){
-    pair<int,int> l2,last;
-    int nowtime,now,prevtime=que.top().first,previ=que.top().second;
-    while(1){
-        nowtime = que.top().first;      //printf("time %d\n",nowtime);
-        now = que.top().second;
+#define ll long long
+#define ld long double
+#define X first
+#define Y second
+#define SZ(x) ((int)(x).size())
+#define LN(x) ((int)(x).length())
+#define rz(x) resize(x)
+#define pb(x) push_back(x)
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define vint vector<int>
+#define endl '\n'
+#define el putchar('\n')
+#define spc putchar(' ')
+#define mid ((l+r)>>1)
+#define xm ((x1+x2)/2)
+#define ym ((y1+y2)/2)
+#define SS stringstream
+#define PQ priority_queue
+#define MS0(x) memset((x),0,sizeof(x))
+#define MSB(x) memset((x),0x7f,sizeof(x))
+#define MSM(x) memset((x),0xff,sizeof(x))
+#define MSMB(x) memset((x),0x80,sizeof(x))
+#define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define FASTCPP ios_base::sync_with_stdio(0); cin.tie(0)
 
-        for(int i=1;i<=n;i++){
-            if(lng[i][now]!=0 && !gone[i]){
-                que.push(make_pair(nowtime + lng[i][now], i));
-                gone[i] = 1;
-            }
-        }
-//printf("jizz");
+#ifdef WEAK
+#define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
+#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
+#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
+#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
+#define DEB(...) printf(__VA_ARGS__)
+#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__)
+#define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__)
+#else
+#define PDE1(a) ;
+#define PDE2(a,b) ;
+#define PDE3(a,b,c) ;
+#define PDE4(a,b,c,d) ;
+#define DEB(...) ;
+#define WHR() ;
+#define LOG(...) ;
+#define getchar gtx
+#endif
 
-        if(que.size()==1){
-            last = que.top();
-            l2.first = prevtime;
-            l2.second =previ;
-            break;
-        }
+template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto it:mp)ostm<<*it<<" ";ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto it:s)ostm<<*it<<" ";ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
-        que.pop();
-
-        previ = now;
-        prevtime = nowtime;
-    }
-    if(warp){printf("\n");}
-    warp =1;
-
-    if(l2.first==last.first && lng[l2.second][last.second]!=0){
-        printf("System #%d\nThe last domino falls after %.1f seconds, between key dominoes %d and %d.\n",t,(float)last.first+((float)lng[l2.second][last.second]/2),last.second,l2.second);
-    }
-    else{
-        printf("System #%d\nThe last domino falls after %.1f seconds, at key domino %d.\n",t,(float)last.first,last.second);
-    }
-    while(que.size())que.pop();
+inline int lowbit(int &x){return x&-x;}
+inline ll lowbit(ll &x){return x&-x;}
+template<typename T>
+inline T _pow(T b,int n){
+    T a=1; while(n){
+        if(n&1)a*=b; b*=b,n>>=1;
+    } return a;
+}
+template<typename T>
+inline T _pow(T b,int n,T mod){
+    T a=1%mod; while(n){
+        if(n&1)a=a*b%mod; b=b*b%mod,n>>=1;
+    } return a;
 }
 
+inline int gtx(){
+    const int N=1048576;
+    static char __buffer[N];
+    static char *__p=__buffer,*__end=__buffer;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
+}
+
+template<typename T>
+inline bool rit(T& x){
+    char c=0; bool fg=0;
+    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    c=='-' ? (fg=1,x=0) : (x=c-'0');
+    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
+    if(fg)x=-x; return true;
+}
+template<typename T,typename ...Args>
+inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
+
+inline void pit(int x){printf("%d",x);}
+inline void pln(ll x){printf("%I64d",x);}
+template<typename ...Args>
+inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
+template<typename ...Args>
+inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
+
+const ld PI=3.14159265358979323846264338327950288;
+const ld eps=1e-8;
+const ll mod=1e9+7;
+
+vint G[505];
+bitset<505> v;
+PQ<pii,vector<pii>,greater<pii>> pq;
+
 int main(){
-    while(scanf("%d %d",&n,&m) && n){
-
-
-
-            t++;
-        for(int i=0;i<m;i++){
-            int l,r,hv;
-            scanf("%d %d %d",&l,&r,&hv);
-            lng[l][r] = lng[r][l] = hv;
+    // freopen("in","r",stdin);
+    // freopen("out","w",stdout);
+    int ks=0,n,m;while(rit(n,m),n){
+        while(m--){
+            int a,b,l;rit(a,b,l);
+            G[a].pb({b,l}); G[b].pb({a,l});
         }
-
-        for(int i=1;i<=n;i++){//printf("jizz");
-            if(lng[1][i]!=0){
-                    gone[i] = 1;//printf("pushed %d time passed %d",i,lng[1][i]);
-                que.push(make_pair(lng[1][i],i));
-
-            }
+        pq.push({1,0});
+        while(pq.size()){
+            while(v[pq.top().X])pq.pop();
+            v[pq.top().X]=1;
+            
         }
-        gone[1] = 1;
-        solve();
-
-
-
-
-
-
-        for(int i=0;i<505;i++)gone[i]=0;
     }
 }

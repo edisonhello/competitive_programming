@@ -1,154 +1,155 @@
-#include<bits/stdc++.h>
+#include<cassert>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<ctime>
+#include<algorithm>
+#include<iostream>
+#include<iomanip>
+#include<sstream>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#include<unordered_map>
+#include<unordered_set>
+#include<bitset>
+#include<vector>
+#include<utility>
+
 using namespace std;
-string mp[10];
-bool gone[10][10];
-int n,gotshort,totshort,thistype,tottype=1;
-struct _6{
-    int a,b,c,d,f;
-    char e;
-};
-queue<_6>goq;
-void go(int nx,int ny,int px,int py,char dis,int len){ // cout<<"jizz"<<endl;
-    //printf("come to %d %d dist %d %d\n",nx,ny,px,py);
-    /*if(gotshort){
-        if(dis>gotshort){
-            return;
-        }
-    }*/
-    gone[nx][ny] = 1;
-    if(nx==px && ny==py){
-        if(gotshort){
-            if(len>gotshort){
-                return;
-            }
-            else if(len==gotshort){
-                thistype++;
-            }
-            else{
-                thistype=0;
-                gotshort=len;
-            }
-        }
-        else{
-            gotshort = len;
-            thistype =   1;
-        }
-        goq.pop();
-        return;
-    }
 
-    //cout<<mp[nx][ny]<<mp[nx+1][ny]<<endl<<mp[nx][ny+1]<<mp[nx+1][ny+1]<<endl;
+#define ll long long
+#define ld long double
+#define X first
+#define Y second
+#define SZ(x) ((int)(x).size())
+#define LN(x) ((int)(x).length())
+#define rz(x) resize(x)
+#define pb(x) push_back(x)
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define vint vector<int>
+#define endl '\n'
+#define el putchar('\n')
+#define spc putchar(' ')
+#define mid ((l+r)>>1)
+#define xm ((x1+x2)/2)
+#define ym ((y1+y2)/2)
+#define SS stringstream
+#define PQ priority_queue
+#define PRF(...) printf(__VA_ARGS__)
+#define MS0(x) memset((x),0,sizeof(x))
+#define MSB(x) memset((x),0x7f,sizeof(x))
+#define MSM(x) memset((x),0xff,sizeof(x))
+#define MSMB(x) memset((x),0x80,sizeof(x))
+#define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define CIO ios_base::sync_with_stdio(0);
 
-    _6 t;
-    if(nx!=0 && (mp[nx-1][ny]=='.' || mp[nx-1][ny]==dis) && !(gone[nx-1][ny])){
-        t.a=nx-1;
-        t.b=ny;
-        t.c=px;
-        t.d=py;
-        t.e=dis;
-        t.f=len+1;
-        goq.push(t);
-    }
-    if(ny!=0 && (mp[nx][ny-1]=='.' || mp[nx][ny-1]==dis) && !(gone[nx][ny-1])){
-        t.a=nx;
-        t.b=ny-1;
-        t.c=px;
-        t.d=py;
-        t.e=dis;
-        t.f=len+1;
-        goq.push(t);
-    }
-    if(nx<n-1 && (mp[nx+1][ny]=='.' || mp[nx+1][ny]==dis) && !(gone[nx+1][ny])){
-        t.a=nx+1;
-        t.b=ny;
-        t.c=px;
-        t.d=py;
-        t.e=dis;
-        t.f=len+1;
-        goq.push(t);
-    }//cout<<(ny<n-1 && (mp[nx][ny+1]=='.' || mp[nx][ny+1]==dis))<<endl;
-    if(ny<n-1 && (mp[nx][ny+1]=='.' || mp[nx][ny+1]==dis) && !(gone[nx][ny+1])){
-        t.a=nx;
-        t.b=ny+1;
-        t.c=px;     //cout<<"jizz"<<endl;
-        t.d=py;
-        t.e=dis;
-        t.f=len+1;
-        goq.push(t);        //cout<<goq.size()<<endl;
-    }
-    goq.pop();
+#ifdef WEAK
+#define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
+#define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<'\n'
+#define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<'\n'
+#define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , "<<#b<<" = "<<(b)<<" , "<<#c<<" = "<<(c)<<" , "<<#d<<" = "<<(d)<<'\n'
+#define DEB(...) printf(__VA_ARGS__)
+#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__)
+#define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__)
+#else
+#define PDE1(a) ;
+#define PDE2(a,b) ;
+#define PDE3(a,b,c) ;
+#define PDE4(a,b,c,d) ;
+#define DEB(...) ;
+#define WHR() ;
+#define LOG(...) ;
+#define getchar gtx
+#endif
+
+template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto it:mp)ostm<<*it<<" ";ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto it:s)ostm<<*it<<" ";ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+
+inline int lowbit(int &x){return x&-x;}
+inline ll lowbit(ll &x){return x&-x;}
+template<typename T>
+inline T _pow(T b,int n){
+    T a=1; while(n){
+        if(n&1)a*=b; b*=b,n>>=1;
+    } return a;
+}
+template<typename T>
+inline T _pow(T b,int n,T mod){
+    T a=1%mod; while(n){
+        if(n&1)a=a*b%mod; b=b*b%mod,n>>=1;
+    } return a;
 }
 
+inline int gtx(){
+    const int N=1048576;
+    static char __buffer[N];
+    static char *__p=__buffer,*__end=__buffer;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
+}
+
+template<typename T>
+inline bool rit(T& x){
+    char c=0; bool fg=0;
+    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    c=='-' ? (fg=1,x=0) : (x=c-'0');
+    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
+    if(fg)x=-x; return true;
+}
+template<typename T,typename ...Args>
+inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
+
+inline void pit(int x){printf("%d",x);}
+inline void pln(ll x){printf("%I64d",x);}
+template<typename ...Args>
+inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
+template<typename ...Args>
+inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
+
+const ld PI=3.14159265358979323846264338327950288;
+const ld eps=1e-8;
+const ll mod=20437;
+
+string mp[11];
+int totLen,n;
+
+pii findPos(char c){
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            if(mp[i][j]==c)return {i,j};
+        }
+    }
+}
+ll getPath()
 
 int main(){
-
-    /*freopen("in","r",stdin);
-    freopen("out","w",stdout);*/
-
-    int t=0;
-    while(cin>>n && n && ++t){
-        cout<<"Case "<<t<<": ";
-        for(int i=0;i<n;i++){
-            cin>>mp[i];
+    // freopen("in","r",stdin);
+    // freopen("out","w",stdout);
+    int ks=0;while(rit(n),n){
+        for(int i=0;i<n;++i)cin>>mp[i];
+        ll totWaz=1; bool imp=0; totLen=0;
+        for(int i=0;i<n-1;++i){
+            pii ipos=findPos(i+'A'),
+                jpos=findPos(i+'B');
+            ll itoj=getPath(ipos,jpos);
+            if(itoj==?){imp=1;break;}
+            totWaz=totWaz*itoj%mod;
         }
+        cout<<"Case "<<(++ks)<<": ";
 
-        int posx[26],posy[26];
-        memset(posx,0,sizeof(posx));
-        memset(posy,0,sizeof(posy));
-        for(int i=0;i<n;i++){
-            posy[0] = mp[i].find('A');
-            if(posy[0]!=string::npos){
-                posx[0]=i;
-                break;
-            }
-        }
-        totshort=0;
-        tottype =1;
-        bool jizz = 0;
-        for(int i=1;!(jizz);i++){
-            //finding
-            gotshort=0;
-            thistype=0;
-
-            bool fd=false;     // cout<<"jizz"<<endl;
-            for(int a=0;a<n;a++){   //cout<<n<<endl;
-                posy[i] = mp[a].find(i+65);
-                if( posy[i] !=string::npos){
-                    fd=true;
-                    posx[i] = a;
-                    break;
-                }
-            }   //    cout<<"asd"<<endl;
-            if(!fd){    //cout<<"jizz";
-                break;
-            }
-            else if(fd){
-                _6 _;
-                _.a=posx[i-1];
-                _.b=posy[i-1];
-                _.c=posx[i];
-                _.d=posy[i];
-                _.e=i+65;
-                _.f=0;
-                goq.push(_);
-                memset(gone,0,sizeof(gone));
-                while(goq.size()>0){
-                    go(goq.front().a,goq.front().b,goq.front().c,goq.front().d,goq.front().e,goq.front().f);
-                }
-                mp[posx[0]][posy[0]]='.';
-            }
-            tottype*=thistype;
-            if(tottype==0){
-                cout<<"Impossible"<<endl;
-                jizz = 1;
-                break;
-            }
-            totshort+=gotshort;
-            mp[posx[i]][posy[i]]='.';
-            gotshort=0;
-        }
-        if(!jizz){
-            cout<<totshort%20437<<" "<<tottype%<<endl;
-        }
     }
 }
