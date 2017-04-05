@@ -2,22 +2,22 @@
 #include<cstdio>
 #include<cstdlib>
 #include<cstring>
-#include<cmath>
-#include<ctime>
+// #include<cmath>
+// #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<map>
-#include<set>
-#include<unordered_map>
-#include<unordered_set>
-#include<bitset>
-#include<vector>
-#include<utility>
+// #include<iostream>
+// #include<iomanip>
+// #include<sstream>
+// #include<deque>
+// #include<queue>
+// #include<stack>
+// #include<map>
+// #include<set>
+// #include<unordered_map>
+// #include<unordered_set>
+// #include<bitset>
+// #include<vector>
+// #include<utility>
 
 using namespace std;
 
@@ -80,14 +80,14 @@ using namespace std;
 #endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto it:mp)ostm<<*it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto it:s)ostm<<*it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto it:mp)ostm<<*it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto it:s)ostm<<*it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 inline int lowbit(int &x){return x&-x;}
 inline ll lowbit(ll &x){return x&-x;}
@@ -136,34 +136,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct disjointSet{
-    std::vector<int> djs;
-    void init(int size){
-        djs.resize(size);
-        for(int i=0;i<size;++i)djs[i]=i;
-    }
-    int F(int x){return djs[x]==x?x:djs[x]=F(djs[x]);}
-    void U(int x,int y){djs[F(x)]=F(y);}
-    bool C(int x,int y){return F(x)==F(y);}
-} djs;
 int a[1006];
-vector<int> num;
 
 int main(){
-    int n;while(cin>>n){
-        djs.init(n+5); num.clear();
+    int n;while(rit(n)){
         for(int i=1;i<=n;++i){
-            cin>>a[i];
-            num.pb(a[i]);
+            rit(a[i]);
         }
-        sort(num.begin(),num.end());
+        int cnt=0;
         for(int i=1;i<=n;++i){
-            a[i]=lower_bound(num.begin(),num.end(),a[i])-num.begin()+1;
-            djs.U(a[i],i);
+            for(int j=n-1;j>=i;--j){
+                if(a[j]>a[j+1]){
+                    swap(a[j],a[j+1]);
+                    ++cnt;
+                }
+            }
         }
-        set<int> s;
-        for(int i=1;i<=n;++i)s.insert(djs.F(i));
-        cout<<"Minimum exchange operations : ";
-        cout<<n-(int)s.size()<<endl;
+        printf("Minimum exchange operations : %d\n",cnt);
     }
 }
