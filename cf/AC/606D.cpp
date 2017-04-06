@@ -128,67 +128,39 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"-1";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct line{
-    ld a,b,c; //ax+by+c=0
-    line(ld aa,ld bb,ld cc){a=aa, b=bb, c=cc;}
-    line(ld x1,ld y1,ld x2,ld y2){b=x1-x2, a=y2-y1, c=-a*x1-b*y1;}
-};
-vector<line> l;
-bool ival[111];
-
-pair<ld,ld> getIts(const line &l1,const line &l2){
-    // ax+by+c=0 aAx+bAy+cA=0
-    // Ax+By+C=0 Aax+Bay+Ca=0
-    // y=-(cA+Ca)/(bA-Ba);
-    if(fabs(l1.b*l2.a-l2.b*l1.a)<eps)return pair<ld,ld>(7122.,7122.);
-    if(fabs(l1.a)<eps && fabs(l2.a)<eps)return pair<ld,ld>(7122.,7122.);
-    ld y=(l2.c*l1.a-l2.a*l1.c)/(l1.b*l2.a-l2.b*l1.a),x;
-    if(!(fabs(l1.a)<eps))x=-(l1.b*y+l1.c)/l1.a;
-    else x=-(l2.b*y+l2.c)/l2.a;
-    return pair<ld,ld>(x,y);
-}
-
+struct edge{int s,t,w,i,u;} e[100009];
 int main(){
-    int n;while(cin>>n,n){
-        l.clear();
-        int bk=1;
-        for(int i=0;i<n;++i)while(n--){
-            ld x1,y1,x2,y2;cin>>x1>>y1>>x2>>y2;
-            line now=line(x1,y1,x2,y2);
-
-            vector<pair<ld,ld>> nd;
-            // map<pair<ld,ld>,bool> pt;
-            for(int i=0;i<l.size();++i){
-                pair<ld,ld> tmp=getIts(l[i],now);
-                PDE1(tmp);
-                if(tmp.X<0 || tmp.Y<0 || tmp.X>1 || tmp.Y>1)continue;
-                nd.push_back(tmp);
-                // if(pt.find(tmp)==pt.end()){
-                //     ++bk; pt[tmp]=1;
-                // }
-            }
-            MS0(ival);
-            for(int i=0;i<nd.size();++i){
-                if(ival[i])continue;
-                for(int j=i+1;j<nd.size();++j){
-                    if(ival[j])continue;
-                    if(fabs(nd[i].X-nd[j].X)<eps && fabs(nd[i].Y-nd[j].Y)<eps)ival[j]=1;
-                }
-            }
-            for(int i=0;i<nd.size();++i){
-                if(!ival[i])++bk;
-            }
-
-            l.push_back(now);
-            ++bk;
-            PDE1(bk);
+    int n,m;cin>>n>>m;
+    for(int i=0;i<m;++i){
+        int w,u;cin>>w>>u;
+        e[i]={-1,-1,w,i,u};
+    }
+    sort(e,e+m,[](const edge &a,const edge &b){return a.w==b.w?a.u>b.u:a.w<b.w;});
+    int n_in_mst=1;
+    deque<pii> trash;
+    for(int i=0;i<m;++i){
+        if(e[i].u==0){
+            if(trash.empty())JIZZ();
+            e[i].s=trash.front().X, e[i].t=trash.front().Y;
+            trash.pop_front();
         }
-        cout<<bk<<endl;
+        else{
+            e[i].s=n_in_mst, e[i].t=n_in_mst+1;
+            for(int j=1;j<n_in_mst;++j){
+                if((int)trash.size()>=m-i-1)break;
+                trash.push_back({j,n_in_mst+1});
+            }
+            ++n_in_mst;
+        }
+    }
+    sort(e,e+m,[](const edge &a,const edge &b){return a.i<b.i;});
+    for(int i=0;i<m;++i){
+        cout<<e[i].s<<" "<<e[i].t<<endl;
     }
 }

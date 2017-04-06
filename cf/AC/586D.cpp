@@ -134,61 +134,36 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct line{
-    ld a,b,c; //ax+by+c=0
-    line(ld aa,ld bb,ld cc){a=aa, b=bb, c=cc;}
-    line(ld x1,ld y1,ld x2,ld y2){b=x1-x2, a=y2-y1, c=-a*x1-b*y1;}
-};
-vector<line> l;
-bool ival[111];
-
-pair<ld,ld> getIts(const line &l1,const line &l2){
-    // ax+by+c=0 aAx+bAy+cA=0
-    // Ax+By+C=0 Aax+Bay+Ca=0
-    // y=-(cA+Ca)/(bA-Ba);
-    if(fabs(l1.b*l2.a-l2.b*l1.a)<eps)return pair<ld,ld>(7122.,7122.);
-    if(fabs(l1.a)<eps && fabs(l2.a)<eps)return pair<ld,ld>(7122.,7122.);
-    ld y=(l2.c*l1.a-l2.a*l1.c)/(l1.b*l2.a-l2.b*l1.a),x;
-    if(!(fabs(l1.a)<eps))x=-(l1.b*y+l1.c)/l1.a;
-    else x=-(l2.b*y+l2.c)/l2.a;
-    return pair<ld,ld>(x,y);
+string mp[3];
+int gone[3][111];
+int n,k;
+int dfs(int x,int y){
+    PDE2(x,y);
+    if(y>=n)return 1;
+    if(gone[x][y])return gone[x][y];
+    gone[x][y]=-1;
+    if(x && mp[x-1][y]=='.' && mp[x-1][y+1]=='.' && mp[x-1][y+2]=='.' && mp[x-1][y+3]=='.' && dfs(x-1,y+3)==1)gone[x][y]=1;
+    if(     mp[x  ][y]=='.' && mp[x  ][y+1]=='.' && mp[x  ][y+2]=='.' && mp[x  ][y+3]=='.' && dfs(x  ,y+3)==1)gone[x][y]=1;
+    if(x!=2&&mp[x+1][y]=='.'&& mp[x+1][y+1]=='.' && mp[x+1][y+2]=='.' && mp[x+1][y+3]=='.' && dfs(x+1,y+3)==1)gone[x][y]=1;
+    return gone[x][y];
 }
 
 int main(){
-    int n;while(cin>>n,n){
-        l.clear();
-        int bk=1;
-        for(int i=0;i<n;++i)while(n--){
-            ld x1,y1,x2,y2;cin>>x1>>y1>>x2>>y2;
-            line now=line(x1,y1,x2,y2);
-
-            vector<pair<ld,ld>> nd;
-            // map<pair<ld,ld>,bool> pt;
-            for(int i=0;i<l.size();++i){
-                pair<ld,ld> tmp=getIts(l[i],now);
-                PDE1(tmp);
-                if(tmp.X<0 || tmp.Y<0 || tmp.X>1 || tmp.Y>1)continue;
-                nd.push_back(tmp);
-                // if(pt.find(tmp)==pt.end()){
-                //     ++bk; pt[tmp]=1;
-                // }
-            }
-            MS0(ival);
-            for(int i=0;i<nd.size();++i){
-                if(ival[i])continue;
-                for(int j=i+1;j<nd.size();++j){
-                    if(ival[j])continue;
-                    if(fabs(nd[i].X-nd[j].X)<eps && fabs(nd[i].Y-nd[j].Y)<eps)ival[j]=1;
-                }
-            }
-            for(int i=0;i<nd.size();++i){
-                if(!ival[i])++bk;
-            }
-
-            l.push_back(now);
-            ++bk;
-            PDE1(bk);
+    int ts;cin>>ts;while(ts--){
+        MS0(gone);
+        cin>>n>>k;
+        cin>>mp[0]>>mp[1]>>mp[2];
+        mp[0]+="...."; mp[1]+="...."; mp[2]+="....";
+        int atx=-1,aty=0;
+        if(mp[0][0]=='s')atx=0;
+        else if(mp[1][0]=='s')atx=1;
+        else atx=2;
+        if(mp[atx][1]=='.'){
+            ++aty;
+            dfs(atx,aty);
+            if(gone[atx][aty]==1)cout<<"YES\n";
+            else cout<<"NO\n";
         }
-        cout<<bk<<endl;
+        else cout<<"NO\n";
     }
 }
