@@ -112,9 +112,9 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    while(c=getchar(), (c&15 && c!='-') || c>'9')if(c==EOF)return false;
     c=='-' ? (fg=1,x=0) : (x=c&15);
     while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
@@ -134,6 +134,37 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n;
+bool p[222];
+void dfs(int dep,int cnt){
+    if(cnt>(n>>1))return;
+    if(dep-cnt>(n>>1))return;
+    if(dep==n){
+        int ii=0;
+        for(int i=0;i<n;++i){
+            if(p[i])++ii;
+            else --ii;
+            if(ii<0)return;
+        }
+        if(ii)return;
+        for(int i=0;i<n;++i){
+            if(p[i])putchar('(');
+            else putchar(')');
+        }
+        puts("");
+    }
+    else{
+        p[dep]=1; dfs(dep+1,cnt+1);
+        p[dep]=0; dfs(dep+1,cnt);
+    }
+}
+
 int main(){
-    //
+    bool first=0;
+    while(cin>>n){
+        n<<=1;
+        if(first)puts("");
+        first=1;
+        dfs(0,0);
+    }
 }

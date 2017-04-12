@@ -134,6 +134,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool only[11];
+bool chk(ll n){
+    while(n)if(!only[n%10])return 0;else n/=10;
+    return 1;
+}
 int main(){
-    //
+    ll n;while(cin>>n){
+        int m;cin>>m;MS0(only);
+        while(m--){
+            int t;cin>>t;only[t]=1;
+        }
+        for(ll i=1;i<=1000000;++i){
+            ll num=i*n;
+            // PDE2(i,num);
+            if(chk(num)){
+                cout<<num<<endl;
+                goto nexT;
+            }
+        }
+        cout<<0<<endl;
+        nexT:;
+    }
 }

@@ -134,6 +134,72 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct point{
+    int x,y,i;
+    point():x(0),y(0),i(0){};
+    point(int xx,int yy):x(xx),y(yy),i(0){};
+    point(int xx,int yy,int ii):x(xx),y(yy),i(ii){};
+} vt[33333];
+point operator-(const point &a,const point &b){return point(b.x-a.x,b.y-a.y,7122);}
+int operator^(const point &a,const point &b){return a.x*b.y-a.y*b.x;}
+ll operator*(const point &a,const point &b){return (ll)(b-a).x*(b-a).x+(ll)(b-a).y*(b-a).y;}
+int tb[33333],tbz,far[33333],ans[33333];
 int main(){
-    //
+    int n;while(cin>>n,n){
+        tbz=0; MS(far,-1);
+        for(int i=0;i<33333;++i){
+            vt[i]=point(0,0,0);
+            tb[i]=far[i]=ans[i]=0;
+        }
+        for(int i=0;i<n;++i)cin>>vt[i].x>>vt[i].y,vt[i].i=i+1;
+        sort(vt,vt+n,[](const point &a,const point &b){return a.x==b.x?a.y>b.y:a.x<b.x;});
+        for(int i=0;i<n;++i){
+            while(tbz>1 && ((vt[i]-vt[tb[tbz-1]])^(vt[tb[tbz-2]]-vt[tb[tbz-1]]))>0)--tbz;
+            tb[tbz++]=i;
+        }
+        int rside=tbz-1;
+        for(int i=n-2;i>=0;--i){
+            while(tbz>rside+1 && ((vt[i]-vt[tb[tbz-1]])^(vt[tb[tbz-2]]-vt[tb[tbz-1]]))>0)--tbz;
+            tb[tbz++]=i;
+        }
+        assert((--tbz)==n);
+        int lptr=0,rptr=rside;
+        // cout<<"tu bao: ";
+        // for(int i=0;i<n;++i)cout<<vt[tb[i]].x<<","<<vt[tb[i]].y<<endl;
+        // cout<<"ready go rotate"<<endl;
+        while(lptr<n){
+            // PDE2(lptr,rptr);
+            if(far[lptr]==-1)far[lptr]=rptr;
+            else{
+                ll od=vt[tb[far[lptr]]]*vt[tb[lptr]],
+                   nd=vt[tb[rptr]]*vt[tb[lptr]];
+                // PDE2(od,nd);
+                if(nd>od){
+                    // cout<<"shorter!"<<endl;
+                    far[lptr]=rptr;
+                }
+                else if(nd==od){
+                    // cout<<"same distance, check number"<<endl;
+                    if(vt[tb[far[lptr]]].i>vt[tb[rptr]].i)far[lptr]=rptr;
+                }
+            }
+            // cout<<"now lptr:"<<lptr<<", match rptr is "<<far[lptr]<<endl;
+
+            if(((vt[tb[(lptr+1)%n]]-vt[tb[lptr]])^(vt[tb[rptr]]-vt[tb[(rptr+1)%n]]))>0){
+                rptr=(rptr+1)%n;
+            }
+            else ++lptr;
+        }
+        for(int i=0;i<n;++i){
+            // cout<<"tu bou number "<<i<<" = original number "<<vt[tb[i]].i<<endl;
+        }
+        for(int i=0;i<n;++i){
+            // cout<<"   lptr: "<<i<<" , rptr: "<<far[i]<<endl;
+            // cout<<"-> lnum: "<<vt[tb[i]].i<<" , rnum: "<<vt[tb[far[i]]].i<<endl;
+            ans[vt[tb[i]].i]=vt[tb[far[i]]].i;
+        }
+        for(int i=1;i<=n;++i){
+            cout<<ans[i]<<endl;
+        }
+    }
 }

@@ -128,12 +128,38 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"Poor Sereja!\n";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n,m;
+pii blu[2222],red[2222];
+// blu goes y and red goes x
+
+
+bool check(int t){
+    
+}
+
 int main(){
-    //
+    cin>>n>>m;
+    for(int i=0;i<n;++i){
+        int x,y;cin>>x>>y;
+        blu[i]={x+y,y-x};
+    }
+    for(int i=0;i<m;++i){
+        int x,y;cin>>x>>y;
+        red[i]={x+y,y-x};
+    }
+    if(n==1 || m==1)JIZZ();
+
+    int L=1,R=4000009;
+    while(R>L){
+        int mid=L+R>>1;
+        if(check(mid))R=mid;
+        else L=mid+1;
+    }
+    cout<<L<<endl;
 }

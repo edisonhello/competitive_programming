@@ -112,9 +112,9 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    while(c=getchar(), (c&15 && c!='-') || c>'9')if(c==EOF)return false;
     c=='-' ? (fg=1,x=0) : (x=c&15);
     while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
@@ -134,6 +134,56 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct D{int y,m,d;} a,b;
+bool operator<(const D &a,const D &b){return a.y==b.y?a.m==b.m?a.d<b.d:a.m<b.m:a.y<b.y;}
+
+
+bool isR(int y){
+    if(y%400==0)return 1;
+    if(y%100==0)return 0;
+    if(y%4==0)return 1;
+    return 0;
+}
+int gD(int y,int m){
+    if(m==1||m==3||m==5||m==7||m==8||m==10||m==12)return 31;
+    if(m==2){
+        if(isR(y))return 29;
+        return 28;
+    }
+    return 30;
+}
 int main(){
-    //
+    while(cin>>a.y>>a.m>>a.d>>b.y>>b.m>>b.d){
+        if(b<a)swap(a,b);
+        int tot=0;
+        if(a.y!=b.y){
+            for(int i=a.y+1;i<b.y;++i){
+                tot+=isR(i)?366:365;
+            }
+            for(int i=a.m+1;i<=12;++i){
+                tot+=gD(a.y,i);
+            }
+            for(int i=a.d;i<=gD(a.y,a.m);++i)++tot;
+            for(int i=1;i<b.m;++i){
+                tot+=gD(b.y,i);
+            }        
+            tot+=b.d;
+        }
+        else{
+            if(a.m!=b.m){
+                for(int i=a.m+1;i<b.m;++i){
+                    tot+=gD(a.y,i);
+                }
+                for(int i=a.d;i<=gD(a.y,a.m);++i){
+                    ++tot;
+                }
+                tot+=b.d;
+            }
+            else{
+                tot+=b.d-a.d+1;
+            }
+        }
+
+        cout<<tot-1<<endl;
+    }
 }

@@ -134,6 +134,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+const int MX=200000;
+int num[MX+87],nnum[MX+87];
 int main(){
-    //
+    int ts;cin>>ts;while(ts--){
+        int n,k;cin>>n>>k;
+        MS0(num); MS0(nnum);
+        int ptr=MX; num[MX]=k;
+        while("jizz"){
+            nnum[ptr]+=num[ptr]*n;
+            if(num[MX]==nnum[ptr] && num[ptr]!=0)break;
+            nnum[ptr-1]=nnum[ptr]/10; nnum[ptr]%=10;
+            --ptr;
+            num[ptr]=nnum[ptr+1];
+            // for(int i=ptr;i<=MX;++i)cout<<nnum[i];cout<<endl;
+            if(ptr<10){
+                cout<<0<<endl;
+                goto nexT;
+            }
+        }
+        for(int i=ptr;i<=MX;++i)cout<<num[i];cout<<endl;
+        nexT:;
+    }
 }

@@ -135,5 +135,14 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    //
+    int ts;cin>>ts;while(ts--){
+        ll a,b,n;cin>>a>>b>>n;
+        n=(n-1)%6+1;
+        ll meow[10]={0};
+        meow[1]=a,meow[2]=b;
+        for(int i=3;i<=6;++i){
+            meow[i]=meow[i-1]-meow[i-2];
+        }
+        cout<<(meow[n]%mod+mod)%mod<<endl;
+    }
 }

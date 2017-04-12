@@ -112,7 +112,7 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
     c=='-' ? (fg=1,x=0) : (x=c&15);
@@ -134,6 +134,104 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct node{
+    node *l,*r;
+    ll mx,tag;
+    node():l(NULL),r(NULL),mx(0),tag(0){};
+    node(int v):l(NULL),r(NULL),mx(0),tag(0){};
+} *root;
+ll a[300005];
+
+#define mid ((l+r)>>1)
+void build(node *now,int l,int r){
+    if(l==r){
+        // now->pre = now->mx = pre+a[l];
+        return;
+    }
+    build(now->l = new node(),l,mid);
+    build(now->r = new node(),mid+1,r);
+    // now->mx = max({now->l->mx,now->r->mx});
+}
+void modify(node *now,int l,int r,int ml,int mr,ll v){
+    if(now->tag){
+        now->mx += now->tag;
+        if(now->l){
+            now->l->tag += now->tag;
+            now->r->tag += now->tag;
+        }
+        now->tag = 0;
+    }
+    if(ml<=l && r<=mr){
+        now->mx += v;
+        if(now->l){
+            now->l->tag += v;
+            now->r->tag += v;
+        }
+        return;
+    }
+    if(r<ml || mr<l)return;
+    modify(now->l,l,mid,ml,mr,v);
+    modify(now->r,mid+1,r,ml,mr,v);
+    now->mx = max({now->l->mx,now->r->mx});
+}
+ll getMx(node *now,int l,int r,int ql,int qr){
+    if(now->tag){
+        now->mx += now->tag;
+        if(now->l){
+            now->l->tag += now->tag;
+            now->r->tag += now->tag;
+        }
+        now->tag = 0;
+    }
+    if(ql<=l&&r<=qr)return now->mx;
+    if(qr<l || r<ql)return -(1ll<<61);
+    return max(getMx(now->l,l,mid,ql,qr),getMx(now->r,mid+1,r,ql,qr));
+}
+#undef mid
+
+int n;
+void allMinusCheck(){
+    bool allMinus=1;
+    for(int i=1;i<=n;++i)if(a[i]>=0){
+        allMinus=0;
+        break;
+    }
+    if(allMinus){
+        ll mn=-(1ll<<61);
+        for(int i=1;i<=n;++i)mn=max(mn,a[i]);
+        cout<<mn<<endl;
+        exit(0);
+    }
+    else return;
+}
+struct chg{int l,r;ll v;};
+bool operator<(const chg &a,const chg &b){return a.l==b.l?a.r<b.r:a.l<b.l;}
+vector<chg> l;
 int main(){
-    //
+    int m; rit(n,m);
+    for(int i=1;i<=n;++i)rit(a[i]);
+    allMinusCheck();
+    build(root = new node(),1,n);
+    for(int i=1;i<=n;++i)modify(root,1,n,i,n,a[i]);
+    while(m--){
+        int b,c,d; rit(b,c,d);
+        l.push_back({b,c,d});
+    }
+    sort(l.begin(),l.end());
+    reverse(l.begin(),l.end());
+    for(auto &i:l){
+        modify(root,1,n,i.r,n,i.v);
+    }
+    ll mx=root->mx;
+    PDE1(mx);
+    for(int i=1;i<=n;++i){
+        modify(root,1,n,i+1,n,-a[i]);
+        while(l.size() && l.back().l<=i){
+            modify(root,1,n,l.back().r,n,-l.back().v);
+            l.pop_back();
+        }
+        PDE1(getMx(root,1,n,i+1,n));
+        mx=max(mx,getMx(root,1,n,i+1,n));
+    }
+    cout<<mx<<endl;
 }

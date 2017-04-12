@@ -28,7 +28,6 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -134,6 +133,40 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bitset<2222> f,g,h,fg;
 int main(){
-    //
+    int ts;cin>>ts;while(ts--){
+        int df;cin>>df;f.reset();--df;
+        for(int i=df;i>=0;--i){
+            int t;cin>>t;
+            if(t)f[i]=1;
+        }
+        int dg;cin>>dg;g.reset();--dg;
+        for(int i=dg;i>=0;--i){
+            int t;cin>>t;
+            if(t)g[i]=1;
+        }
+        int dh;cin>>dh;h.reset();--dh;
+        for(int i=dh;i>=0;--i){
+            int t;cin>>t;
+            if(t)h[i]=1;
+        }
+        int dfg=df+dg;fg.reset();
+        for(int i=0;i<=df;++i){
+            if(f[i]){
+                fg^=g<<i;
+            }
+        }
+        for(int i=dfg;i>=dh;--i){
+            if(fg[i]){
+                fg^=(h<<(i-dh));
+            }
+        }
+        while(dfg && fg[dfg]==0)--dfg;
+        if(dfg==0 && fg[dfg]==0)cout<<0<<endl;
+        else{
+            cout<<dfg+1;
+            for(int i=dfg;i>=0;--i)cout<<" "<<fg[i];cout<<endl;
+        }
+    }
 }

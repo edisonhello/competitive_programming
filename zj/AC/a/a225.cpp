@@ -112,9 +112,9 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    while(c=getchar(), (c&15 && c!='-') || c>'9')if(c==EOF)return false;
     c=='-' ? (fg=1,x=0) : (x=c&15);
     while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
@@ -134,6 +134,15 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+ll a[1111];
 int main(){
-    //
+    int n;while(cin>>n){
+        for(int i=0;i<n;++i)cin>>a[i];
+        sort(a,a+n,[](const ll &a,const ll &b){
+            if(a%10 != b%10)return a%10 < b%10;
+            else return a/10 > b/10;
+        });
+        for(int i=0;i<n;++i)cout<<a[i]<<" ";
+        cout<<endl;
+    }
 }

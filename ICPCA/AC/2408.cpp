@@ -135,5 +135,8 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    //
+    ld y,m,d,t;while(cin>>y>>m>>d>>t){
+        ld tt=11529215046068469.75/6.0/6.0/24.0/365.242199*t;
+        cout<<fixed<<setprecision(1)<<y+(m*30.5+d)/365.242199+tt<<endl;
+    }
 }

@@ -134,6 +134,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int meow(ll n){
+    bool app[10]={0};
+    for(ll i=1;;++i){
+        ll num=n*i;
+        while(num){
+            app[num%10]=1;
+            num/=10;
+        }
+        for(int i=0;i<10;++i){
+            if(!app[i])goto nexT;
+        }
+        return i;
+        nexT:;
+    }
+}
 int main(){
-    //
+    ll n;
+    while(cin>>n)cout<<meow(n)<<endl;
 }

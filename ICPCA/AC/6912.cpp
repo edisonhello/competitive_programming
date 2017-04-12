@@ -134,6 +134,31 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int sw[1111];
 int main(){
-    //
+    int ts,ks=0;cin>>ts;while(ts--){
+        int n,k;cin>>n>>k;
+        for(int i=0;i<k;++i)cin>>sw[i];
+        sort(sw,sw+k);
+        int ptr=0,mx=0;
+        while(ptr<k && sw[ptr]*sw[ptr]<=n)++ptr;
+        for(int i=0;i<(1<<ptr);++i){
+            bool b[1111]={0};
+            for(int j=0;j<ptr;++j){
+                if(!(i&(1<<j)))continue;
+                for(int l=sw[j];l<=n;l+=sw[j])b[l]^=1;
+            }
+            for(int j=ptr;j<k;++j){
+                int o0=0,o1=0;
+                for(int l=sw[j];l<=n;l+=sw[j])if(b[l])++o1;else ++o0;
+                if(o0>o1)
+                for(int l=sw[j];l<=n;l+=sw[j])b[l]^=1;
+            }
+            int cnt=0;
+            for(int i=1;i<=n;++i)if(b[i])++cnt;
+            mx=max(mx,cnt);
+        }
+        cout<<"Case #"<<(++ks)<<": ";
+        cout<<mx<<endl;
+    }
 }

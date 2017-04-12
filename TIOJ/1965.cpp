@@ -133,7 +133,43 @@ void JIZZ(){cout<<"";exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
+#ifndef WEAK
+#include"lib1965.h"
+#endif
+#define ull uint64_t
+ull *a;
+int ST[24][10000007];
+int n;
 
-int main(){
-    //
+
+void init(int N,ull C[]){
+    n=N, a=C;
+    for(int i=0;i<n;++i)ST[0][i]=i;
+    for(int d=1,lv=1;d<n;d<<=1,++lv){
+        for(int i=0;i+(1<<lv)-1<n;++i){
+            ST[lv][i] = a[ST[lv-1][i]]>a[ST[lv-1][i+d]] ? ST[lv-1][i] : ST[lv-1][i+d];
+            cout<<ST[lv][i]<<" ";
+        }
+        cout<<endl;
+    }
 }
+ull RMQ(int l,int r){
+    int d=r-l,lv=0;
+    while((1<<lv)<=d)++lv;--lv;
+    PDE2(lv,d);
+    return max(a[ST[lv][l]],a[ST[lv][r-(1<<(lv))]]);
+}
+
+#ifdef WEAK
+ull _C[10000007];
+int main(){
+    int n;cin>>n;
+    for(int i=0;i<n;++i)cin>>_C[i];
+    init(n,_C);
+    int m;cin>>m;
+    while(m--){
+        int a,b;cin>>a>>b;
+        cout<<RMQ(a,b)<<endl;
+    }
+}
+#endif

@@ -112,11 +112,11 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c&15);
-    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
+    c=='-' ? (fg=1,x=0) : (x=c-'0');
+    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
     if(fg)x=-x; return true;
 }
 template<typename T,typename ...Args>
@@ -134,6 +134,19 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool a[300005];
 int main(){
-    //
+    CIO; cin.tie(0);
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    int ans=0;
+    for(int i=1,j;i<=n;++i){
+        if(a[i]){
+            ++ans;
+            for(j=i;j<=n;j+=i){
+                a[j]^=1;
+            }
+        }
+    }
+    cout<<ans<<endl;
 }

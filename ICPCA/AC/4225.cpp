@@ -134,6 +134,37 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+const int base[]={2,2*3,2*3*5,2*3*5*7,2*3*5*7*11,2*3*5*7*11*13,2*3*5*7*11*13*17,2*3*5*7*11*13*17*19,2*3*5*7*11*13*17*19*23},c=9;
 int main(){
-    //
+    int n;while(cin>>n,n){
+        int cnt[15]={0};
+        int ptr=8,mxr,orin; while(ptr && base[ptr]>n)--ptr; mxr=ptr; orin=n;
+        if(ptr==-1){
+            cout<<"1 = 1\n";
+            continue;
+        }
+        while(ptr>=0){
+            cnt[ptr+1]=n/base[ptr];
+            n%=base[ptr--];
+        }
+        cnt[0]=n;
+        bool first=1;
+        cout<<orin<<" = ";
+        for(int i=0;i<=mxr+1;++i){
+            if(!cnt[i])continue;
+            if(!first)cout<<" + ";
+            first=0;
+            cout<<cnt[i];
+            if(i==1)cout<<"*2";
+            if(i==2)cout<<"*2*3";
+            if(i==3)cout<<"*2*3*5";
+            if(i==4)cout<<"*2*3*5*7";
+            if(i==5)cout<<"*2*3*5*7*11";
+            if(i==6)cout<<"*2*3*5*7*11*13";
+            if(i==7)cout<<"*2*3*5*7*11*13*17";
+            if(i==8)cout<<"*2*3*5*7*11*13*17*19";
+            if(i==9)cout<<"*2*3*5*7*11*13*17*19*23";
+        }
+        cout<<endl;
+    }
 }

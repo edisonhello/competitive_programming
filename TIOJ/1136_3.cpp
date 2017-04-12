@@ -134,6 +134,47 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n;
+struct Mat{
+    ld mat[111][111];
+    Mat(int n){for(int i=0;i<n;++i)for(int j=0;j<n;++j)mat[i][j]=0.0;}
+    Mat(int n,int i){for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j)mat[i][j]=0.0;
+        mat[i][i]=1.0;
+    }}
+};
+Mat operator*(const Mat &a,const Mat &b){
+    Mat rt(n);
+    for(int i=0;i<n;++i)for(int j=0;j<n;++j)for(int k=0;k<n;++k)rt.mat[i][j]+=a.mat[i][k]*b.mat[k][j];
+    return rt;
+}
+Mat pow(Mat b,int t){
+    Mat a(n,1);
+    while(t){
+        if(t&1)a=a*b;
+        b=b*b; t>>=1;
+    }
+    return a;
+}
+
+vint G[111];
 int main(){
-    //
+    int t;while(cin>>n>>t){
+        if(!(n|t))return 0;
+        for(int i=0;i<=n;++i)G[i].clear();
+        int c;cin>>c;while(c--){
+            int u,v;cin>>u>>v;--u;--v;
+            G[u].pb(v);G[v].pb(u);
+        }
+        int x;cin>>x;--x;
+        Mat mat(n);
+        for(int i=0;i<n;++i){
+            if(G[i].empty())continue;
+            for(int j:G[i])mat.mat[i][j]=1.0/(ld)G[i].size();
+        }
+        mat=pow(mat,t);
+        ld ans=0;
+        for(int i=0;i<n;++i)ans+=mat.mat[i][x];
+        cout<<fixed<<setprecision(4)<<ans/(ld)n<<endl;
+    }
 }

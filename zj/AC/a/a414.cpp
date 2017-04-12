@@ -115,7 +115,7 @@ template<typename T>
 inline bool rit(T &x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c&15);
+    c=='-' ? (fg=1,x=0) : (x=(c&15));
     while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
 }
@@ -135,5 +135,12 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    //
+    int n;while(rit(n),n){
+        int ans=0;
+        for(int i=0;;++i){
+            if(!((1ll<<i)&n))break;
+            ++ans;
+        }
+        pit(ans),el;
+    }
 }

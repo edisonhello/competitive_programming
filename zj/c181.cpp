@@ -112,11 +112,11 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T &x){
+inline bool rit(T& x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c&15);
-    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
+    c=='-' ? (fg=1,x=0) : (x=c-'0');
+    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
     if(fg)x=-x; return true;
 }
 template<typename T,typename ...Args>
@@ -134,6 +134,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+ll a[300009];
+bool xhv[300009];
+queue<int> x;
+set<int> y;
 int main(){
-    //
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=0,tmp;i<(n>>1);++i){
+        cin>>tmp; xhv[tmp]=1;
+        x.push(tmp);
+    }
+    for(int i=1;i<=n;++i)if(!xhv[i])y.insert(i);
+    ll sc=0;
+    int lptr=1; while(xhv[lptr])++lptr;
+    while(x.size()){
+        auto it=y.lower_bound(x.front());
+        if(it==y.end()){
+            // cout<<"not found"<<endl;
+            y.erase(lptr);
+            sc-=a[lptr++]; while(xhv[lptr])++lptr;
+        }
+        else{
+            // cout<<"found"<<endl;
+            sc+=a[*it];
+            xhv[*it]=1;
+            y.erase(*it);
+        }
+        x.pop();
+    }
+    cout<<sc<<endl;
 }

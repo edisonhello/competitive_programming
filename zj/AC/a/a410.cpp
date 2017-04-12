@@ -134,6 +134,21 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+// ax+by=c
+// dx+ey=f
 int main(){
-    //
+    ld a,b,c,d,e,f;
+    while(cin>>a>>b>>c>>d>>e>>f){
+        ld delta=a*e-b*d;
+        ld delx =c*e-b*f;
+        ld dely =a*f-c*d;
+        if(fabs(delta)<eps){
+            if(fabs(delx)<eps && fabs(dely)<eps)cout<<"Too many"<<endl;
+            else cout<<"No answer"<<endl;
+            continue;
+        }
+        cout<<"x="<<fixed<<setprecision(2)<<delx/delta<<endl;
+        cout<<"y="<<fixed<<setprecision(2)<<dely/delta<<endl;
+    }
 }
+
