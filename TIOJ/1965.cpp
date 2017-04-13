@@ -70,6 +70,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -81,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
+#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -136,40 +138,72 @@ const ll mod=1e9+7;
 #ifndef WEAK
 #include"lib1965.h"
 #endif
+
 #define ull uint64_t
-ull *a;
-int ST[24][10000007];
-int n;
+ull *a,b[420000];
+int n,nblock,blockSize,blockST[420000][4][16],bigST[20][420000];
 
 
-void init(int N,ull C[]){
-    n=N, a=C;
-    for(int i=0;i<n;++i)ST[0][i]=i;
-    for(int d=1,lv=1;d<n;d<<=1,++lv){
-        for(int i=0;i+(1<<lv)-1<n;++i){
-            ST[lv][i] = a[ST[lv-1][i]]>a[ST[lv-1][i+d]] ? ST[lv-1][i] : ST[lv-1][i+d];
-            cout<<ST[lv][i]<<" ";
+ull buildBlockST(int n,int l,int r){
+    int s=r-l+1; ull mx=0;
+    for(int i=l;i<=r;++i)blockST[n][0][i-l]=i,mx=max(mx,a[i]);
+    for(int i=1,d=1;d<s;++i,d<<=1){
+        for(int j=l;j+(d<<1)-1<=r;++j){
+            blockST[n][i][j-l] = a[blockST[n][i-1][j-l]] > a[blockST[n][i-1][j+d-l]] ? blockST[n][i-1][j-l] : blockST[n][i-1][j+d-l];
         }
-        cout<<endl;
+    } return mx;
+}
+void buildBigST(){
+    for(int i=0;i<nblock;++i)bigST[0][i]=i;
+    for(int i=1,d=1;d<nblock;++i,d<<=1){
+        for(int j=0;j+(d<<1)-1<nblock;++j){
+            bigST[i][j] = b[bigST[i-1][j]] > b[bigST[i-1][j+d]] ? bigST[i-1][j] : bigST[i-1][j+d];
+        }
     }
 }
-ull RMQ(int l,int r){
-    int d=r-l,lv=0;
-    while((1<<lv)<=d)++lv;--lv;
-    PDE2(lv,d);
-    return max(a[ST[lv][l]],a[ST[lv][r-(1<<(lv))]]);
+void init(int N,ull C[]){
+    a=C; n=N; blockSize=ceil(log(n)/log(2)/2), nblock=ceil((double)n/blockSize);
+    for(int i=0;i<nblock;++i)b[i]=buildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
+    buildBigST();
 }
 
+ll queryBlock(int n,int l,int r){
+    int d=r-l+1,lv=0;
+    while((1<<lv)<=d)++lv; --lv;
+    return max(a[blockST[n][lv][l-n*blockSize]],a[blockST[n][lv][r-(1<<lv)+1-n*blockSize]]);
+}
+ll queryBig(int l,int r){
+    if(r<l)return 0;
+    int d=r-l+1,lv=0;
+    while((1<<lv)<=d)++lv; --lv;
+    return max(b[bigST[lv][l]],b[bigST[lv][r-(1<<lv)+1]]);
+}
+ull RMQ(int l,int r){
+    if(r-l==1)return a[l]; --r;
+    int lblock=l/blockSize;
+    int rblock=r/blockSize;
+    PDE4(l,r,lblock,rblock);
+    if(lblock==rblock){
+        return queryBlock(lblock,l,r);
+    }
+    else{
+        return max({queryBlock(lblock,l,(lblock+1)*blockSize)
+                   ,queryBig(lblock+1,rblock-1)
+                   ,queryBlock(rblock,rblock*blockSize,r)});
+    }
+}
+
+
 #ifdef WEAK
-ull _C[10000007];
+ull C[10000007];
 int main(){
-    int n;cin>>n;
-    for(int i=0;i<n;++i)cin>>_C[i];
-    init(n,_C);
-    int m;cin>>m;
-    while(m--){
-        int a,b;cin>>a>>b;
-        cout<<RMQ(a,b)<<endl;
+    int N;cin>>N;
+    for(int i=0;i<N;++i)cin>>C[i];
+    init(N,C);
+    int M;cin>>M;
+    for(int i=0;i<M;++i){
+        int L,R;cin>>L>>R;
+        cout<<RMQ(L,R)<<endl;
     }
 }
 #endif

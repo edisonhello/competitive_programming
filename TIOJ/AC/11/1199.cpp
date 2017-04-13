@@ -1,23 +1,23 @@
-#include<cassert>
+// #include<cassert>
 #include<cstdio>
-#include<cstdlib>
-#include<cstring>
-#include<cmath>
-#include<ctime>
-#include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<map>
-#include<set>
-#include<unordered_map>
-#include<unordered_set>
-#include<bitset>
-#include<vector>
-#include<utility>
+// #include<cstdlib>
+// #include<cstring>
+// #include<cmath>
+// #include<ctime>
+// #include<algorithm>
+// #include<iostream>
+// #include<iomanip>
+// #include<sstream>
+// #include<deque>
+// #include<queue>
+// #include<stack>
+// #include<map>
+// #include<set>
+// #include<unordered_map>
+// #include<unordered_set>
+// #include<bitset>
+// #include<vector>
+// #include<utility>
 
 using namespace std;
 
@@ -70,7 +70,6 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -82,7 +81,6 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
-#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -92,19 +90,19 @@ using namespace std;
 #endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
-    const int N=1048576;
+    const int N=65535;
     static char __buffer[N];
     static char *__p=__buffer,*__end=__buffer;
     if(__p==__end){
@@ -130,12 +128,25 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+// void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+inline int pow(int b,int n,int &m,int a=1){
+    while(n){
+        if(n&1)a=a*b%m;
+        b=b*b%m; n>>=1;
+    } return a;
+}
 int main(){
-    //
+    int n,y,ans,meow,x;while(rit(ans,n,y),y){
+        meow=0;
+        for(x=0;x<y;++x){
+            if(x==0 && n==0)continue;
+            if(pow(x,n,y)==ans)++meow;
+        }
+        pit(meow),el;
+    }
 }

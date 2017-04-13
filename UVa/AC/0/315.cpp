@@ -144,7 +144,7 @@ void dfs(int now,int p){
             lw[now]=min(lw[now],itm[i]);
         }
     }
-    if(lw[now]<=itm[now] && ((ch>=1 && p)||(!p && ch>1)) && dea){
+    if(((ch>=1 && p)||(!p && ch>1)) && dea){
         ++ans;
         // cout<<"ans ++ at "<<now<<endl;
     }

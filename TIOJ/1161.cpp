@@ -134,73 +134,10 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int n;
-vector<int> G[111];
-
-void init(vector<vector<ld>> &v,int n){
-    v.clear(); v.resize(111);
-    for(int i=0;i<111;++i){
-        v[i].resize(111);
-        for(int j=0;j<111;++j){
-            v[i][j]=0.0;
-        }
-    }
-}
-
-vector<vector<ld>> meow(vector<vector<ld>> &a,vector<vector<ld>> &b){
-    vector<vector<ld>> rt; init(rt,n);
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            for(int k=0;k<n;++k){
-                rt[i][j]+=a[i][k]*b[k][j];
-            }
-        }
-    }
-    return rt;
-}
-
-vector<vector<ld>> pow(vector<vector<ld>> b,int t){
-    vector<vector<ld>> a; init(a,n); for(int i=0;i<n;++i)a[i][i]=1.0;
-    while(t){
-        if(t&1)a=meow(a,b);
-        b=meow(b,b); t>>=1;
-    }
-    return a;
-}
-
-void print(vector<vector<ld>> &v){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            cout<<v[i][j]<<" ";
-        }
-        cout<<endl;
-    }
-}
+int n,k;
 
 int main(){
-    int t;while(cin>>n>>t){
-        if(n==0 && t==0)return 0;
-        vector<vector<ld>> mat; init(mat,n);
-        int C;cin>>C;while(C--){
-            int u,v;cin>>u>>v;--u,--v;
-            G[u].pb(v),G[v].pb(u);
-        }
-        int x;cin>>x;--x;
-        if(t==0){
-            cout<<fixed<<setprecision(4)<<(ld)1/(ld)n<<endl;
-            continue;
-        }
-        for(int i=0;i<n;++i){
-            for(int j:G[i]){
-                mat[i][j]=G[j].size() ? (ld)1/(ld)(int)G[j].size() : 0;
-            }
-        }
-        // print(mat);
-        mat=pow(mat,t);
-        ld ans=0;
-        for(int i=0;i<n;++i)ans+=mat[i][x];
-        int canexp=0; for(int i=0;i<n;++i)if(G[i].size())++canexp;
-        cout<<fixed<<setprecision(4)<<ans/(ld)canexp<<endl;
-        for(int i=0;i<n;++i)G[i].clear();
+    int ts;cin>>ts;while(ts--){
+        cin>>n>>k;
     }
 }

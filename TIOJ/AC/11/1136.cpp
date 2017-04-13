@@ -1,28 +1,28 @@
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
-#include<cstring>
-#include<cmath>
-#include<ctime>
+// #include<cstring>
+// #include<cmath>
+// #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<map>
-#include<set>
-#include<unordered_map>
-#include<unordered_set>
-#include<bitset>
+// #include<iostream>
+// #include<iomanip>
+// #include<sstream>
+// #include<deque>
+// #include<queue>
+// #include<stack>
+// #include<map>
+// #include<set>
+// #include<unordered_map>
+// #include<unordered_set>
+// #include<bitset>
 #include<vector>
-#include<utility>
+// #include<utility>
 
 using namespace std;
 
 #define ll long long
-#define ld long double
+#define ld double
 #define X first
 #define Y second
 #define SZ(x) ((int)(x).size())
@@ -70,7 +70,6 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -82,7 +81,6 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
-#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -92,14 +90,14 @@ using namespace std;
 #endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
 
@@ -130,12 +128,58 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+// void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n;
+struct Mat{
+    ld mat[100][100];
+    Mat(int n){for(int i=0;i<n;++i)for(int j=0;j<n;++j)mat[i][j]=0.0;}
+    Mat(int n,int i){for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j)mat[i][j]=0.0;
+        mat[i][i]=1.0;
+    }}
+};
+Mat operator*(const Mat &a,const Mat &b){
+    Mat rt(n);
+    for(int i=0;i<n;++i)for(int k=0;k<n;++k)for(int j=0;j<n;++j)rt.mat[i][j]+=a.mat[i][k]*b.mat[k][j];
+    return rt;
+}
+Mat pow(Mat &b,int &t){
+    Mat a(n,1);
+    while(t){
+        if(t&1)a=a*b;
+        b=b*b; t>>=1;
+    } return a;
+}
+
+int G[100][100];
+int deg[100];
 int main(){
-    //
+    ld tmp;
+    int t,c,u,v,x,i,j;while(rit(n,t)){
+        if(!(n|t))return 0;
+        for(i=0;i<n;++i){
+            for(int j=0;j<deg[i];++j)G[i][j]=0;
+            deg[i]=0;
+        }
+        rit(c);while(c--){
+            rit(u,v);--u;--v;
+            G[u][deg[u]++]=v;G[v][deg[v]++]=u;
+        }
+        rit(x);--x;
+        Mat mat(n);
+        for(i=0;i<n;++i){
+            if(!deg[i])continue;
+            tmp=1.0/deg[i];
+            for(j=0;j<deg[i];++j)mat.mat[i][G[i][j]]=tmp;
+        }
+        mat=pow(mat,t);
+        ld ans=0;
+        for(i=0;i<n;++i)ans+=mat.mat[i][x];
+        printf("%.4f\n",ans/n);
+    }
 }

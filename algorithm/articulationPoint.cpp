@@ -13,7 +13,7 @@ void dfs(int now,int p){
         }
         else lw[now]=min(lw[now],itm[i]);
     }
-    if(lw[now]<=itm[now] && ((ch>=1 && p)||(!p && ch>1)) && dea)++ans;
+    if(((ch>=1 && p)||(!p && ch>1)) && dea)++ans;
 }
 
 int main(){

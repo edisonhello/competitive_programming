@@ -135,46 +135,47 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int n;
-struct Mat{
-    ld mat[111][111];
-    Mat(int n){for(int i=0;i<n;++i)for(int j=0;j<n;++j)mat[i][j]=0.0;}
-    Mat(int n,int i){for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j)mat[i][j]=0.0;
-        mat[i][i]=1.0;
-    }}
-};
-Mat operator*(const Mat &a,const Mat &b){
-    Mat rt(n);
-    for(int i=0;i<n;++i)for(int j=0;j<n;++j)for(int k=0;k<n;++k)rt.mat[i][j]+=a.mat[i][k]*b.mat[k][j];
-    return rt;
-}
-Mat pow(Mat b,int t){
-    Mat a(n,1);
-    while(t){
-        if(t&1)a=a*b;
-        b=b*b; t>>=1;
+ll S,W,Q,a[100555],pre[100005];
+map<ll,int> mp;
+void gen(){
+    int g=S;
+    for(int i=0;i<n;++i){
+        a[i]=(g/7)%10;
+        if(g%2==0)g/=2;
+        else g=(g/2)^W;
     }
-    return a;
+}
+ll pw(ll b,int n,ll a=1,ll m=Q){
+    while(n){
+        if(n&1)a=a*b%m;
+        b=b*b%m; n>>=1;
+    } return a;
 }
 
-vint G[111];
+int __buffer[7122],not0[100005];
 int main(){
-    int t;while(cin>>n>>t){
-        if(!(n|t))return 0;
-        for(int i=0;i<=n;++i)G[i].clear();
-        int c;cin>>c;while(c--){
-            int u,v;cin>>u>>v;--u;--v;
-            G[u].pb(v);G[v].pb(u);
+    while(cin>>n>>S>>W>>Q,n){
+        MS0(a), MS0(pre);
+        gen(); mp.clear();
+        if(Q==2 || Q==5){
+            MS0(not0), MS0(__buffer);
+            for(int i=0;i<n;++i)not0[i]=not0[i-1]+(a[i]==0?0:1);
+            ll ans=0;
+            for(int i=0;i<n;++i)if(a[i]%Q==0)ans+=not0[i];
+            cout<<ans<<endl;
+            continue;
         }
-        int x;cin>>x;--x;
-        Mat mat(n);
-        for(int i=0;i<n;++i){
-            if(G[i].empty())continue;
-            for(int j:G[i])mat.mat[i][j]=1.0/(ld)G[i].size();
+        // for(int i=0;i<n;++i)cout<<a[i]<<" ";cout<<endl;
+        for(int i=0;i<n;++i)pre[i]=(pre[i-1]+a[i]*pw(10,n-1-i))%Q;
+        // for(int i=0;i<n;++i)cout<<pre[i]<<" ";cout<<endl;
+        ll ans=0;
+        for(int i=n-1;i>=0;--i){
+            if(a[i+1]==0)goto addVal;
+            ans+=mp[pre[i]];
+            addVal:;
+            ++mp[pre[i]];
         }
-        mat=pow(mat,t);
-        ld ans=0;
-        for(int i=0;i<n;++i)ans+=mat.mat[i][x];
-        cout<<fixed<<setprecision(4)<<ans/(ld)n<<endl;
+        if(a[0]!=0)ans+=mp[0];
+        cout<<ans<<endl;
     }
 }

@@ -134,81 +134,45 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct mat{
-    vector<vector<ld>> m;
-    void init(int n){
-        m.resize(n);
-        for(int i=0;i<n;++i){
-            m[i].resize(n);
-            for(int j=0;j<n;++j){
-                m[i][j]=0.0;
-            }
+int low[12345],num[12345],tm;
+vint G[12345],arch;
+
+void dfs(int now,int pa){
+    low[now]=num[now]=++tm;
+    int ch=0; bool isa=0;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        if(num[i])low[now]=min(low[now],num[i]);
+        else{
+            ++ch; dfs(i,now);
+            low[now]=min(low[now],low[i]);
+            if(low[i]>=num[now])++isa;
         }
     }
-};
-int n;
-mat operator*(const mat &a,const mat &b){
-    mat tmp; tmp.init(n);
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            for(int k=0;k<n;++k){
-                tmp.m[i][j]+=a.m[i][k]*b.m[k][j];
-            }
-        }
-    }
-    return tmp;
-}
-
-
-mat pow(mat b,int t){
-    mat a; a.init(n); for(int i=0;i<n;++i)a.m[i][i]=1.0;
-    while(t){
-        if(t&1)a=a*b;
-        b=b*b; t>>=1;
-    }
-    return a;
-}
-
-vint G[111];
-
-void printMat(mat &a){
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            cout<<a.m[i][j]<<" ";
-        }
-        cout<<endl;
-    }
+    if(((!pa && ch>1)||(pa && ch>0)) && isa)arch.pb(now);
 }
 
 int main(){
-    int t;while(cin>>n>>t){
-        if(!(n|t))return 0;
-        for(int i=0;i<n;++i)G[i].clear();
-        int c;cin>>c;
-        while(c--){
-            int u,v;cin>>u>>v;--u,--v;
+    int ts;cin>>ts;while(ts--){
+        int n,m;cin>>n>>m;
+        arch.clear(); MS0(low), MS0(num), tm=0;
+        for(int i=0;i<=n;++i)G[i].clear();
+        while(m--){
+            int u,v;cin>>u>>v;
             G[u].pb(v), G[v].pb(u);
         }
-        mat bs; bs.init(n);
-        for(int i=0;i<n;++i){
-            if(G[i].empty())continue;
-            ld baseChance=(ld)1/(ld)(int)G[i].size();
-            for(int ii:G[i]){
-                bs.m[i][ii]=baseChance;
+        dfs(1,0);
+        // cout<<"num: ";for(int i=1;i<=n;++i)cout<<num[i]<<" ";cout<<endl;
+        // cout<<"low: ";for(int i=1;i<=n;++i)cout<<low[i]<<" ";cout<<endl;
+        if(arch.size()){
+            sort(arch.begin(),arch.end());
+            cout<<arch.size()<<endl;
+            for(int i=0;i<arch.size();++i){
+                if(i)cout<<" ";
+                cout<<arch[i];
             }
+            cout<<endl;
         }
-        bs=pow(bs,t);
-        int X;cin>>X;--X;
-        if(t==0){
-            cout<<fixed<<setprecision(4)<<(ld)1/(ld)n<<endl;
-            continue;
-        }
-        ld ans=0.0;
-        for(int i=0;i<n;++i){
-            ans+=bs.m[i][X];
-        }
-        int haveEdgePot=0;
-        for(int i=0;i<n;++i)if(G[i].size())++haveEdgePot;
-        cout<<fixed<<setprecision(4)<<ans/(ld)haveEdgePot<<endl;
+        else cout<<"0\n0\n";
     }
 }

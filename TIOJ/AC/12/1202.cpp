@@ -1,23 +1,23 @@
-#include<cassert>
+// #include<cassert>
 #include<cstdio>
-#include<cstdlib>
-#include<cstring>
-#include<cmath>
-#include<ctime>
+// #include<cstdlib>
+// #include<cstring>
+// #include<cmath>
+// #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<map>
+// #include<iostream>
+// #include<iomanip>
+// #include<sstream>
+// #include<deque>
+// #include<queue>
+// #include<stack>
+// #include<map>
 #include<set>
-#include<unordered_map>
-#include<unordered_set>
-#include<bitset>
+// #include<unordered_map>
+// #include<unordered_set>
+// #include<bitset>
 #include<vector>
-#include<utility>
+// #include<utility>
 
 using namespace std;
 
@@ -70,7 +70,6 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -82,7 +81,6 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
-#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -92,14 +90,14 @@ using namespace std;
 #endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
+// template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+// template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
 
@@ -130,12 +128,52 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+// void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct event{bool type;int h,p;};
+vector<event> v;
+multiset<int> h;
+
 int main(){
-    //
+    int n,i,j,l,_,r,ph;
+    multiset<int>::iterator it;
+    while(rit(n),n){
+        v.clear(), h.clear(); v.resize(n<<1);
+        for(i=0;i<n;++i){
+            rit(l,_,r);
+            v[(i<<1)]={1,_,l};
+            v[(i<<1)+1]={0,_,r};
+        }
+        sort(v.begin(),v.end(),[](const event &a,const event &b){return a.p<b.p;});
+        ph=0;
+        for(i=0,j=0;i<(n<<1);i=j){
+            event &oe=v[i];
+            for(;j<(n<<1);++j){
+                // PDE3(e.type,e.h,e.p);
+                event &e=v[j];
+                if(e.p!=oe.p)break;
+                if(e.type)h.insert(e.h);
+                else h.erase(h.find(e.h));
+            }
+            if(h.size()){
+                it=h.end(); --it;
+                if((*it)!=ph){
+                    pit(oe.p,*it),spc;
+                    ph=(*it);
+                }
+            }
+            else{
+                if(ph!=0){
+                    pit(oe.p),spc,putchar('0');
+                    if(oe.p!=v[v.size()-1].p)spc;
+                    ph=0;
+                }
+            }
+        }
+        el;
+    }
 }

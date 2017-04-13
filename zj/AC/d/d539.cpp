@@ -70,6 +70,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -81,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
+#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -133,33 +135,52 @@ void JIZZ(){cout<<"";exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
+#ifndef WEAK
+// #include"lib1965.h"
+#endif
 
-int n;
-ll S,W,Q,a[100555],pre[100005];
-map<ll,int> mp;
-void gen(){
-    int g=S;
-    for(int i=0;i<n;++i){
-        a[i]=(g/7)%10;
-        if(g%2==0)g/=2;
-        else g=(g/2)^W;
+#define ull uint64_t
+// ull *a;
+int a[500009];
+int n,ST[20][500009];
+
+void buildST(){
+    for(int i=0;i<n;++i)ST[0][i]=a[i];
+    for(int i=1,d=1;d<n;++i,d<<=1){
+        for(int j=0;j+(d<<1)-1<n;++j){
+            ST[i][j] = max(ST[i-1][j],ST[i-1][j+d]);
+            if(DEBUG)cout<<ST[i][j]<<" ";
+        }
+        if(DEBUG)cout<<endl;
     }
+}
+int RMQ(int l,int r){
+    // if(r-l==1)return a[l];
+    int d=r-l+1,lv=0;
+    while((1<<lv)<=d)++lv;--lv;
+    return max(ST[lv][l],ST[lv][r-(1<<lv)+1]);
 }
 
 int main(){
-    while(cin>>n>>S>>W>>Q,n){
-        gen(); mp.clear();
-        for(int i=0;i<n;++i)cout<<a[i]<<" ";cout<<endl;
-        for(int i=0;i<n;++i)pre[i]=(pre[i-1]*10+a[i])%Q;
-        for(int i=0;i<n;++i)cout<<pre[i]<<" ";cout<<endl;
-        int ans=0;
-        for(int i=n-1;i>=0;--i){
-            if(a[i]==0)goto addVal;
-            ans+=mp[pre[i]];
-            addVal:;
-            ++mp[pre[i]];
-        }
-        ans+=mp[0];
-        cout<<ans<<endl;
+    cin>>n;
+    for(int i=0;i<n;++i)cin>>a[i];
+    buildST();
+    int m;cin>>m;
+    while(m--){
+        int l,r;cin>>l>>r;--l,--r;
+        cout<<RMQ(min(l,r),max(l,r))<<endl;
     }
 }
+// #ifdef WEAK
+// ull C[10000007];
+// int main(){
+//     int N;cin>>N;
+//     for(int i=0;i<N;++i)cin>>C[i];
+//     init(N,C);
+//     int M;cin>>M;
+//     for(int i=0;i<M;++i){
+//         int L,R;cin>>L>>R;
+//         cout<<RMQ(L,R)<<endl;
+//     }
+// }
+// #endif
