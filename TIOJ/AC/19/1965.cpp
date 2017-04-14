@@ -140,56 +140,137 @@ const ll mod=1e9+7;
 #endif
 
 #define ull uint64_t
-ull *a,b[420000];
-int n,nblock,blockSize,blockST[420000][4][16],bigST[20][420000];
+// ull *a,b[420000];
+// int n,nblock,blockSize,blockST[420000][4][16],bigST[20][420000];
+ull *a,*b,*blockST[4][16],*bigST[20];
+int n,nblock,blockSize,*lg,*iblockST[4][16],*ibigST[20];
 
+inline void jizz(){
+    b=new ull[nblock+7];
 
-ull buildBlockST(int n,int l,int r){
+    if(n>1000000){
+        for(int i=0;i<4;++i){
+            for(int j=0;j<blockSize+1;++j){
+                blockST[i][j]=new ull[nblock+7];
+            }
+        }
+
+        int lognblock=ceil(log(nblock)/log(2));
+        for(int i=0;i<lognblock+2;++i){
+            bigST[i]=new ull[nblock];
+        }
+    }
+    else{
+        for(int i=0;i<4;++i){
+            for(int j=0;j<blockSize+1;++j){
+                iblockST[i][j]=new int[nblock+7];
+            }
+        }
+
+        int lognblock=ceil(log(nblock)/log(2));
+        for(int i=0;i<lognblock+2;++i){
+            ibigST[i]=new int[nblock];
+        }
+    }
+}
+inline void doLog(){
+    lg=new int[n+5];
+    lg[1]=lg[2]=0;
+    for(int i=2;i<=n;++i)lg[i]=lg[i>>1]+1;
+}
+inline ull buildBlockST(int n,int l,int r){
     int s=r-l+1; ull mx=0;
-    for(int i=l;i<=r;++i)blockST[n][0][i-l]=i,mx=max(mx,a[i]);
+    for(int i=l;i<=r;++i)blockST[0][i-l][n]=a[i],mx=max(mx,a[i]);
     for(int i=1,d=1;d<s;++i,d<<=1){
         for(int j=l;j+(d<<1)-1<=r;++j){
-            blockST[n][i][j-l] = a[blockST[n][i-1][j-l]] > a[blockST[n][i-1][j+d-l]] ? blockST[n][i-1][j-l] : blockST[n][i-1][j+d-l];
+            blockST[i][j-l][n] = max(blockST[i-1][j-l][n],blockST[i-1][j+d-l][n]);
         }
     } return mx;
 }
-void buildBigST(){
-    for(int i=0;i<nblock;++i)bigST[0][i]=i;
+inline void buildBigST(){
+    for(int i=0;i<nblock;++i)bigST[0][i]=b[i];
     for(int i=1,d=1;d<nblock;++i,d<<=1){
         for(int j=0;j+(d<<1)-1<nblock;++j){
-            bigST[i][j] = b[bigST[i-1][j]] > b[bigST[i-1][j+d]] ? bigST[i-1][j] : bigST[i-1][j+d];
+            bigST[i][j] = max(bigST[i-1][j],bigST[i-1][j+d]);
+        }
+    }
+}
+inline ull ibuildBlockST(int n,int l,int r){
+    int s=r-l+1; ull mx=0;
+    for(int i=l;i<=r;++i)iblockST[0][i-l][n]=i,mx=max(mx,a[i]);
+    for(int i=1,d=1;d<s;++i,d<<=1){
+        for(int j=l;j+(d<<1)-1<=r;++j){
+            iblockST[i][j-l][n] = a[iblockST[i-1][j-l][n]] > a[iblockST[i-1][j+d-l][n]] ? iblockST[i-1][j-l][n] : iblockST[i-1][j+d-l][n];
+        }
+    } return mx;
+}
+inline void ibuildBigST(){
+    for(int i=0;i<nblock;++i)ibigST[0][i]=i;
+    for(int i=1,d=1;d<nblock;++i,d<<=1){
+        for(int j=0;j+(d<<1)-1<nblock;++j){
+            ibigST[i][j] = b[ibigST[i-1][j]] > b[ibigST[i-1][j+d]] ? ibigST[i-1][j] : ibigST[i-1][j+d];
         }
     }
 }
 void init(int N,ull C[]){
     a=C; n=N; blockSize=ceil(log(n)/log(2)/2), nblock=ceil((double)n/blockSize);
-    for(int i=0;i<nblock;++i)b[i]=buildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
-    buildBigST();
+    jizz(); doLog();
+    if(n>1000000){
+        for(int i=0;i<nblock;++i)b[i]=buildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
+        buildBigST();
+    }
+    else{
+        for(int i=0;i<nblock;++i)b[i]=ibuildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
+        ibuildBigST();
+    }
 }
 
-ll queryBlock(int n,int l,int r){
-    int d=r-l+1,lv=0;
-    while((1<<lv)<=d)++lv; --lv;
-    return max(a[blockST[n][lv][l-n*blockSize]],a[blockST[n][lv][r-(1<<lv)+1-n*blockSize]]);
+inline ull queryBlock(int n,int l,int r){
+    int d=r-l+1;
+    int lv=lg[d],nblockSize=n*blockSize;
+    return max(blockST[lv][l-nblockSize][n],blockST[lv][r-(1<<lv)+1-nblockSize][n]);
 }
-ll queryBig(int l,int r){
+inline ull queryBig(int l,int r){
     if(r<l)return 0;
-    int d=r-l+1,lv=0;
-    while((1<<lv)<=d)++lv; --lv;
-    return max(b[bigST[lv][l]],b[bigST[lv][r-(1<<lv)+1]]);
+    int d=r-l+1;
+    int lv=lg[d];
+    return max(bigST[lv][l],bigST[lv][r-(1<<lv)+1]);
+}
+inline ull iqueryBlock(int n,int l,int r){
+    int d=r-l+1;
+    int lv=lg[d],nblockSize=n*blockSize;
+    return max(a[iblockST[lv][l-nblockSize][n]],a[iblockST[lv][r-(1<<lv)+1-nblockSize][n]]);
+}
+inline ull iqueryBig(int l,int r){
+    if(r<l)return 0;
+    int d=r-l+1;
+    int lv=lg[d];
+    return max(b[ibigST[lv][l]],b[ibigST[lv][r-(1<<lv)+1]]);
 }
 ull RMQ(int l,int r){
     if(r-l==1)return a[l]; --r;
     int lblock=l/blockSize;
     int rblock=r/blockSize;
     PDE4(l,r,lblock,rblock);
-    if(lblock==rblock){
-        return queryBlock(lblock,l,r);
+    if(n>1000000){
+        if(lblock==rblock){
+            return queryBlock(lblock,l,r);
+        }
+        else{
+            return max(queryBlock(lblock,l,(lblock+1)*blockSize-1)
+            ,max(queryBig(lblock+1,rblock-1)
+            ,queryBlock(rblock,rblock*blockSize,r)));
+        }
     }
     else{
-        return max({queryBlock(lblock,l,(lblock+1)*blockSize)
-                   ,queryBig(lblock+1,rblock-1)
-                   ,queryBlock(rblock,rblock*blockSize,r)});
+        if(lblock==rblock){
+            return iqueryBlock(lblock,l,r);
+        }
+        else{
+            return max(iqueryBlock(lblock,l,(lblock+1)*blockSize-1)
+            ,max(iqueryBig(lblock+1,rblock-1)
+            ,iqueryBlock(rblock,rblock*blockSize,r)));
+        }
     }
 }
 

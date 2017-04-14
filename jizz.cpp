@@ -54,6 +54,11 @@ using namespace std;
 #define left Ugbemugbem
 #define Osas
 
+#define YES cout<<"YES"<<endl
+#define NO cout<<"NO"<<endl
+#define Yes cout<<"Yes"<<endl
+#define No cout<<"No"<<endl
+
 #ifdef WEAK
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
@@ -65,6 +70,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -76,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
+#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -107,11 +114,11 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T& x){
+inline bool rit(T &x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c-'0');
-    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
+    c=='-' ? (fg=1,x=0) : (x=c&15);
+    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
 }
 template<typename T,typename ...Args>
@@ -129,35 +136,69 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-bool blk[1009][1009];
-ll ans=0,h[1009];
+#define ull uint64_t
+int a[500009],b[500009];
+int n,nblock,blockSize,blockST[420000][4][16],bigST[20][420000];
+
+int buildBlockST(int n,int l,int r){
+    int s=r-l+1; int mx=0;
+    for(int i=l;i<=r;++i)blockST[n][0][i-l]=i,mx=max(mx,a[i]);
+    for(int i=1,d=1;d<s;++i,d<<=1){
+        for(int j=l;j+(d<<1)-1<=r;++j){
+            blockST[n][i][j-l] = a[blockST[n][i-1][j-l]] > a[blockST[n][i-1][j+d-l]] ? blockST[n][i-1][j-l] : blockST[n][i-1][j+d-l];
+        }
+    } return mx;
+}
+void buildBigST(){
+    for(int i=0;i<nblock;++i)bigST[0][i]=i;
+    for(int i=1,d=1;d<nblock;++i,d<<=1){
+        for(int j=0;j+(d<<1)-1<nblock;++j){
+            bigST[i][j] = b[bigST[i-1][j]] > b[bigST[i-1][j+d]] ? bigST[i-1][j] : bigST[i-1][j+d];
+        }
+    }
+}
+void init(){
+    blockSize=ceil(log(n)/log(2)/2), nblock=ceil((double)n/blockSize);
+    for(int i=0;i<nblock;++i)b[i]=buildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
+    buildBigST();
+}
+
+int queryBlock(int n,int l,int r){
+    PDE3(n,l,r);
+    int d=r-l+1,lv=0;
+    while((1<<lv)<=d)++lv; --lv;
+    return max(a[blockST[n][lv][l-n*blockSize]],a[blockST[n][lv][r-(1<<lv)+1-n*blockSize]]);
+}
+int queryBig(int l,int r){
+    PDE2(l,r);
+    if(r<l)return 0;
+    int d=r-l+1,lv=0;
+    while((1<<lv)<=d)++lv; --lv;
+    return max(b[bigST[lv][l]],b[bigST[lv][r-(1<<lv)+1]]);
+}
+int RMQ(int l,int r){
+    if(r==l)return a[l];
+    int lblock=l/blockSize;
+    int rblock=r/blockSize;
+    PDE4(l,r,lblock,rblock);
+    if(lblock==rblock){
+        return queryBlock(lblock,l,r);
+    }
+    else{
+        return max({queryBlock(lblock,l,(lblock+1)*blockSize-1)
+                   ,queryBig(lblock+1,rblock-1)
+                   ,queryBlock(rblock,rblock*blockSize,r)});
+    }
+}
+
+
 int main(){
-    int n,m,k;
-    cin>>n>>m>>k;
-    while(k--){
-        int r,c;cin>>r>>c;
-        blk[r][c]=1;
+    cin>>n;
+    for(int i=0;i<n;++i)cin>>a[i];
+    init();
+    int M;cin>>M;
+    for(int i=0;i<M;++i){
+        int L,R;cin>>L>>R;--L;--R;
+        cout<<RMQ(min(L,R),max(L,R))<<endl;
     }
-    for(int i=1;i<=n;++i){
-        for(int j=1;j<=m;++j){
-            if(blk[i][j])h[j]=0;
-            else ++h[j];
-        }
-        pii stk[100]; int tp=0;
-        for(int j=1;j<=m;++j){
-            while(tp>0 && stk[tp-1].Y>h[j])--tp;
-            if(tp==0){
-                ans+=h[j]*j;
-                stk[tp++]={j,h[j]};
-            }
-            else{
-                if(tp>0 && h[j]>stk[tp-1].Y)stk[tp++]={j,h[j]};
-                for(int k=0;k<tp;++k){
-                    ans+=(j-stk[k].X+1)*stk[k].Y;
-                }
-            }
-        }
-        PDE1(ans);
-    }
-    cout<<ans<<endl;
 }
