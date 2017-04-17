@@ -147,11 +147,12 @@ bool live(ld t){
     return 1;
 }
 int main(){
+    CIO; cin.tie(0);
     cin>>n>>p;
     ld tota=0,totb=0;
     for(int i=0;i<n;++i)cin>>a[i]>>b[i],tota+=a[i],totb+=b[i];
     if(tota<p+(1e-9))JIZZ();
-    ld l=0,r=1e25;
+    ld l=0,r=1e15;
     while(r-l>eps){
         ld mid=(l+r)/2;
         if(live(mid))l=mid;
@@ -159,3 +160,7 @@ int main(){
     }
     cout<<fixed<<setprecision(10)<<l<<endl;
 }
+// 26422589 23:28 WA 4
+// 26424619 35:34 WA 4
+// 26426073 43:50 TLE 10
+// 26426193 44:35 AC

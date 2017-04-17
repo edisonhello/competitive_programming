@@ -136,6 +136,20 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
-    //
+ld x[1009],y[1009];
+ld meow(int i,int j,int k){
+    ld area=fabs(x[i]*y[j]+x[j]*y[k]+x[k]*y[i]-y[i]*x[j]-y[j]*x[k]-y[k]*x[i]);
+    ld dx=x[i]-x[k],dy=y[i]-y[k],bt=sqrt(dx*dx+dy*dy);
+    return area/bt/2;
 }
+
+int main(){
+    int n;cin>>n;
+    for(int i=0;i<n;++i)cin>>x[i]>>y[i];
+    ld mx=1e30;
+    for(int i=0;i<n;++i){
+        mx=min(mx,meow(i,(i+1)%n,(i+2)%n));
+    }
+    cout<<fixed<<setprecision(10)<<mx<<endl;
+}
+// 26428647 62:43 AC (binsjl)
