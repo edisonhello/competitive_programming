@@ -136,8 +136,12 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-map<pair<int,int>,pair<int,int>> ev;
-
+ll cnt[70009];
 int main(){
-    //
+    cnt[0]=cnt[1]=1;
+    for(int i=2;i<=7000;++i)for(int j=0;j<=(i>>1);++j)cnt[i]+=cnt[j];
+    int ts,ks=0;cin>>ts;while(ts--){
+        int n;cin>>n;
+        cout<<(++ks)<<" "<<cnt[n]<<endl;
+    }
 }
