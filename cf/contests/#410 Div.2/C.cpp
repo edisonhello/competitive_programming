@@ -163,5 +163,12 @@ int main(){
             ++cnt;
         }
     }
+    while(ary[n-1]&1){
+        ll a=ary[n-2]-ary[n-1],b=ary[n-2]+ary[n-1];
+        ary[n-2]=a, ary[n-1]=b;
+        ++cnt;
+    }
+    cout<<"YES\n";
+    cout<<cnt<<endl;
 
 }
