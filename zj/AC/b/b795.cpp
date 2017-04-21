@@ -136,55 +136,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-vector<pii> G[1000006];
-int in[1000006],out[1000006],val[1000006],BIT[2200006],ptr=1;
+ld a[11111],avg;
 
-void modify(int v,int x){
-    while(x<=ptr){
-        BIT[x]+=v;
-        x+=lowbit(x);
-    }
-}
-int query(int x,int v=0){
-    while(x>0){
-        v+=BIT[x];
-        x-=lowbit(x);
-    } return v;
-}
-void _flat(int now){
-    in[now]=ptr++;
-    for(pii &i:G[now]){
-        val[ptr-1]=i.Y; BIT[ptr-1]=i.Y;
-        _flat(i.X);
-        val[ptr-1]=i.Y; BIT[ptr-1]=i.Y;
-        ++ptr;
-    }
-    out[now]=ptr;
-}
 int main(){
-    int n,q,a,b,m,com,d;rit(n,q);
-    for(int i=1;i<n;++i){
-        rit(a,b,m);
-        G[a].pb(pii(b,m));
-    }
-    _flat(0);
-    for(int i=2;i<=ptr;++i)BIT[i]+=BIT[i-1];
-    for(int i=2;i<=ptr;++i)BIT[i]-=BIT[i-lowbit(i)];
-    cout<<"in: ";for(int i=0;i<n;++i)cout<<in[i]<<" ";cout<<endl;
-    cout<<"out: ";for(int i=0;i<n;++i)cout<<out[i]<<" ";cout<<endl;
-    cout<<"val: ";for(int i=1;i<=ptr;++i)cout<<val[i]<<" ";cout<<endl;
-    cout<<"BIT: ";for(int i=1;i<=ptr;++i)cout<<BIT[i]<<" ";cout<<endl;
-    while(q--){
-        rit(com);
-        if(com){
-            rit(d);
-            printf("%d\n",query(out[d]-2)-query(in[d]-1));
+    int ts;cin>>ts;while(ts--){
+        int n;cin>>n;
+        avg=0;
+        for(int i=0;i<n;++i)cin>>a[i],avg+=a[i];
+        ld ls=0; avg/=n;
+        for(int j=0;j<n;++j)ls+=(a[j]-avg)*(a[j]-avg);
+        ls/=n;
+        ls=sqrt(ls);
+        cout<<fixed<<setprecision(2)<<ls<<endl;
+        int q;cin>>q;while(q--){
+            ld a,b;cin>>a>>b;
+            cout<<fixed<<setprecision(2)<<ls*abs(a)<<endl;
         }
-        else{
-            rit(d,m);
-            modify(m-val[in[d]-1],in[d]-1);
-            modify(m-val[out[d]-1],out[d]-1);
-            val[in[d]-1]=val[out[d]-1]=m;
-        }
+        cout<<endl;
     }
 }
