@@ -136,29 +136,70 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-struct meow{ll u,d,v;};
-int n,m,A,B;
-vector<meow> G[10009];
-
-ll d[10009];
-ll normaldij(){
-    for(int i=1;i<=n;++i)d[i]=999999999999999999ll;
-    priority_queue<pair<ll,int>,vector<pair<ll,int>>,greater<pair<ll,int>>> pq;
-    pq.push(pair<ll,int>(0,A)); d[A]=0;
+bool v[2000];
+vint p;
+set<int> sp;
+void init(){
+    for(int i=2;i<=1000;++i){
+        if(!v[i])p.pb(i);
+        for(int j=0;i*p[j]<=1000;++j){
+            v[i*p[j]]=1;
+            if(i%p[j]==0)break;
+        }
+    }
+    for(int i:p)sp.insert(i);
 }
-ll speeddij(){
-
+void even(int n){
+    int ptr=upper_bound(p.begin(),p.end(),n>>1)-p.begin()-1;
+    while(ptr>=0){
+        if(sp.find(n-p[ptr])!=sp.end()){
+            printf("2 %d %d\n",p[ptr],n-p[ptr]);
+            return;
+        } --ptr;
+    }
+}
+int oa[3];
+bool dfs(int n,int lft){
+    if(lft==1){
+        if(sp.find(n)!=sp.end()){
+            oa[0]=n;return 1;
+        } return 0;
+    }
+    else if(lft==2){
+        int ptr=upper_bound(p.begin(),p.end(),n>>1)-p.begin()-1;
+        while(ptr>=0){
+            oa[1]=p[ptr];
+            if(dfs(n-p[ptr],lft-1))return 1;
+        } --ptr;
+        return 0;
+    }
+    else if(lft==3){
+        int ptr=upper_bound(p.begin(),p.end(),n/3)-p.begin()-1;
+        while(ptr>=0){
+            oa[2]=p[ptr];
+            if(dfs(n-p[ptr],lft-1))return 1;
+        } --ptr;
+        return 0;
+    }
+}
+bool u2(int n){
+    if(sp.find(n-2)!=sp.end()){
+        printf("2 2 %d\n",n-2);
+    }
+}
+void odd(int n){
+    if(u2(n))return;
+    dfs(n,3);
+    sort(oa,oa+3);
+    printf("3 %d %d %d\n",oa[0],oa[1],oa[2]);
+}
+void meow(int n){
+    if(sp.find(n)!=sp.end())printf("1 %d\n",n);
+    else if(!(n%2))even(n);
+    else odd(n);
 }
 
 int main(){
-    int ts;cin>>ts;while(ts--){
-        cin>>n>>m>>A>>B;
-        for(int i=1;i<=n;++i)G[i].clear();
-        while(m--){
-            ll s,t,d,v;
-            G[s].push_back({t,d,v});
-            G[t].push_back({s,d,v});
-        }
-        cout<<normaldij()<<" "<<speeddij()<<endl;
-    }
+    init();
+    int n;while(scanf("%d",&n),n)meow(n);
 }
