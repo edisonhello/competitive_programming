@@ -172,3 +172,6 @@ int main(){
     cout<<cnt<<endl;
 
 }
+// 26550604 36:24 AC
+//          78:03 locked
+//          84:50 unsuccessful hack

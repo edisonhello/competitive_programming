@@ -145,3 +145,6 @@ int main(){
     if(cnt==1 || (cnt==0 && s.length()&1))cout<<"YES";
     else cout<<"NO";
 }
+// 26539956 02:05 WA 8
+// 26540552 03:32 AC
+//          31:08 locked
