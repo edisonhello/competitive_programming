@@ -70,6 +70,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -81,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define endl '\n'
 #define getchar gtx
+#define DEBUG 0
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -112,11 +114,11 @@ inline int gtx(){
 }
 
 template<typename T>
-inline bool rit(T& x){
+inline bool rit(T &x){
     char c=0; bool fg=0;
     while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c-'0');
-    while(c=getchar(), c>='0' && c<='9')x=x*10+c-'0';
+    c=='-' ? (fg=1,x=0) : (x=c&15);
+    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
     if(fg)x=-x; return true;
 }
 template<typename T,typename ...Args>
@@ -128,44 +130,19 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"0\n";exit(0);}
+void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-string mp[22]; int n,m,sx,sy;
-bool v[22][22];
-vector<pii> d;
-
-int dfs(int x,int y){
-    v[x][y]^=1; d.push_back({x,y});
-    if(abs(x-sx)<1 && abs(y-sy)<1 && v[x][y])return 1;
-    PDE2(x,y);
-    if(x<n-1 && mp[x+1][y]!='.' && !v[x+1][y] && dfs(x+1,y))return 1;
-    if(y<m-1 && mp[x][y+1]!='.' && !v[x][y+1] && dfs(x,y+1))return 1;
-    if(x>0 && mp[x-1][y]!='.' && !v[x-1][y] && dfs(x-1,y))return 1;
-    if(y>0 && mp[x][y-1]!='.' && !v[x][y-1] && dfs(x,y-1))return 1;
-    d.pop_back(); return 0;
-}
-
 int main(){
-    while(cin>>mp[n++]);--n; m=mp[0].length();
-    int x=-1,y=-1,cf=0;
-    for(int i=0;i<n;++i){
-        for(int j=0;j<mp[i].length();++j){
-            if(mp[i][j]=='+'){
-                x=i,y=j;goto nS;
-            }
-        }
+    int n,t,k,d;cin>>n>>t>>k>>d;
+    int oo=((n-1)/k+1)*t;
+    int ooo=0; for(;;++ooo){
+        if(k*(ooo/t)+(ooo>=d?k*((ooo-d)/t):0)>=n)break;
     }
-    nS:;
-    if(x==-1)JIZZ();
-    v[x][y]=1;
-    dfs(sx=x,sy=y);
-    int ans=0;
-    for(int i=1;i<d.size();++i){
-        ans+=d[i-1].X*d[i].Y-d[i-1].Y*d[i].X;
-    }
-    cout<<abs(ans/2)<<endl;
+    // PDE2(oo,ooo);
+    if(ooo<oo)cout<<"YES";
+    else cout<<"NO";
 }
