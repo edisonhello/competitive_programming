@@ -137,5 +137,14 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    //
+    string a,b;cin>>a>>b;
+    string c;
+    sort(a.begin(),a.end());
+    sort(b.begin(),b.end(),greater<char>());
+    for(int i=0;i+1<a.length();i+=2){
+        c=c+a[i/2];
+        c=c+b[i/2];
+    }
+    if(c.length()!=a.length())c+=a[a.length()/2];
+    cout<<c<<endl;
 }

@@ -137,5 +137,17 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    //
+    int n; ld h;
+    cin>>n>>h;
+    ld a=h/2;
+    ld e=a/n;
+    ld l=0.;
+    ld t=0.;
+    ld d=1.0/h;
+    PDE1(e);
+    for(int i=1;i<n;++i){
+        t+=(-2*l+sqrt(4*l*l+4*2*e*d))/2/d;
+        l=t*d;
+        cout<<fixed<<setprecision(10)<<t<<endl;
+    }
 }

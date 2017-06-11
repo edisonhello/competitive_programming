@@ -130,12 +130,66 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"-1";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-12;
 const ll mod=1e9+7;
 
+int n;
+ld x1,y1,x2,y2;
+multiset<pair<ld,int>> tl;
+
 int main(){
-    //
+    cin.tie(0);
+    ios_base::sync_with_stdio(0);
+    cin>>n;
+    cin>>x1>>y1>>x2>>y2;
+    for(int i=0;i<n;++i){
+        ld rx,ry,vx,vy;cin>>rx>>ry>>vx>>vy;
+        if(vx==0 && vy==0){
+            if(!(x1<=rx && rx<=x2 && y1<=ry && ry<=y2))JIZZ();
+            LOG("insert 0 0: %d\n",i);
+            tl.insert(pair<ld,int>(0,1));
+        }
+        else if(vx==0){
+            if(!(x1<=rx && rx<=x2))JIZZ();
+            ld t1=(y1-ry)/vy,t2=(y2-ry)/vy;
+            ld L=min(t1,t2),R=max(t1,t2);
+            if(R<0)JIZZ();
+            LOG("insert 0 1: %d\n",i);
+            tl.insert(pair<ld,int>(L,1));
+            tl.insert(pair<ld,int>(R,-1));
+        }
+        else if(vy==0){
+            if(!(y1<=vy && vy<=y2))JIZZ();
+            ld t1=(x1-rx)/vx,t2=(x2-rx)/vx;
+            ld L=min(t1,t2),R=max(t1,t2);
+            if(R<0)JIZZ();
+            LOG("insert 1 0: %d\n",i);
+            tl.insert(pair<ld,int>(L,1));
+            tl.insert(pair<ld,int>(R,-1));
+        }
+        else{
+            ld xt1=(x1-rx)/vx,xt2=(x2-rx)/vx,yt1=(y1-ry)/vy,yt2=(y2-ry)/vy;
+            ld L=max(min(xt1,xt2),min(yt1,yt2)),R=min(max(xt1,xt2),max(yt1,yt2));
+            if(L>R)JIZZ();
+            if(R<0)JIZZ();
+            LOG("insert 1 1: %d\n",i);
+            PDE4(xt1,xt2,yt1,yt2);
+            PDE2(L,R);
+            tl.insert(pair<ld,int>(L,1));
+            tl.insert(pair<ld,int>(R,-1));
+        }
+    }
+    int nw=0;
+    for(auto it=tl.begin();it!=tl.end();++it){
+        nw+=it->second;
+        PDE2(nw,it->first);
+        if(nw==n){
+            cout<<fixed<<setprecision(10)<<max(0.0l,it->first)<<endl;
+            exit(0);
+        }
+    }
+    JIZZ();
 }
