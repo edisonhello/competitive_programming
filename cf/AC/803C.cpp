@@ -130,22 +130,37 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"-1";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
+    ll n,k;cin>>n>>k;
+    if(k>=1000000)JIZZ();
+    vector<ll> insu;
+    for(ll i=1;i<=(ll)sqrt(n);++i){
+        if(i*i==n){
+            insu.push_back(i);
+        }
+        else if(n%i==0){
+            insu.push_back(i);
+            insu.push_back(n/i);
+        }
     }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    sort(insu.begin(),insu.end());
+    reverse(insu.begin(),insu.end());
+    for(ll i:insu){
+        if(n/i>=k*(k+1)/2){
+            ll l=n;
+            for(ll j=i,c=0;c<k-1;++c,j+=i){
+                cout<<j<<" ";
+                l-=j;
+            }
+            cout<<l<<endl;
+            return 0;
+        }
+    }
+    JIZZ();
 }

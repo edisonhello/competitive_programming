@@ -136,16 +136,33 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool is0[200005];
+int dis[200005];
 int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
+    int n;cin>>n;
+    for(int i=0;i<n;++i){
+        dis[i]=99999999;
     }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    for(int i=0;i<n;++i){
+        int t;cin>>t;
+        is0[i]=t==0?0:1;
+        PDE2(i,is0[i]);
+    }
+    for(int i=0;i<n;++i){
+        if(!is0[i]){
+            dis[i]=0;
+            int j=i+1;
+            while(j<n && is0[j]){
+                dis[j]=min(dis[j],j-i);
+                ++j;
+            }
+            j=i-1;
+            while(j>=0 && is0[j]){
+                dis[j]=min(dis[j],i-j);
+                --j;
+            }
+        }
+    }
+    for(int i=0;i<n;++i)cout<<dis[i]<<" ";
+    cout<<endl;
 }

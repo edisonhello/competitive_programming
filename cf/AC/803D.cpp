@@ -136,16 +136,42 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
+int k;
+string s;
+
+bool can(int wid){
+    int idx=-1,len=s.length(),lines=0;
+    while(idx<len-1){
+        int lend=idx+wid;
+        if(lend>=len-1){
+            lines++;
+            break;
+        }
+        while(lend>idx){
+            if(s[lend]==' '||s[lend]=='-'){
+                idx=lend;
+                ++lines;
+                goto findend;
+            }
+            --lend;
+        }
+        return 0;
+        findend:;
+        //PDE5(wid,idx,lines,lend,len);
     }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    if(lines<=k)return 1;
+    return 0;
+}
+
+int main(){
+    cin>>k; cin.ignore();
+    getline(cin,s);
+    int L=1,R=s.length(),A=R;
+    while(R>=L){
+        int M=(L+R)>>1;
+        PDE4(L,R,M,A);
+        if(can(M))A=M,R=M-1;
+        else L=M+1;
+    }
+    cout<<A<<endl;
 }

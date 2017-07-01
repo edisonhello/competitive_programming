@@ -130,22 +130,35 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){
+    cout<<"NO";
+    exit(0);
+}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n,k;
+string s;
+int v[2345][2345];
+
+bool dp(int i,int j){
+    PDE2(i,j);
+    if(i==n)return abs(j)==k;
+    if(abs(j)>=k)return 0;
+    if(v[i][j]++)return 0;
+    if(s[i]=='W')return dp(i+1,j+1);
+    if(s[i]=='D')return dp(i+1,j);
+    if(s[i]=='L')return dp(i+1,j-1);
+    if(dp(i+1,j+1))return s[i]='W';
+    if(dp(i+1,j))return s[i]='D';
+    if(dp(i+1,j-1))return s[i]='L';
+    return 0;
+}
+
 int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
-    }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    cin>>n>>k>>s;
+    if(dp(0,0))cout<<s<<endl;
+    else JIZZ();
 }

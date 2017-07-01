@@ -137,15 +137,12 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
+    ll t=0;
+    string s;cin>>s;
+    ll pre=1;
+    for(char c:s){
+        if(c=='a')pre=pre*2%mod;
+        else t=(t+pre-1)%mod;
     }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    cout<<t%mod<<endl;
 }

@@ -136,16 +136,20 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+void find(string &s,char c,int &idx){
+    do{
+        if(s[idx]==c)return;
+    }while(++idx<(int)s.length());
+}
 int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
-    }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+    string s;
+    cin>>s;
+    int idx=0;
+    find(s,'h',idx);PDE1(idx);
+    find(s,'e',idx);PDE1(idx);
+    find(s,'i',idx);PDE1(idx);
+    find(s,'d',idx);PDE1(idx);
+    find(s,'i',idx);PDE1(idx);
+    if(idx<s.length())cout<<"YES";
+    else cout<<"NO";
 }

@@ -130,22 +130,61 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"NO";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
-    string a,b;cin>>a>>b;
-    string c;
-    sort(a.begin(),a.end());
-    sort(b.begin(),b.end(),greater<char>());
-    PDE2(a,b);
-    for(int i=0;i+1<a.length();i+=2){
-        if(a[i/2]<b[i/2])c+=a[i/2],c+=b[i/2];
-        else c+=b[i/2],c+=a[i/2];
+int n,m,bn[300005],x[300005];
+set<int> gt[300005];
+map<int,int> xon;
+map<set<int>,int> hh;
+
+void dfs(int now,int nowx,int dir,int from){
+    int ext=-1; xon[nowx]=bn[now];
+    for(int i:gt[now]){
+        if(bn[i]==from)continue;
+        else if(!~ext){
+            ext=bn[now];
+            dfs(i,nowx+dir,dir,bn[now]);
+        }
+        else if(ext!=bn[i])JIZZ();
     }
-    if(c.length()!=a.length())c+=a[a.length()/2];
-    cout<<c<<endl;
+}
+
+int main(){
+    cin>>n>>m;
+    while(m--){
+        int u,v; cin>>u>>v;
+        gt[u].insert(v);
+        gt[v].insert(u);
+    }
+    for(int i=1;i<=n;++i){
+        auto it=hh.find(gt[i]);
+        if(it!=hh.end())bn[i]=it->Y;
+        else hh[gt[i]]=bn[i]=hh.size();
+    }
+    int oneway=-1,twoway=-1;
+    xon[0]=bn[1];
+    for(int i:gt[1]){
+        if(!~oneway){
+            oneway=bn[i];
+            dfs(i,1,1,bn[i]);
+        }
+        else if(!~twoway && oneway==bn[i])continue;
+        else if(!~twoway){
+            twoway=bn[i];
+            dfs(i,-1,-1,bn[i]);
+        }
+        else if(twoway!=bn[i])JIZZ();
+    }
+    int mn=11;
+    for(auto &it:xon){
+        mn=min(mn,it.Y);
+    }
+    cout<<"YES\n";
+    for(int i=1;i<=n;++i){
+        cout<<xon[bn[i]]-mn+1<<" ";
+    }
 }
