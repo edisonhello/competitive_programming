@@ -136,17 +136,30 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
+char s[2999999];
+int jt[2999999];
+int las=0;
 int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
+    int n; cin>>n;
+    for(int i=0;i<2999999;++i)jt[i]=i;
+    for(int _=0;_<n;++_){
+        string ss; cin>>ss;
+        int t; cin>>t;
+        for(int i=0;i<t;++i){
+            int pos; cin>>pos;
+            for(int j=0;j<ss.length();){
+                int ptr=pos+j, optr=pos+j;
+                ptr=jt[ptr]; j=ptr-pos; if(j>=ss.length())break;
+                s[ptr]=ss[j]; ++j;
+                jt[optr]=max(jt[optr],(int)(pos+ss.length()));
+            }
+        }
+        // for(int i=1;i<10;++i)cout<<jt[i]<<" ";cout<<endl;
+        // for(las=2999998;las>=0;--las)if(s[las])break;++las;
+        // PDE2(las,s[las]);
+        // for(int i=1;i<las;++i)cout<<(s[i]?s[i]:'a');
     }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
-
+    for(las=2999998;las>=0;--las)if(s[las])break;++las;
+    PDE2(las,s[las]);
+    for(int i=1;i<las;++i)cout<<(s[i]?s[i]:'a');
 }

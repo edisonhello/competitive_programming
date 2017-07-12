@@ -136,17 +136,55 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
-int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
-    }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
+int BIT[11][11][4][100005];
 
+int gid(char c){
+    switch(c){
+        case 'A':return 0;
+        case 'T':return 1;
+        case 'C':return 2;
+        case 'G':return 3;
+    }
+}
+
+void add(int a,int b,int c,int x,int v){
+    while(x<100005){
+        BIT[a][b][c][x]+=v;
+        x+=lowbit(x);
+    }
+}
+int qry(int a,int b,int c,int x,int v=0){
+    while(x>0){
+        v+=BIT[a][b][c][x];
+        x-=lowbit(x);
+    } return v;
+}
+int nor(int a,int m){
+    return ((a%m)+m)%m;
+}
+
+int main(){
+    string s; cin>>s;
+    for(int i=0;i<s.length();++i){
+        for(int j=1;j<=10;++j)add(j,i%j,gid(s[i]),i+1,1);
+    }
+    // cout<<"inited\n";
+    int com; cin>>com; while(com--){
+        int t; cin>>t;
+        if(t==1){
+            int x; char c,o; cin>>x>>c; o=s[x-1]; s[x-1]=c;
+            for(int j=1;j<=10;++j){
+                add(j,(x-1)%j,gid(o),x,-1);
+                add(j,(x-1)%j,gid(c),x,1);
+            }
+        }
+        else{
+            int l,r; string ss; cin>>l>>r>>ss;
+            int ans=0;
+            for(int i=0;i<ss.length();++i){
+                ans+=qry(ss.length(),nor(i+l-1,ss.length()),gid(ss[i]),r)-qry(ss.length(),nor(i+l-1,ss.length()),gid(ss[i]),l-1);
+            }
+            cout<<ans<<endl;
+        }
+    }
 }

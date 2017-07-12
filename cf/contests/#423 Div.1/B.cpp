@@ -136,17 +136,13 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
 int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
+    int n,k;cin>>n>>k;
+    cout<<n-k+1<<endl;
+    int las;
+    for(int i=0;i<n-k;++i){
+        cout<<i+1<<" "<<i+2<<endl;
+        las=i+2;
     }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
-
+    for(int i=las+1;i<=n;++i)cout<<las<<" "<<i<<endl;
 }

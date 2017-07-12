@@ -136,17 +136,18 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
+vector<pair<int,int>> a;
 int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
+    int n,k,i,ptr;cin>>n>>k;
+    queue<pair<int,int>> q;
+    for(i=0,ptr=2;i<k;++i,++ptr){
+        a.push_back(pair<int,int>(1,ptr));
     }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
-
+    for(;ptr<=n;++ptr){
+        a.push_back(pair<int,int>(ptr,ptr-k));
+    }
+    if((n-1)%k==1)cout<<(n-1)/k*2+1<<endl;
+    else if((n-1)%k==0)cout<<(n-1)/k*2<<endl;
+    else cout<<(n-1)/k*2+2<<endl;
+    for(auto i:a)cout<<i.X<<" "<<i.Y<<endl;
 }

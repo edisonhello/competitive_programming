@@ -136,17 +136,126 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
-int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
-    }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
+struct ynode{
+    ynode *u,*d;
+    int v[5];
+    ynode():u(NULL),d(NULL){MS0(v);};
+    ynode(ynode *ref):u(ref->u),d(ref->d){for(int i=0;i<5;++i)v[i]=ref->v[i];}
+};
+struct xnode{
+    xnode *l,*r;
+    ynode *y;
+    xnode():l(NULL),r(NULL),y(NULL){};
+    xnode(xnode *ref):l(ref->l),r(ref->r),y(ref->y){};
+} *root[100005];
 
+int gid(char c){
+    if(c=='A')return 0;
+    else if(c=='T')return 1;
+    else if(c=='C')return 2;
+    else return 3;
+}
+
+void init(ynode *now,int yl,int yr,int yy,int tg,int v){
+    if(yl==yr){
+        now->v[tg]+=v;
+    }
+    else{
+        if(yy<=((yl+yr)>>1))init(now->u=new ynode(now->u),yl,(yl+yr)>>1,yy,tg,v);
+        else init(now->d=new ynode(now->d),((yl+yr)>>1)+1,yr,yy,tg,v);
+    }
+}
+void init(xnode *now,int xl,int xr,int yl,int yr,int xx,int yy,int tg,int v){
+    if(xl==xr){
+        init(now->y=new ynode(now->y),yl,yr,yy,tg,v);
+    }
+    else{
+        if(xx<=((xl+xr)>>1))init(now->l=new xnode(now->l),xl,(xl+xr)>>1,yl,yr,xx,yy,tg,v);
+        else init(now->r=new xnode(now->r),((xl+xr)>>1)+1,xr,yl,yr,xx,yy,tg,v);
+    }
+}
+void epdy(ynode *now,int l,int r){
+    if(l==r)return;
+    else{
+        epdy(now->u=new ynode(),l,(l+r)>>1);
+        epdy(now->d=new ynode(),((l+r)>>1)+1,r);
+    }
+}
+void epdx(xnode *now,int l,int r){
+    if(l==r){
+        epdy(now->y=new ynode(),0,l-1);
+    }
+    else{
+        epdx(now->l=new xnode(),l,((l+r)>>1));
+        epdx(now->r=new xnode(),((l+r)>>1)+1,r);
+    }
+}
+void mdf(ynode *now,int yl,int yr,int yy,int tg,int v){
+    if(yl==yr){
+        cout<<" "<<yl<<" v["<<tg<<"]+= "<<v<<endl;
+        now->v[tg]+=v;
+    }
+    else{
+        if(yy<=((yl+yr)>>1))init(now->u,yl,(yl+yr)>>1,yy,tg,v);
+        else init(now->d,((yl+yr)>>1)+1,yr,yy,tg,v);
+    }
+}
+void mdf(xnode *now,int xl,int xr,int yl,int yr,int xx,int yy,int tg,int v){
+    if(xl==xr){
+        cout<<"mdf "<<xl;
+        mdf(now->y,yl,yr,yy,tg,v);
+    }
+    else{
+        if(xx<=((xl+xr)>>1))mdf(now->l,xl,(xl+xr)>>1,yl,yr,xx,yy,tg,v);
+        else mdf(now->r,((xl+xr)>>1)+1,xr,yl,yr,xx,yy,tg,v);
+    }
+}
+
+int qry(ynode *now,int yl,int yr,int yy){
+    if(yl==yr){
+        int rt=0;
+        for(int i=0;i<4;++i)rt+=now->v[i];
+        return rt;
+    }
+    else{
+        if(yy<=((yl+yr)>>1))return qry(now->u,yl,(yl+yr)>>1,yy);
+        else return qry(now->d,((yl+yr)>>1)+1,yr,yy);
+    }
+}
+int qry(xnode *now,int xl,int xr,int yl,int yr,int xx,int yy){
+    if(xl==xr){
+        return qry(now->y,yl,yr,yy);
+    }
+    else{
+        if(xx<=((xl+xr)>>1))return qry(now->l,xl,(xl+xr)>>1,yl,yr,xx,yy);
+        else return qry(now->r,((xl+xr)>>1)+1,xr,yl,yr,xx,yy);
+    }
+}
+
+int main(){
+    epdx(root[0]=new xnode(),1,10);
+    string s; cin>>s;
+    for(int i=0;i<s.length();++i){
+        int id=gid(s[i]);
+        for(int j=1;j<=10;++j)init(root[i+1]=new xnode(root[i]),1,10,0,j-1,j,i%j,id,1);
+    }
+    cout<<"inited\n";
+    int com; cin>>com; while(com--){
+        int t; cin>>t;
+        if(t==1){
+            int x; char c,o; cin>>x>>c; o=s[x];
+            for(int j=1;j<=10;++j){
+                mdf(root[x],1,10,0,j-1,j,x%j,gid(o),-1);
+                mdf(root[x],1,10,0,j-1,j,x%j,gid(c),1);
+            }
+        }
+        else{
+            int l,r; string ss; cin>>l>>r>>ss;
+            int ans=0;
+            for(int i=0;i<ss.length();++i){
+                ans+=qry(root[r],1,10,0,ss.length()-1,ss.length(),i)-qry(root[l-1],1,10,0,ss.length()-1,ss.length(),i);
+            }
+            cout<<ans<<endl;
+        }
+    }
 }
