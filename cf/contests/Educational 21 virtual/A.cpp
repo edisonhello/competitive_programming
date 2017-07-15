@@ -136,17 +136,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int st[60],md[60],pst[60],pmd[60];
 int main(){
-    int n;cin>>n;
-    int ptr=0;
-    for(int i=0;i<n;++i){
-        ll a;cin>>a;
-        while(a>(1ll<<ptr))++ptr;
-        if(a==(1ll<<ptr))++st[ptr];
-        else ++md[ptr];
+    string s;cin>>s;
+    int cnt=0;
+    for(char c:s){
+        if(c!='0')++cnt;
     }
-    pst[0]=st[0], pmd[0]=md[0];
-    for(int i=1;i<60;++i)pst[i]=pst[i-1]+st[i], pmd[i]=pmd[i-1]+md[i];
-
+    if(cnt==1){
+        int cnt0=0;
+        cout<<1;
+        for(int i=0;i<s.length()-1;++i)cout<<0;
+        cout<<endl;
+    }
+    else{
+        SS ss(s.substr(1,s.length()-1)); int y; ss>>y;
+        int o=1; for(int i=0;i<s.length()-1;++i)o*=10;
+        cout<<o-y<<endl;
+    }
 }
+// 28563491 04:10 AC
