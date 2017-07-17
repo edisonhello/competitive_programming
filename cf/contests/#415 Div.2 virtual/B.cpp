@@ -136,5 +136,24 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
+#define int long long
+ll k[100055],l[100005];
+priority_queue<int,vector<int>,less<int>> pq;
+main(){
+    int n,f; cin>>n>>f;
+    ll al=0;
+    for(int i=0;i<n;++i){
+        cin>>k[i]>>l[i];
+        ll th=min(k[i],l[i]);
+        al+=min(k[i],l[i]);
+        ll db=min(k[i]*2,l[i]);
+        pq.push(db-th);
+    }
+    while(f--){
+        al+=pq.top();
+        pq.pop();
+    }
+    cout<<al<<endl;
 }
+// 28579018 10:32 RE 6
+// 28579195 21;39 AC

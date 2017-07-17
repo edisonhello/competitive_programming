@@ -136,5 +136,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
+ll nor(ll x){return ((x%mod)+mod)%mod;}
+ll pww(ll b,ll n,ll a=1){
+    while(n){
+        if(n&1)a=nor(a*b);
+        b=nor(b*b); n>>=1;
+    } return a;
 }
+ll x[300005];
+int main(){
+    int n;cin>>n;
+    ll ans=0;
+    for(int i=0;i<n;++i){
+        cin>>x[i];
+    }
+    sort(x,x+n);
+    for(int i=0;i<n;++i){
+        ans=nor(ans+x[i]*(pww(2,i)-1));
+        ans=nor(ans-x[i]*(pww(2,n-i-1)-1));
+        PDE3(i,ans,(pww(2,i)-1));
+    }
+    cout<<nor(ans)<<endl;
+}
+// 28579179 21:01 AC

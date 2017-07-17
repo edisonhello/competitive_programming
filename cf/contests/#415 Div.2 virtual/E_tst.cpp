@@ -136,5 +136,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int mat[5555][5555],pre[5555][5555];
+
+int calc(int x,int y){
+    set<int> a;
+    for(int i=0;i<x;++i){
+        a.insert(mat[i][y]);
+    }
+    for(int i=0;i<y;++i){
+        a.insert(mat[x][i]);
+    }
+    for(int i=1;;++i){
+        if(a.find(i)==a.end())return i;
+    }
+}
+
 int main(){
+    int n=30;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            mat[i][j]=calc(i,j);
+            cout<<setw(3)<<mat[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            pre[i][j]=mat[i][j];
+            if(i)pre[i][j]+=pre[i-1][j];
+            if(j)pre[i][j]+=pre[i][j-1];
+            if(i&&j)pre[i][j]-=pre[i-1][j-1];
+            cout<<setw(5)<<pre[i][j]<<" ";
+        }
+        cout<<endl;
+    }
 }

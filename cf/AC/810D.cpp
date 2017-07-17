@@ -136,5 +136,24 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
+bool ga(int a,int b){
+    cout<<"1 "<<a<<" "<<b<<endl;
+    string s; cin>>s;
+    if(s=="TAK")return 1; return 0;
 }
+int bs(int l,int r){
+    while(r>l){
+        int m=(l+r)>>1;
+        if(ga(m,m+1))r=m;
+        else l=m+1;
+    } return l;
+}
+int main(){
+    int n,k; cin>>n>>k;
+    int x=bs(1,n);
+    int y=bs(1,x-1);
+    PDE2(x,y);
+    y=(x!=y&&(ga(x,y)&&ga(y,x)))?y:bs(x+1,n);
+    assert(x!=y);
+    cout<<"2 "<<x<<" "<<y<<endl;
+}   
