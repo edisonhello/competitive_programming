@@ -136,6 +136,62 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n,m,cx,cy,ex,ey;
+char L,R,U,D;
+string mp[111];
+int cf[111][111];
+
+void go(char dir){
+    cout<<dir<<endl;
+    cin>>cx>>cy;
+    if(mp[cx][cy]=='F')exit(0);
+}
+bool u[111][111];
 int main(){
-    CIO;
+    cin>>n>>m;
+    for(int i=1;i<=n;++i)cin>>mp[i],mp[i]="$"+mp[i];
+    cx=1,cy=1; if(mp[cx][cy]=='F')exit(0);
+    L='L',R='R',U='U',D='D';
+    if(mp[1][2]=='.'){
+        go(R); if(cy==1)swap(L,R);
+        else go(L);
+        while(mp[2][cy]=='*')go(R);
+        go(D); if(cx==1)swap(U,D);
+    }
+    else{
+        go(D); if(cx==1)swap(U,D);
+        else go(U);
+        while(mp[cx][2]=='*')go(D);
+        go(R); if(cy==1)swap(L,R);
+    }
+    for(int i=1;i<=n;++i) for(int j=1;j<=m;++j) if(mp[i][j]=='F')ex=i, ey=j;
+    PDE4(L,R,U,D);
+    PDE4(cx,cy,ex,ey);
+    queue<pair<int,int>> q; q.push(pair<int,int>(cx,cy)); u[cx][cy]=1;
+    while(q.size()){
+        int x=q.front().first, y=q.front().second; if(x==ex && y==ey)break;
+        // PDE2(x,y);
+        if(y<m && mp[x][y+1]!='*' && !u[x][y+1])cf[x][y+1]=1,q.push(pair<int,int>(x,y+1)),u[x][y+1]=1;
+        if(y>1 && mp[x][y-1]!='*' && !u[x][y-1])cf[x][y-1]=2,q.push(pair<int,int>(x,y-1)),u[x][y-1]=1;
+        if(x<n && mp[x+1][y]!='*' && !u[x+1][y])cf[x+1][y]=3,q.push(pair<int,int>(x+1,y)),u[x+1][y]=1;
+        if(x>1 && mp[x-1][y]!='*' && !u[x-1][y])cf[x-1][y]=4,q.push(pair<int,int>(x-1,y)),u[x-1][y]=1;
+        q.pop();
+    }
+    // for(int i=1;i<=n;++i){
+    //     for(int j=1;j<=m;++j) cout<<cf[i][j];
+    //     cout<<endl;
+    // }
+    stack<char> ans;
+    while(ex!=cx || ey!=cy){
+        PDE2(ex,ey);
+        if(cf[ex][ey]==1)ans.push(R),--ey;
+        else if(cf[ex][ey]==2)ans.push(L),++ey;
+        else if(cf[ex][ey]==3)ans.push(D),--ex;
+        else if(cf[ex][ey]==4)ans.push(U),++ex;
+        else assert(1==0);
+    }
+    while(ans.size()){
+        go(ans.top());
+        ans.pop();
+    }
 }

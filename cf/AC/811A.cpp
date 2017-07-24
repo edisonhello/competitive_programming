@@ -18,7 +18,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<tuple>
 
 using namespace std;
 
@@ -47,6 +46,7 @@ using namespace std;
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
@@ -80,9 +80,9 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define endl '\n'
 #define getchar gtx
 #define DEBUG 0
-#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -137,5 +137,13 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
-    CIO;
+    ll a,b; string sa="Vladik",sb="Valera";
+    cin>>a>>b; ll cur=1;
+    while(a>=cur){
+        a-=cur;
+        swap(a,b);
+        swap(sa,sb);
+        ++cur;
+    }
+    cout<<sa<<endl;
 }

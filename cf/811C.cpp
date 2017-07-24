@@ -18,7 +18,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<tuple>
 
 using namespace std;
 
@@ -47,6 +46,7 @@ using namespace std;
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
@@ -80,9 +80,9 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define endl '\n'
 #define getchar gtx
 #define DEBUG 0
-#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -136,6 +136,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int l[5555],r[5555],a[5555],xo[5555][5555];
+bool u[5555];
 int main(){
-    CIO;
+    int n; cin>>n;
+    for(int i=0;i<5555;++i)l[i]=99999;
+    for(int i=1;i<=n;++i){
+        cin>>a[i];
+        l[a[i]]=(l[a[i]]==99999?i:l[a[i]]);
+        r[a[i]]=i;
+    }
+    for(int i=1;i<=n;++i){
+        MS0(u);
+        for(int j=i;j<=n;++j){
+            xo[i][j]=xo[i][j-1];
+            if(u[a[j]])continue;
+            u[a[j]]=1; xo[i][j-1]^=a[j];
+        }
+    }
 }

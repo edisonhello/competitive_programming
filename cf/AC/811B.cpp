@@ -18,7 +18,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<tuple>
 
 using namespace std;
 
@@ -47,6 +46,7 @@ using namespace std;
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
@@ -80,9 +80,9 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define endl '\n'
 #define getchar gtx
 #define DEBUG 0
-#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -136,6 +136,17 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int a[10004];
 int main(){
-    CIO;
+    int n,m; cin>>n>>m;
+    for(int i=0;i<n;++i)cin>>a[i];
+    while(m--){
+        int l,r,x; cin>>l>>r>>x;
+        int sm=0,lr=0;
+        for(int i=l-1;i<r;++i){
+            if(a[i]<a[x-1])++sm;
+        }
+        if(sm==x-l)cout<<"Yes\n";
+        else cout<<"No"<<endl;
+    }
 }
