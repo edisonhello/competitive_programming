@@ -82,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define getchar gtx
 #define DEBUG 0
+#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -135,5 +136,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n,m,k,q;
+deque<int> toy_req[100005],chi_req[100005];
+vector<pair<int,int>> his;
+bool inplay[100005];
+int chi_waiting[100005];
 int main(){
+    cin>>n>>m>>k>>q;
+    while(k--){
+        int x,y; cin>>x>>y;
+        chi_req[x].push_back(y);
+        his.push_back(pair<int,int>(x,y));
+    }
+    for(pair<int,int> i:his){
+        int x=i.X,y=i.Y;
+        if(inplay[y]){
+            chi_waiting[x]++;
+            toy_req[y].push_back(x);
+        }
+        else{
+            
+        }
+    }
 }

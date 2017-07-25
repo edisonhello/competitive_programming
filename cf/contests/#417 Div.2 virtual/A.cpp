@@ -82,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define getchar gtx
 #define DEBUG 0
+#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -129,11 +130,31 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"NO";exit(0);}
+void YOOO(){cout<<"YES";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int li[8][8];
 int main(){
+    CIO;
+    for(int i=1;i<=4;++i) for(int j=1;j<=4;++j) cin>>li[i][j];
+    if(li[2][4]){
+        if(li[1][3] || li[2][1] || li[2][3] || li[2][2] || li[3][1] || li[4][2])YOOO();
+    }
+    if(li[3][4]){
+        if(li[2][3] || li[3][1] || li[3][2] || li[3][3] || li[4][1] || li[1][2])YOOO();
+    }
+    if(li[4][4]){
+        if(li[3][3] || li[4][1] || li[4][2] || li[4][3] || li[1][1] || li[2][2])YOOO();
+    }
+    if(li[1][4]){
+        if(li[4][3] || li[1][1] || li[1][2] || li[1][3] || li[2][1] || li[3][2])YOOO();
+    }
+    JIZZ();
 }
+// 28875115 08:11 WA 5
+// 28875168 10:22 WA 2
+// 28875202 11:18 AC

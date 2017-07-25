@@ -82,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define getchar gtx
 #define DEBUG 0
+#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -135,5 +136,31 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int dp[22][3];
+bool light[22][2222];
+int lest[22],rest[22];
 int main(){
+    int n,m; cin>>n>>m;
+    int upp=0;
+    for(int i=n;i>=1;--i){
+        for(int j=0;j<=m+1;++j){
+            char c; cin>>c;
+            light[i][j]=(c=='1');
+            if(light[i][j]){
+                lest[i]=lest[i]?lest[i]:j;
+                rest[i]=j;
+                upp=upp?upp:i;
+            }
+        }
+    }
+    if(upp==0)return cout<<0<<endl,0;
+    MS(dp,0x3f);
+    dp[0][0]=rest[0]*2, dp[0][1]=m+1;
+    for(int i=1;i<=upp-1;++i){
+        dp[i][0]=min(dp[i-1][1]+m+1,dp[i-1][0]+rest[i]*2)+1;
+        dp[i][1]=min(dp[i-1][0]+m+1,dp[i-1][1]+(lest[i]?(m+1-lest[i])*2:0))+1;
+        PDE3(i,dp[i][0],dp[i][1]);
+    }
+    cout<<min(dp[upp-1][0]+rest[upp],dp[upp-1][1]+m+1-lest[upp])<<endl;
 }
+// 28875540 26:26 AC

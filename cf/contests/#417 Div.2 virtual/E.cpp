@@ -82,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define getchar gtx
 #define DEBUG 0
+#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -135,5 +136,29 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int n,ap[100005];
+vector<int> G[100005];
+map<int,int> leaf_apple,nleaf_apple;
+int dep[100005];
+int mxest=-1,esi=-1,mner=-1,eri=-1;
+void dfs(int now,int nd){
+    dep[now]=nd;
+    for(int i:G[now])dfs(i,nd+1);
+    if(G[now].empty())leaf_apple[ap[now]]++;
+    else nleaf_apple[ap[now]]++;
+    if(G[now].empty()){
+        if(dep[now]+ap[now]>mxest){
+            
+        }
+    }
+}
+
 int main(){
+    cin>>n;
+    for(int i=1;i<=n;++i)cin>>ap[i];
+    for(int i=2;i<=n;++i){
+        int r; cin>>r;
+        G[r].push_back(i);
+    }
+    dfs(1,0);
 }

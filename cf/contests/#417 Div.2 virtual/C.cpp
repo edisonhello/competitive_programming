@@ -82,6 +82,7 @@ using namespace std;
 #define LOG(...) ;
 #define getchar gtx
 #define DEBUG 0
+#define CIO ios_base::sync_with_stdio(0),cin.tie(0);
 #ifdef WEA
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
@@ -135,5 +136,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
+ll a[100005],p[100005],n,s;
+ll ncst=0;
+
+bool no(ll bk){
+    PDE1(bk);
+    for(int i=1;i<=n;++i){
+        p[i]=i*bk+a[i];
+        PDE2(i,p[i]);
+    }
+    sort(p+1,p+n+1);
+    ll now=0;
+    for(int i=1;i<=bk;++i){
+        now+=p[i];
+        if(now>s)return 1;
+    }
+    ncst=now;
+    return 0;
 }
+
+int main(){
+    cin>>n>>s;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    int L=0,R=n,A=0;
+    while(R>=L){
+        int M=(L+R)>>1;
+        if(no(M))R=M-1;
+        else L=M+1,A=M;
+    }
+    cout<<A<<" "<<ncst<<endl;
+}
+// 28875904 41:38 AC
