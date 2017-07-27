@@ -136,7 +136,7 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int l[5555],r[5555],a[5555],xo[5555][5555];
+int l[5555],r[5555],a[5555],xo[5555][5555],dp[5555];
 bool u[5555];
 int main(){
     int n; cin>>n;
@@ -151,7 +151,26 @@ int main(){
         for(int j=i;j<=n;++j){
             xo[i][j]=xo[i][j-1];
             if(u[a[j]])continue;
-            u[a[j]]=1; xo[i][j-1]^=a[j];
+            u[a[j]]=1; xo[i][j]^=a[j];
         }
     }
+    if(DEBUG)for(int i=1;i<=n;++i){
+        for(int j=1;j<=n;++j){
+            cout<<xo[i][j]<<" ";
+        } cout<<endl;
+    }
+    for(int i=1;i<=n;++i){
+        dp[i]=dp[i-1];
+        if(r[a[i]]==i){
+            int ablej=l[a[i]];
+            for(int j=i;j>0;--j){
+                if(r[a[j]]>i)break;
+                if(l[a[j]]<j)ablej=min(ablej,l[a[j]]);
+                if(j>ablej)continue;
+                dp[i]=max(dp[i],dp[j-1]+xo[j][i]);
+            }
+        }
+    }
+    if(DEBUG)for(int i=1;i<=n;++i)cout<<dp[i]<<" ";cout<<endl;
+    cout<<dp[n]<<endl;
 }
