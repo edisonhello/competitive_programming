@@ -135,89 +135,19 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int n,m,k;
-map<string,int> msi;
-struct edge{
-    int u,v,cap,flow;
-    edge(int u,int v,int cap):u(u),v(v),cap(cap),flow(0){};
-};
-vector<edge> edg;
-vector<int> G[1111];
-
-void clear(){
-    msi.clear();
-    edg.clear();
-    for(int i=0;i<1111;++i)G[i].clear();
-}
-
-vector<int> d,se;
-vector<bool> inq,v;
-int flowwww(int &mxf){
-    LOG("flowwww\n");
-    d.clear(), d.resize(1111);
-    se.clear(), se.resize(1111);
-    inq.clear(), inq.resize(1111);
-    v.clear(), v.resize(1111);
-
-    queue<int> q; q.push(0); d[0]=8787;
-    while(q.size()){
-        PDE1(q.front());
-        for(int edi:G[q.front()]){
-            if(edg[edi].cap-edg[edi].flow<=0)continue;
-            if(edg[edi].cap-edg[edi].flow>d[edg[edi].v]){
-                d[edg[edi].v]=min(d[q.front()],edg[edi].cap-edg[edi].flow);
-                se[edg[edi].v]=edi;
-                if(!inq[edg[edi].v]){
-                    q.push(edg[edi].v);
-                    inq[edg[edi].v]=1;
-                }
-            }
-        }
-        if(d[777])break;
-        q.pop();
-    }
-    if(!d[777])return 0;
-    for(int u=777;u;u=edg[se[u]].u){
-        LOG("bw: %d, add %d\n",u,d[777]);
-        edg[se[u]].flow+=d[777];
-        edg[se[u]^1].flow-=d[777];
-    }
-    return mxf+=d[777];
-}
-
-int flowww(){
-    int ans=0;
-    while(flowwww(ans));
-    return ans;
-}
-
+int cnt[9999];
 int main(){
-    int ts; cin>>ts; while(ts--){
-        clear();
-        cin>>n; for(int i=0;i<n;++i){
-            string s; cin>>s; msi[s]=i+1; int sid=i+1;
-            G[sid].push_back(edg.size());
-            G[777].push_back(edg.size()+1);
-            edg.push_back(edge(sid,777,1));
-            edg.push_back(edge(777,sid,-1));
-        }
-        cin>>m; for(int i=0;i<m;++i){
-            string s,ss; cin>>s>>ss;
-            int ssid=msi[ss];
-            G[0].push_back(edg.size());
-            G[ssid].push_back(edg.size()+1);
-            edg.push_back(edge(0,ssid,1));
-            edg.push_back(edge(ssid,0,-1));
-        }
-        cin>>k; for(int i=0;i<k;++i){
-            string s,ss; cin>>s>>ss;
-            int sid=msi[s],ssid=msi[ss];
-            G[sid].push_back(edg.size());
-            G[ssid].push_back(edg.size()+1);
-            edg.push_back(edge(sid,ssid,8787));
-            edg.push_back(edge(ssid,sid,-8787));
-        }
-        cout<<m-flowww()<<endl;
-        if(ts)cout<<endl;
+    int k,n=0; cin>>k;
+    string s; cin>>s;
+    for(char c:s)++cnt[c-'0'],n+=(c-'0');
+    int a=0,ptr=0;
+    while(n<k){
+        while(!cnt[ptr])++ptr;
+        --cnt[ptr];
+        n+=9-ptr;
+        ++a;
     }
+    cout<<a<<endl;
+
 }
+// 29053561 06:10 AC
