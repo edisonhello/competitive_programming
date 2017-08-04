@@ -133,59 +133,72 @@ void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=123456789;
-const ll p=47017;
-ll nor(ll x){return (x%mod+mod)%mod;}
+const ll mod=1e9+7;
 
-unsigned ll __buffer__[7122],hsh[2][5555],pp[5555];
-int cnt[5555];
-string s;
-
-int meow=0;
-bool isp(int l,int r,int k){
-    PDE3(l,r,k);
-    // if(++meow>30)exit(0);
-    if(k==1 && r<=l+1){
-        PDE1(s[l]==s[r]);
-        return s[l]==s[r];
-    }
-    PDE4(hsh[0][r]-hsh[0][l-1],pp[s.length()-l],hsh[1][l]-hsh[1][r+1],pp[r+1]);
-    PDE4((hsh[0][r]-hsh[0][l-1])*pp[s.length()-l],(hsh[0][r]-hsh[0][l-1])*pp[s.length()-l],(hsh[1][l]-hsh[1][r+1])*pp[r+1],(hsh[1][l]-hsh[1][r+1])*pp[r+1]);
-    if((hsh[0][r]-hsh[0][l-1])*pp[s.length()-l] != (hsh[1][l]-hsh[1][r+1])*pp[r+1])return 0;
-    if(k==1)return 1;
-    if(!isp(l,(l+r-1)>>1,k-1))return 0;
-    if(!isp(((l+r)>>1)+1,r,k-1))return 0;
-    PDE4(l,r,k,"ok");
-    return 1;
+int n;
+struct edge{
+    int u,v,f,c;
+    edge(int u,int v,int f,int c):u(u),v(v),f(f),c(c){};
+};
+vector<int> G[2222];
+vector<edge> edg;
+void init(){
+    for(int i=0;i<2222;++i)G[i].clear();
+    edg.clear();
+}
+void ae(int u,int v,int f,int c){
+    G[u].push_back(edg.size());
+    G[v].push_back(edg.size()+1);
+    edg.push_back(edge(u,v,f,c));
+    edg.push_back(edge(v,u,0,-c));
 }
 
-int main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    cin>>s; 
-    clock_t t=clock();
-    pp[0]=1; for(int i=0;i<5554;++i)pp[i+1]=pp[i]*p;
-    for(int i=0;i<s.length();++i)hsh[0][i]=hsh[0][i-1]+s[i]*pp[i];
-    for(int i=s.length()-1;i>=0;--i)hsh[1][i]=hsh[1][i+1]+s[i]*pp[s.length()-1-i];
-    
-    if(DEBUG){
-        cout<<"pp : "; for(int i=0;i<=s.length();++i)cout<<setw(12)<<pp[i]; cout<<endl;
-        cout<<"hsh: "; for(int i=0;i<=s.length();++i)cout<<setw(12)<<hsh[0][i]; cout<<endl;
-        cout<<"hs1: "; for(int i=0;i<=s.length();++i)cout<<setw(12)<<hsh[1][i]; cout<<endl;
-    }
-    int len=s.length();
-    for(int i=0,j,k;i<len;++i){
-        for(j=i;j<len;++j){
-            k=20; while((1<<k)>j-i+1)--k;
-            while(1){
-                if(isp(i,j,k+1)){
-                    ++cnt[k+1];
-                    break;
-                }
-                --k; if(k<=0)break;
+vector<bool> inq;
+vector<int> nc,bn,cf;
+int floww(int &nf){
+    PDE1("www");
+    queue<int> q;
+    nc.clear(), nc.resize(2222);
+    bn.clear(), bn.resize(2222);
+    cf.clear(), cf.resize(2222);
+    inq.clear(),inq.resize(2222);
+    for(int i=0;i<2222;++i)nc[i]=1e7;
+    q.push(1); nc[1]=0; bn[1]=878787;
+    while(q.size()){
+        for(int i:G[q.front()]){
+            edge e=edg[i];
+            if(e.f>0 && nc[e.v] > nc[q.front()]+e.c){
+                bn[e.v]=min(e.f,bn[q.front()]);
+                nc[e.v]=nc[q.front()]+e.c;
+                cf[e.v]=i;
+                if(!inq[e.v])q.push(e.v),inq[e.v]=1;
             }
         }
+        inq[q.front()]=0; q.pop();
     }
-    for(int i=55;i>=1;--i)cnt[i]+=cnt[i+1];
-    for(int i=1;i<=s.length();++i)cout<<cnt[i]<<" ";cout<<endl;
-    cout<<(float)(clock()-t)/CLOCKS_PER_SEC<<endl;
+    if(nc[n]>7777777 || bn[n]<=0)return 0;
+    for(int u=n;u!=1;u=edg[cf[u]].u){
+        edg[cf[u]].f-=bn[n];
+        edg[cf[u]^1].f+=bn[n];
+        PDE1(u);
+    }
+    return nf+=nc[n]*bn[n];
+}
+
+int mcmf(){
+    int ans=0;
+    floww(ans),floww(ans);
+    return ans;
+}
+
+main(){
+    int m; while(cin>>n>>m){
+        init();
+        for(int i=2;i<n;++i)ae(i,i+n,1,0);
+        while(m--){
+            int u,v,c; cin>>u>>v>>c; if(u>1&&u<n)u+=n;
+            ae(u,v,1,c);
+        }
+        cout<<mcmf()<<endl;
+    }
 }
