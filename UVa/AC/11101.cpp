@@ -97,7 +97,7 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
@@ -135,5 +135,49 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+#define _(a) ((a)<0?(-(a)):(a))
+pair<int,int> operator-(const pair<int,int> &a,const pair<int,int> &b){
+    return pair<int,int>(a.first-b.first,a.second-b.second);
+}
+void comp(int &x){
+    x=(x<0?-1:1)*(!!x);
+}
+bool sw(pair<int,int> a,pair<int,int> b){
+    // PDE2(a,b);
+    comp(a.first), comp(a.second), comp(b.first), comp(b.second);
+    // PDE3("after", a,b);
+    return (a.first^b.first)==0 && (a.second^b.second)==0;
+}
+
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n; while(cin>>n,n){
+        vector<pair<int,int>> a,b,aa,bb;
+        while(n--){
+            int x,y; cin>>x>>y; a.push_back(pair<int,int>(x,y));
+        } cin>>n; while(n--){
+            int x,y; cin>>x>>y; b.push_back(pair<int,int>(x,y));
+        }
+        for(pair<int,int> i:a){
+            if(aa.size()>1 && sw(i-aa[aa.size()-1],aa[aa.size()-1]-aa[aa.size()-2]))aa.pop_back();
+            aa.push_back(i);
+        }
+        for(pair<int,int> i:b){
+            if(bb.size()>1 && sw(i-bb[bb.size()-1],bb[bb.size()-1]-bb[bb.size()-2]))bb.pop_back();
+            bb.push_back(i);
+        }
+        PDE2(aa,bb);
+        int mn=54875487;
+        for(pair<int,int> &i:aa){
+            for(pair<int,int> &j:b){
+                mn=mn<_(i.first-j.first)+_(i.second-j.second)?mn:_(i.first-j.first)+_(i.second-j.second);
+            }
+        }
+        for(pair<int,int> &i:a){
+            for(pair<int,int> &j:bb){
+                mn=mn<_(i.first-j.first)+_(i.second-j.second)?mn:_(i.first-j.first)+_(i.second-j.second);
+            }
+        }
+        cout<<mn<<endl;
+    }
 }

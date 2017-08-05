@@ -97,7 +97,7 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
@@ -135,5 +135,70 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct edge{
+    int u,v,f;
+    edge(int u,int v,int f):u(u),v(v),f(f){};
+};
+vector<int> G[111],needchk;
+vector<edge> edg;
+vector<char> work;
+
+void ae(int u,int v,int f){
+    PDE3(u,v,f);
+    G[u].push_back(edg.size());
+    G[v].push_back(edg.size()+1);
+    edg.push_back(edge(u,v,f));
+    edg.push_back(edge(v,u,0));
+}
+
+vector<int> cf,bn,v,wid;
+bool floww(){
+    cf.clear(); cf.resize(111);
+    bn.clear(); bn.resize(111); bn[0]=878787;
+    v.clear() ; v.resize(111);
+    queue<int> q; q.push(0);
+    while(q.size()){
+        for(int i:G[q.front()]){
+            edge e=edg[i];
+            if(e.f>0 && !v[e.v]){
+                bn[e.v]=min(bn[e.u],e.f);
+                cf[e.v]=i;
+                q.push(e.v);
+                v[e.v]=1;
+            }
+        }
+        q.pop();
+    }
+    PDE1(bn[87]);
+    if(!bn[87])return 0;
+    for(int u=87,pw=0;u;u=edg[cf[u]].u){
+        PDE1(u);
+        if(u>0 && u<=26 && pw)wid[pw]=u,pw=0;
+        else if(u>=30 && u<40)pw=u;
+        edg[cf[u]].f-=bn[87];
+        edg[cf[u]^1].f+=bn[87];
+    } return 1;
+}
+
 int main(){
+    string s; while(getline(cin,s)){
+        for(int i=0;i<111;++i)G[i].clear(); edg.clear(); work.clear(); needchk.clear();
+        work.resize(22,'_'); int totneed=0;
+        do{
+            char job=s[0]; int req=s[1]-'0'; SS ss(s); ss>>s>>s; s=s.substr(0,s.length()-1);
+            PDE1(s);
+            needchk.push_back(edg.size()); ae(0,job-'A'+1,req); totneed+=req; 
+            for(char c:s)ae(job-'A'+1,c-'0'+30,1);
+        }while(getline(cin,s) && s!="");
+        for(int i=30;i<40;++i)ae(i,87,1);
+        wid.clear(); wid.resize(111); while(floww())if(DEBUG){
+            for(int i=30;i<40;++i)cout<<(char)(wid[i]?wid[i]-1+'A':'_');
+            cout<<endl;
+        }
+        for(int i:needchk)if(edg[i].f>0){
+            cout<<"!\n"; goto ww;
+        }
+        for(int i=30;i<40;++i)cout<<(char)(wid[i]?wid[i]-1+'A':'_'); cout<<endl;
+        ww:;
+    }
 }

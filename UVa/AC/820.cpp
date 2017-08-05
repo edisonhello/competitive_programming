@@ -135,5 +135,56 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+struct edge{
+    int u,v,f;
+    edge(int u,int v,int f):u(u),v(v),f(f){};
+};
+
+vector<int> G[111];
+vector<edge> edg;
+
+void ae(int u,int v,int f){
+    G[u].push_back(edg.size());
+    G[v].push_back(edg.size()+1);
+    edg.push_back(edge(u,v,f));
+    edg.push_back(edge(v,u,f));
+}
+
+int cf[111],bn[111],u[111];
+int floww(const int &s,const int &t,int &mf){
+    LOG("flowww\n");
+    MS0(cf); MS0(bn); MS0(u);
+    queue<int> q; q.push(s); u[s]=1; bn[s]=87878787;
+    while(q.size()){
+        for(int i:G[q.front()]){
+            edge e=edg[i];
+            if(!u[e.v] && e.f>0){
+                u[e.v]=1;
+                cf[e.v]=i;
+                bn[e.v]=min(bn[e.u],e.f);
+                q.push(e.v);
+            }
+        }
+        q.pop();
+    }
+    if(!bn[t])return 0;
+    for(int u=t;u!=s;u=edg[cf[u]].u){
+        edg[cf[u]].f-=bn[t];
+        edg[cf[u]^1].f+=bn[t];
+    }
+    return mf+=bn[t];
+}
+
 int main(){
+    int n,ks=0; while(cin>>n,n){
+        edg.clear(); for(int i=0;i<111;++i)G[i].clear();
+        int s,t,m; cin>>s>>t>>m;
+        while(m--){
+            int u,v,c; cin>>u>>v>>c;
+            ae(u,v,c);
+        }
+        int ans=0;
+        while(floww(s,t,ans));
+        cout<<"Network "<<(++ks)<<"\nThe bandwidth is "<<ans<<".\n\n";
+    }
 }

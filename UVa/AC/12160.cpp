@@ -97,7 +97,7 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
@@ -135,5 +135,33 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int dp[11111];
+bool v[11111];
 int main(){
+    int s,t,n,cs=0; while(cin>>s>>t>>n,n){
+        cout<<"Case "<<(++cs)<<": ";
+        vector<int> mv; while(n--){
+            int t; cin>>t; mv.push_back(t);
+        }
+        MS0(dp), MS0(v);
+        queue<int> q; q.push(s); v[s]=1;
+        while(q.size()){
+            PDE1(q.front());
+            for(int i:mv){
+                int np=i+q.front(); np%=10000;
+                PDE1(np);
+                if(v[np])continue;
+                v[np]=1;
+                dp[np]=dp[q.front()]+1;
+                if(np==t){
+                    cout<<dp[t]<<endl;
+                    goto gans;
+                }
+                q.push(np);
+            }
+            q.pop();
+        }
+        cout<<"Permanently Locked\n";
+        gans:;
+    }
 }

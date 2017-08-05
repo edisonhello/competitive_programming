@@ -97,7 +97,7 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
@@ -135,5 +135,43 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool jizz[55][55];
 int main(){
+    int n,m; cin>>n>>m;
+    int x,y; char fc; while(cin>>x>>y>>fc){
+        int f; switch(fc){
+            case 'N': f=0; break;
+            case 'E': f=1; break;
+            case 'S': f=2; break;
+            default : f=3; break;
+        }
+        string s; cin>>s;
+        bool fall=0;
+        for(char c:s){
+            int nx=x,ny=y;
+            if(c=='L')f=(f+3)%4;
+            else if(c=='R')f=(f+1)%4;
+            else{
+                if(f==0)++ny;
+                else if(f==1)++nx;
+                else if(f==2)--ny;
+                else --nx;
+            }
+            if(nx<0||nx>n||ny<0||ny>m){
+                if(jizz[x][y]);
+                else{
+                    jizz[x][y]=1;
+                    fall=1;
+                    break;
+                }
+            }
+            else x=nx,y=ny;
+        }
+        cout<<x<<" "<<y<<" ";
+        if(f==0)cout<<"N";
+        else if(f==1)cout<<"E";
+        else if(f==2)cout<<"S";
+        else cout<<"W";
+        cout<<(fall?" LOST\n":"\n");
+    }
 }

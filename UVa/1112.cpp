@@ -135,5 +135,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<pair<int,int>> G[111];
+bool u[111];
+int nt[111];
 int main(){
+    int ts,cs=0; cin>>ts; while(ts--){
+        for(int i=0;i<111;++i)G[i].clear(); MS0(u); MS(nt,0x3f);
+        int n,e,t,m; cin>>n>>e>>t>>m;
+        while(m--){
+            int u,v,c; cin>>u>>v>>c;
+            G[v].push_back(pair<int,int>(u,c));
+        }
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq; pq.push(pair<int,int>(0,e));
+        nt[e]=0;
+        while(pq.size()){
+            while(pq.size() && u[pq.top().second])pq.pop();
+            if(pq.empty())break;
+            pair<int,int> x=pq.top(); pq.pop();
+            PDE2(x,pq);
+            u[x.second]=1;
+            for(pair<int,int> i:G[x.second]){
+                PDE4(i,x.first,i.second,nt[i.first]);
+                if(x.first+i.second<nt[i.first]){
+                    nt[i.first]=x.first+i.second;
+                    pq.push(pair<int,int>(nt[i.first],i.first));
+                }
+            }
+            if(DEBUG)for(int i=1;i<=4;++i)cout<<nt[i]<<" ";
+            PDE1(pq);
+        }
+        int cnt=0;
+        for(int i=0;i<111;++i)if(nt[i]<=t)++cnt;
+        cout<<cnt<<endl;
+        if(DEBUG)for(int i=1;i<=4;++i)cout<<nt[i]<<" ";
+        if(ts)cout<<endl;
+    }
 }
