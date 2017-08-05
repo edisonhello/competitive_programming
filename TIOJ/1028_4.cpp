@@ -11,11 +11,12 @@ vector<int> nowmnl,tmp;
 int mn;
 
 void BT(int i,int j){
-    if(i==j){
+    tmp.push_back(i);
+    while(bt[i][j]!=j){
+        // cout<<i<<" "<<j<<" "<<bt[i][j]<<endl;
+        i=bt[i][j];
         tmp.push_back(i);
-        return;
     }
-    BT(i,bt[i][j]), BT(bt[i][j],j);
 }
 
 main(){
@@ -39,43 +40,46 @@ main(){
                     G[j][i]=G[i][j]=G[i][k]+G[k][j];
                     bt[i][j]=bt[j][i]=k;
                 }
+				if(G[i][k]+G[k][j]==G[i][j]){
+				    bt[i][j]=min(G[i][j],k);
+                    bt[j][i]=min(G[j][i],k);
+				}
             }
         }
     }
     //
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            printf("%lld ",G[i][j]);
-        }
-        puts("");
-    }
-    for(int i=0;i<n;++i){
-        for(int j=0;j<n;++j){
-            printf("%lld ",bt[i][j]);
-        }
-        puts("");
-    }
+    // for(int i=0;i<n;++i){
+    //     for(int j=0;j<n;++j){
+    //         printf("%lld ",G[i][j]);
+    //     }
+    //     puts("");
+    // }
+    // for(int i=0;i<n;++i){
+    //     for(int j=0;j<n;++j){
+    //         printf("%lld ",bt[i][j]);
+    //     }
+    //     puts("");
+    // }
 
     scanf("%lld",&k);
-    int wlist[22]={0};
-    for(i=0;i<k;++i){
-        int t=0; scanf("%lld",&t);
-        if(want[0])wlist[t]=1;
-        else want[0]=t;
-    }
-    k=1; for(int i=0;i<22;++i){
-        if(wlist[i])want[k++]=i;
-    }
+    for(i=0;i<k;++i)scanf("%lld",&want[i]);
     sort(want+1,want+k);
     mn=0x7f7f7f7f7f7f7f7f;
     do{
-        tmp.clear(); len=0;
-        for(i=1;i<k;++i)len+=G[want[i-1]][want[i]];
+        tmp.clear();
+        len=0;
+        for(i=1;i<k;++i){
+            len+=G[want[i-1]][want[i]];
+        }
         if(len>mn)continue;
-
-        for(i=1;i<k;++i)BT(want[i-1],want[i]);
+        for(i=1;i<k;++i){
+            BT(want[i-1],want[i]);
+        }
         tmp.push_back(want[k-1]);
-        if(len<mn)nowmnl=tmp,mn=len;
+        if(len<mn){
+            nowmnl=tmp;
+            mn=len;
+        }
         else if(len==mn){
             for(int i=0;i<min(nowmnl.size(),tmp.size());++i){
                 if(tmp[i]<nowmnl[i]){
