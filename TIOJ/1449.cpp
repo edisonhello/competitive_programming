@@ -146,7 +146,7 @@ int main(){
             slspt[i][j]=i; dp[i][j]=(1ll<<58);
             for(int k=i-1;k>0;--k){
                 ll dta=(1ll<<58);
-                for(int s=i;s>k;--s){
+                for(int s=slspt[i][j];s>k;--s){
                     ll ri=x[i]*(i-s+1)-(pre[i]-pre[s-1]);
                     ll le=(pre[s-1]-pre[k])-x[k]*(s-1-k);
                     ll ndt=le+ri;
