@@ -135,7 +135,7 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-ll dp[1111][1111],slspt[1111][1111],x[1111],pre[1111];
+ll dp[1111][1111],slspt[1111][1111],cf[1111][1111],x[1111],pre[1111];
 int main(){
     int n,k; cin>>n>>k; k=min(n,k);
     for(int i=2;i<=n;++i)cin>>x[i]; sort(x+2,x+n+1);
@@ -144,7 +144,7 @@ int main(){
     for(int i=2;i<=n;++i){
         for(int j=2;j<=min(k,i);++j){
             slspt[i][j]=i; dp[i][j]=(1ll<<58);
-            for(int k=i-1;k>0;--k){
+            for(int k=i-1;k>=max(cf[i-1][j],cf[i][j-1]);--k){
                 ll dta=(1ll<<58);
                 for(int s=slspt[i][j];s>k;--s){
                     ll ri=x[i]*(i-s+1)-(pre[i]-pre[s-1]);
@@ -159,8 +159,10 @@ int main(){
                         slspt[i][j]=s;
                     }
                 }
-                dp[i][j]=min(dp[i][j],dp[k][j-1]+dta);
-                PDE2(dp[i][j],dp[k][j-1]);
+                if(dp[k][j-1]+dta<dp[i][j]){
+                    dp[i][j]=dp[k][j-1]+dta;
+                    cf[i][j]=k;
+                }
             }
         }
     }
@@ -172,6 +174,11 @@ int main(){
         for(int i=1;i<=n;++i){
             for(int j=1;j<=k;++j){
                 cout<<dp[i][j]<<" ";
+            } cout<<endl;
+        } cout<<endl;
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=k;++j){
+                cout<<cf[i][j]<<" ";
             } cout<<endl;
         }
     }
