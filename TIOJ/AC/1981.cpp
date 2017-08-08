@@ -5,20 +5,7 @@
 #include<cmath>
 #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<map>
-#include<set>
-#include<unordered_map>
-#include<unordered_set>
-#include<bitset>
 #include<vector>
-#include<utility>
-#include<tuple>
 
 using namespace std;
 
@@ -52,7 +39,7 @@ using namespace std;
 #define tm Ovuvuevuevue
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
-#define ws Osas
+#define Osas
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -91,15 +78,6 @@ using namespace std;
 #endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-
 #define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
@@ -129,11 +107,53 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<int> G[1000006],iG[1000006];
+vector<int> cG[1000006],tp;
+bool u[1000006];
+int bel[1000006],sz[1000006],dp[1000006];
+
+void dfs1(int now){
+    u[now]=1;
+    for(int i:G[now])if(!u[i])dfs1(i);
+    tp.push_back(now);
+}
+void dfs2(int now,int cn){
+    bel[now]=cn;
+    u[now]=1;
+    ++sz[cn];
+    for(int i:iG[now])if(!u[i])dfs2(i,cn);
+}
+int dfs3(int now){
+    if(dp[now])return dp[now];
+    int mx=0,nw;
+    for(int i:cG[now])nw=dp[i]?dp[i]:dfs3(i),mx=mx>nw?mx:nw;
+    return dp[now]=mx+sz[now];
+}
+
 int main(){
+    int n,m,s,t,cc=0,mx=0; rit(n,m);
+    while(m--){
+        rit(s,t); 
+        G[s].push_back(t);
+        iG[t].push_back(s);
+    }
+    for(int i=0;i<n;++i)if(!u[i])dfs1(i);
+    for(int i=0;i<n;++i)u[i]=0;
+    for(int i=n-1;i>=0;--i)if(!u[tp[i]])dfs2(tp[i],cc++);
+    for(int i=0;i<n;++i){
+        for(int ii:G[i]){
+            if(bel[ii]==bel[i])continue;
+            cG[bel[i]].push_back(bel[ii]);
+        }
+    }
+    for(int i=0;i<cc;++i){
+        if(!dp[i])dp[i]=dfs3(i);
+        mx=dp[i]>mx?dp[i]:mx;
+    }
+    printf("%d\n",mx);
 }

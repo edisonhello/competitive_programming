@@ -135,5 +135,119 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int Rand(){
+    static int seed=7122;
+    return seed=(seed*5487)^'meow';
+}
+
+struct node{
+    node *l,*r;
+    int val,sz,tag,pri;
+    node(int val=0):l(NULL),r(NULL),val(val),sz(1),tag(0),pri(Rand()){};
+    int lz(){return this->l?this->l->sz:0;}
+    int rz(){return this->r?this->r->sz:0;}
+    node *pull(){
+        this->sz=this->lz()+this->rz()+1;
+        return this;
+    }
+} *root;
+int ws[1000006];
+
+void push(node *now){
+    now->val+=now->tag;
+    if(now->l)now->l->tag+=now->tag;
+    if(now->r)now->r->tag+=now->tag;
+    now->tag=0;
+}
+void printTree(node *now){
+    if(!DEBUG || !now)return;
+    if(now->l)cout<<"(",printTree(now->l),cout<<")";
+    cout<<"["<<now->val<<","<<now->tag<<"]";
+    if(now->r)cout<<"(",printTree(now->r),cout<<")";
+}
+node *merge(node *a,node *b){
+    // if(DEBUG)LOG("merging a: "),printTree(a),printf(", b: "),printTree(b),el;
+    if(!a)return b; if(!b)return a;
+    if(a->tag)push(a); if(b->tag)push(b);
+    if(b->pri>a->pri)return a->r=merge(a->r,b),a->pull();
+    else return b->l=merge(a,b->l),b->pull();
+}
+void splitSize(node *now,int sz,node *&a,node *&b){
+    if(!now){
+        a=0,b=0;
+        return;
+    }
+    push(now);
+    if(now->lz()>=sz){
+        b=now; splitSize(now->l,sz,a,b->l);
+        b->pull();
+    }
+    else{
+        a=now; splitSize(now->r,sz-1-now->lz(),a->r,b);
+        a->pull();
+    }
+}
+void splitVal(node *now,int val,node *&a,node *&b){
+    if(!now){
+        a=0,b=0;
+        return;
+    }
+    if(now)push(now);
+    if(now->val>val){
+        b=now; splitVal(now->l,val,a,b->l);
+        b->pull();
+    }
+    else{
+        a=now; splitVal(now->r,val,a->r,b);
+        a->pull();
+    }
+}
+void addNode(int val){
+    LOG("adding node val=%d\n",val);
+    node *a,*b;
+    splitVal(root,val,a,b);
+    LOG("splited\n");
+    if(DEBUG)printf("a:"),printTree(a),spc,printf("b:"),printTree(b),el;
+    root=merge(merge(a,new node(val)),b);
+    LOG("merged\n");
+}
+int getRight(node *now){
+    PDE2(now,now?now->r:0);
+    assert(now);
+    if(now->tag)push(now);
+    return now->r?getRight(now->r):now->val;
+}
+
 int main(){
+    int n; cin>>n;
+    while(n--){
+        int u,v; cin>>u>>v;
+        ++ws[u], --ws[v+1];
+    }
+    for(int i=1;i<=1000000;++i)ws[i]+=ws[i-1];
+    int m; cin>>m;
+    vector<pair<int,int>> wks;
+    while(m--){
+        int u,v; cin>>u>>v;
+        wks.push_back(pair<int,int>(v,u));
+    }
+    sort(wks.begin(),wks.end());
+    int nt=0;
+    for(pair<int,int> w:wks){
+        while(nt<w.first)addNode(ws[++nt]);
+        LOG("working for time: %d, need %d\n",nt,w.second);
+        node *a,*b;
+        splitSize(root,w.second,a,b);
+        ++a->tag;
+        int rLimit=getRight(a);
+        node *aa,*ab,*ba,*bb;
+        splitVal(a,rLimit-1,aa,ab);
+        splitVal(b,rLimit-1,ba,bb);
+        if(DEBUG)printf("aa: "),printTree(aa),printf(", ab: "),printTree(ab),printf(", ba: "),printTree(ba),printf(", bb: "),printTree(bb),el;
+        root=merge(merge(aa,ba),merge(ab,bb));
+        LOG("new t:%d tree: ",nt); if(DEBUG)printTree(root),el;
+    }
+    while(nt<(DEBUG?10:1000000))addNode(ws[++nt]),printTree(root),DEBUG?el:0;
+    printTree(root);
+    cout<<getRight(root)<<endl;
 }
