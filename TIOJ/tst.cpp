@@ -29,11 +29,13 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
+#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
+#define el putchar('\n')
+#define spc putchar(' ')
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
@@ -68,7 +70,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG 1
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -79,9 +81,14 @@ using namespace std;
 #define WHR() ;
 #define LOG(...) ;
 #define getchar gtx
+#define DEBUG 0
+#ifdef WEA
+#define FIN freopen("in","r",stdin)
+#define FOUT freopen("out","w",stdout)
+#else
 #define FIN ;
 #define FOUT ;
-#define DEBUG 0
+#endif
 #endif
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
@@ -129,4 +136,8 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
+    freopen("in","w",stdout);
+    cout<<"2 16"<<endl;
+    srand(time(NULL));
+    for(int i=0;i<16;++i)cout<<(rand()&1?"A ":"B ")<<rand()%400<<(rand()&1?" A ":" B ")<<rand()%400<<endl;
 }

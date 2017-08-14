@@ -128,5 +128,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<int> G[1000006],iG[1000006],tp;
+int bel[1000006];
+bool u[1000006];
+
+void dfs1(int now){
+    u[now]=1;
+    for(int i:G[now])if(!u[i])dfs1(i);
+    tp.pb(now);
+}
+void dfs2(int now,int cc){
+    u[now]=1; bel[now]=cc;
+    for(int i:iG[now])if(!u[i])dfs2(i,cc);
+}
+// void dfs3(int now){
+//     u[now]=1;
+//     for(int i:cG[now])if(!u[i])dfs3(i);
+//     tp.pb(now);
+// }
+
 int main(){
+    int n,m,s,t; rit(n,m);
+    while(m--){
+        rit(s,t);
+        G[s].pb(t), iG[t].pb(s);
+    }
+    for(int i=1;i<=n;++i)if(!u[i])dfs1(i);
+    memset(u,0,sizeof(bool)*(n+2)); int cc=0;
+    for(int i=n-1;i>=0;--i)if(!u[tp[i]])dfs2(tp[i],++cc);
+    // for(int i=1;i<=n;++i)for(int ii:G[i])if(bel[i]!=bel[ii])cG[bel[i]].pb(bel[ii]);
+    // tp.clear(); memset(u,0,sizeof(bool)*(n+2)); for(int i=1;i<=cc;++i)if(!u[i])dfs3(i);
+    // for(int i=0;i<tp.size();++i)nbig[tp[i]]=tp.size()-i;
+    // printf("%d\n",(int)tp.size());
+    // for(int i=1;i<=n;++i)printf("%d ",nbig[bel[i]]);puts("");
+    printf("%d\n",cc);
+    for(int i=1;i<=n;++i)printf("%d ",bel[i]);puts("");
 }

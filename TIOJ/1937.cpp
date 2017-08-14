@@ -5,9 +5,6 @@
 #include<cmath>
 #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
 #include<deque>
 #include<queue>
 #include<stack>
@@ -29,11 +26,13 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
+#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
+#define el putchar('\n')
+#define spc putchar(' ')
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
@@ -68,7 +67,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG 1
+#define DEBUG "jizz"
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -79,19 +78,16 @@ using namespace std;
 #define WHR() ;
 #define LOG(...) ;
 #define getchar gtx
+#define DEBUG 0
+#ifdef WEA
+#define FIN freopen("in","r",stdin)
+#define FOUT freopen("out","w",stdout)
+#else
 #define FIN ;
 #define FOUT ;
-#define DEBUG 0
+#endif
 #endif
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 
 #define lowbit(x) ((x)&(-(x)))
 
@@ -122,11 +118,76 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<vector<int>> a,b,c;
+
+struct Matrix{
+    int size,x,y;
+
+    void init(int N,int sx,int sy){
+        size=N; x=sx; y=sy;
+    }
+    Matrix submat(bool gx,bool gy)const{
+        const Matrix &a=*this;
+        return Matrix::init(size>>1,x+(gx?size>>1:0),y+(gy?size>>1:0));
+    }
+    Matrix operator+(const Matrix b)const{
+        const Matrix &a=*this;
+        Matrix c; c.init(size);
+        for(int i=0;i<size;++i)for(int j=0;j<size;++j)c.mat[i][j]=a.mat[i][j]+b.mat[i][j];
+        return c;
+    }
+    Matrix operator-(const Matrix b)const{
+        const Matrix &a=*this;
+        Matrix c; c.init(size);
+        for(int i=0;i<size;++i)for(int j=0;j<size;++j)c.mat[i][j]=a.mat[i][j]-b.mat[i][j];
+        return c;
+    }
+    Matrix operator*(const Matrix b)const{
+        const Matrix &a=*this;
+        if(size==1){
+            Matrix c; c.init(1); c.mat[0][0]=a.mat[0][0]*b.mat[0][0]; return c;
+        }
+        if(size<=2){
+            Matrix c; c.init(size);
+            for(int i=0;i<size;++i)for(int j=0;j<size;++j)for(int k=0;k<size;++k)c.mat[i][j]+=a.mat[i][k]*b.mat[k][j];
+            return c;
+        }
+        Matrix m[8];
+        Matrix A11=a.submat(0,0),A12=a.submat(0,1),A21=a.submat(1,0),A22=a.submat(1,1),
+               B11=b.submat(0,0),B12=b.submat(0,1),B21=b.submat(1,0),B22=b.submat(1,1);
+        m[1]=(A11+A22)*(B11+B22),
+        m[2]=(A21+A22)*B11,
+        m[3]=A11*(B12-B22),
+        m[4]=A22*(B21-B11),
+        m[5]=(A11+A12)*B22,
+        m[6]=(A21-A11)*(B11+B12),
+        m[7]=(A12-A22)*(B21+B22);
+        Matrix c; c.init(size);
+        for(int i=0;i<(size>>1);++i)for(int j=0;j<(size>>1);++j)c.mat[i][j]=m[1].mat[i][j]+m[4].mat[i][j]-m[5].mat[i][j]+m[7].mat[i][j];
+        for(int i=0;i<(size>>1);++i)for(int j=0;j<(size>>1);++j)c.mat[i][j+(size>>1)]=m[3].mat[i][j]+m[5].mat[i][j];
+        for(int i=0;i<(size>>1);++i)for(int j=0;j<(size>>1);++j)c.mat[i+(size>>1)][j]=m[2].mat[i][j]+m[4].mat[i][j];
+        for(int i=0;i<(size>>1);++i)for(int j=0;j<(size>>1);++j)c.mat[i+(size>>1)][j+(size>>1)]=m[1].mat[i][j]-m[2].mat[i][j]+m[3].mat[i][j]+m[6].mat[i][j];
+        return c;
+    }
+} ma,mb,c;
+
 int main(){
+    int n,N; rit(n); N=n;
+    while(lowbit(N)!=N)N+=lowbit(N);
+    a.resize(N); for(int i=0;i<N;++i)a[i].resize(N);
+    b.resize(N); for(int i=0;i<N;++i)b[i].resize(N);
+    c.resize(N); for(int i=0;i<N;++i)c[i].resize(N);
+    for(int i=0;i<n;++i)for(int j=0;j<n;++j)rit(a[i][j]);
+    for(int i=0;i<n;++i)for(int j=0;j<n;++j)rit(b[i][j]);
+    ma.init(N,0,0); mb.init(N,0,0);
+    c=a*b;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j)printf("%d ",c.mat[i][j]);
+        printf("\n");
+    }
 }
