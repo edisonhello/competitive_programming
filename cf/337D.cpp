@@ -18,6 +18,7 @@
 #include<bitset>
 #include<vector>
 #include<utility>
+#include<tuple>
 
 using namespace std;
 
@@ -25,6 +26,8 @@ using namespace std;
 #define ld long double
 #define X first
 #define Y second
+#define SZ(x) ((int)(x).size())
+#define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
 #define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
@@ -81,13 +84,6 @@ using namespace std;
 #define DEBUG 0
 #endif
 
-#define lowbit(x) ((x)&(-(x)))
-
-#if __cplusplus >= 201103L
-#include<unordered_map>
-#include<unordered_set>
-#include<tuple>
-
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
 template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
@@ -96,6 +92,8 @@ template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stac
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
 template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
+
+#define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
     const int N=1048576;
@@ -124,13 +122,56 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-#endif
-
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int d;
+bool mark[100005];
+vector<int> G[100005];
+vector<pair<int,int>> farest[100005];
+
+void dfs1(int now,int fa){
+    if(mark[now])farest[now].push_back(pair<int,int>(0,now));
+    for(int i:G[now]){
+        if(i==fa)continue;
+        dfs1(i,now);
+        if(farest[i].size())farest[now].push_back(pair<int,int>(farest[i][0].first+1,i));
+        if(farest[i].size()>1u)farest[now].push_back(pair<int,int>(farest[i][1].first+1,i));
+        sort(farest[now].begin(),farest[now].end(),greater<pair<int,int>>());
+        farest[now].resize(min((int)farest[now].size(),2));
+    }
+}
+int ans=0;
+void dfs2(int now,int fa,int left_dep){
+    PDE3(now,fa,left_dep);
+    if(left_dep<0)return;
+    if(farest[now].size() && farest[now][0].first<=d)++ans,printf(DEBUG?"ans++: %d\n":"",now);
+    for(int i:G[now]){
+        if(i==fa)continue;
+        PDE1(farest[now].size() && farest[now][0].second == i ?(farest[now].size()>1u ? farest[now][1].first : 1<<29): (farest[now].size() ? farest[now][0].first : 1<<29));
+        dfs2(i,now,min(left_dep-1,d-1-
+            (farest[now].size() && farest[now][0].second == i ?
+                (farest[now].size()>1u ? farest[now][1].first : -(1<<29))
+                : (farest[now].size() ? farest[now][0].first : -(1<<29)))));
+    }
+}
+
 int main(){
+    int n,m; cin>>n>>m>>d;
+    for(int i=0,t;i<m;++i){
+        cin>>t;
+        mark[t]=1;
+    }
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    dfs1(1,1);
+    for(int i=1;i<=n;++i)PDE2(i,farest[i]);
+    dfs2(1,1,1<<29);
+    cout<<ans<<endl;
 }
