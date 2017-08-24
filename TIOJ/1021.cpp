@@ -133,5 +133,46 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+ll trans(string s){
+    SS ss(s); ll rt;
+    if(ss>>rt)return rt+1;
+    else return 1;
+}
+ll p10(int x){
+    if(x<0)return 0;
+    ll a=1; while(x--)a*=10;
+    return a;
+}
+ll full(int len){
+    return len*p10(len-1);
+}
+ll meow(string s,int k){
+    if(s=="")return 0;
+    PDE2(s,k);
+    ll ans=0;
+    for(int i='0';i<s[0];++i){
+        ans+=full(s.length()-1);
+        if(i==k+'0')ans+=p10(s.length()-1);
+    }
+    PDE1(ans);
+    ans+=meow(s.substr(1,s.length()-1),k);
+    PDE1(ans);
+    if(s[0]==k+'0')ans+=trans(s.substr(1,s.length()-1));
+    PDE3(s,k,ans);
+    return ans;
+}
+
 int main(){
+    string s; int k; while(cin>>s>>k){
+        if(k==0){
+            ll v,ans=0;
+            while((s=s.substr(0,s.length()-1))!=""){
+                SS ss(s); ss>>v; ans+=v;
+            }
+            cout<<ans<<endl;
+        }
+        else{
+            cout<<meow(s,k)<<endl;
+        }
+    }
 }

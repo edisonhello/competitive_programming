@@ -133,5 +133,53 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<pair<int,int>> spd;
+vector<int> ovt;
+int doovt(){
+    stack<int> st;
+    int rt=0;
+    for(int i:ovt){
+        if(i==2){
+            while(st.size() && st.top()!=4){
+                ++rt;
+                st.pop();
+            }
+        }
+    } return rt;
+}
+int nowspd;
+int dospd(){
+    stack<int> st;
+    int rt=0;
+    for(pair<int,int> i:spd){
+        if(i.first==1){
+            nowspd=i.second;
+            while(st.size() && st.top()<nowspd){
+                ++rt;
+                st.pop();
+            }
+        }
+        else{
+            st.push(i.second);
+            while(st.size() && st.top()<nowspd){
+                ++rt;
+                st.pop();
+            }
+        }
+    } return rt;
+}
 int main(){
+    int n; cin>>n;
+    for(int i=0;i<n;++i){
+        int typ,nspd; cin>>typ;
+        if(typ&1){
+            if(typ<5)cin>>nspd;
+            else nspd=999;
+            spd.push_back(pair<int,int>(typ,nspd));
+        }
+        else ovt.push_back(typ);
+    }
+    PDE2(ovt,spd);
+    int ans=dospd()+doovt();
+    cout<<ans<<endl;
 }

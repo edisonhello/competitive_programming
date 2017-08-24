@@ -48,7 +48,6 @@ using namespace std;
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
 #define ws Osas
-#define dec tetteterette
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -131,7 +130,31 @@ void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
-const ll mod=1e9+7;
+const ll mod=1111111113ll;
+const ll p=47107;
+
+inline ll norm(ll x){return (x%mod+mod)%mod;}
+ll pp[2222],pre[2222],sth,edh;
+vector<int> stp,edp;
+set<ll> hhhh[2222];
 
 int main(){
+    string s,st,ed; cin>>s>>st>>ed;
+    for(char &c:s)c-='a'; for(char &c:st)c-='a'; for(char &c:ed)c-='a';
+    pp[0]=1; for(int i=1;i<2222;++i)pp[i]=norm(pp[i-1]*p);
+    for(int i=0;i<s.length();++i)pre[i+1]=norm(pre[i]+norm(pp[s.length()-1-i]*s[i]));
+    for(int i=0;i<st.length();++i)sth=norm(sth+norm(pp[st.length()-i-1]*st[i]));
+    for(int i=0;i<ed.length();++i)edh=norm(edh+norm(pp[ed.length()-i-1]*ed[i]));
+    if(DEBUG){for(int i=1;i<=s.length();++i)cout<<pre[i]<<" ";cout<<endl;}
+    PDE2(sth,edh);
+    for(int i=0;i<s.length();++i)for(int j=i+max(st.length(),ed.length())-1;j<s.length();++j){
+        PDE2(i,j);
+        if(norm(pre[i+st.length()]-pre[i])!=norm(sth*pp[s.length()-i-st.length()]))continue;
+        PDE2(i,j);
+        if(norm(pre[j+1]-pre[j-ed.length()+1])!=norm(edh*pp[s.length()-j-1]))continue;
+        PDE2(i,j);
+        hhhh[j-i+1].insert(norm(norm(pre[j+1]-pre[i])*pp[i]));
+    }
+    int ans=0; for(int i=0;i<2222;++i)ans+=hhhh[i].size();
+    cout<<ans<<endl;
 }

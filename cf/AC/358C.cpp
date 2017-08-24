@@ -48,7 +48,6 @@ using namespace std;
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
 #define ws Osas
-#define dec tetteterette
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -133,5 +132,55 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int num[100005];
+bool nd[100005];
+priority_queue<pair<int,int>,vector<pair<int,int>>,less<pair<int,int>>> pq;
 int main(){
+    int n; cin>>n;
+    for(int i=0;i<n;++i){
+        cin>>num[i];
+        if(num[i]==0){
+            int cnt=3; while(pq.size() && cnt--){
+                nd[pq.top().second]=1;
+                pq.pop();
+            }
+            while(pq.size())pq.pop();
+        }
+        else pq.push(pair<int,int>(num[i],i));
+    }
+    int cnt=0,snd=0;
+    for(int i=0;i<n;++i){
+        if(nd[i]){
+            if(cnt%3==0){
+                cout<<"pushStack"<<endl;
+            }
+            else if(cnt%3==1){
+                cout<<"pushQueue"<<endl;
+            }
+            else{
+                cout<<"pushFront"<<endl;
+            }
+            ++cnt;
+        }
+        else if(num[i]==0){
+            int tcnt=3;
+            cout<<min(cnt-snd,tcnt);
+            while(snd<cnt && tcnt--){
+                if(snd%3==0){
+                    cout<<" popStack";
+                }
+                else if(snd%3==1){
+                    cout<<" popQueue";
+                }
+                else{
+                    cout<<" popFront";
+                }
+                ++snd;
+            }
+            cout<<endl;
+        }
+        else{
+            cout<<"pushBack"<<endl;
+        }
+    }
 }

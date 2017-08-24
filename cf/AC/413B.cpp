@@ -133,5 +133,16 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool form[20005][12];
+int cnt[12],dec[20005],ans[20005];
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n,m,k; cin>>n>>m>>k;
+    for(int i=1;i<=n;++i)for(int j=1;j<=m;++j)cin>>form[i][j];
+    while(k--){
+        int a,b; cin>>a>>b;
+        cnt[b]++; dec[a]++;
+    }
+    for(int j=1;j<=m;++j)for(int i=1;i<=n;++i)if(form[i][j])ans[i]+=cnt[j];
+    for(int i=1;i<=n;++i)cout<<ans[i]-dec[i]<<" ";cout<<endl;
 }

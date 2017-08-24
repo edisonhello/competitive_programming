@@ -48,7 +48,6 @@ using namespace std;
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
 #define ws Osas
-#define dec tetteterette
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -134,4 +133,45 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
+    string s; cin>>s;
+    string ss=s;
+    {
+        bool find=0;
+        for(char c:ss)if(c=='.')find=1;
+        if(!find)ss+=".";
+    }
+    {
+        string sss; int ptr=0; while(ptr<ss.length() && ss[ptr]=='0')++ptr; while(ptr<ss.length())sss+=ss[ptr++]; ss=sss; sss="";
+        PDE1(ss);
+        ptr=ss.length()-1; while(ptr>=0 && ss[ptr]=='0')--ptr; while(ptr>=0)sss+=ss[ptr--]; ss="";
+        PDE1(sss);
+        ptr=sss.length()-1; while(ptr<sss.length())ss+=sss[ptr--];
+        PDE1(ss);
+    }
+    PDE1(ss);
+    {
+        int mean=0,i=0,E=0;
+        for(;i<ss.length();++i){
+            if(ss[i]=='.')break;
+            ++mean;
+        }
+        PDE3(mean,i,E);
+        while(mean>1){
+            ++E;
+            swap(ss[i],ss[i-1]);
+            --i; --mean;
+            PDE4(mean,i,E,ss);
+        }
+        while(mean==0){
+            --E;
+            swap(ss[i],ss[i+1]);
+            ++i; if(ss[i-1]!='0')++mean;
+        }
+        string sss; int ptr=0; while(ptr<ss.length() && ss[ptr]=='0')++ptr; while(ptr<ss.length())sss+=ss[ptr++]; ss=sss; sss="";
+        ptr=ss.length()-1; while(ptr>=0 && ss[ptr]=='0')--ptr; while(ptr>=0)sss+=ss[ptr--]; ss="";
+        ptr=sss.length()-1; while(ptr<sss.length())ss+=sss[ptr--];
+        if(ss[ss.length()-1]=='.')ss=ss.substr(0,ss.length()-1);
+        if(E)cout<<ss<<"E"<<E<<endl;
+        else cout<<ss<<endl;
+    }
 }

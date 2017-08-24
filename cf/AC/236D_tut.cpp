@@ -48,7 +48,6 @@ using namespace std;
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
 #define ws Osas
-#define dec tetteterette
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -133,5 +132,14 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+ld prob,a[100005],pre;
 int main(){
+    int n; cin>>n;
+    for(int i=1;i<=n;++i){
+        cin>>a[i];
+        prob+=a[i];
+        prob+=a[i]*pre*2;
+        pre=pre*a[i]+a[i];
+    }
+    cout<<fixed<<setprecision(10)<<prob<<endl;
 }

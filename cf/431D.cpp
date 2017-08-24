@@ -133,5 +133,15 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+vector<int> meow[10];
+void calc(int x){
+    int c=0;
+    for(int i=0;(1<<i)<=x;++i)if(x&(1<<i))++c;
+    meow[c].push_back(x);
+}
 int main(){
+    for(int i=1;i<=511;i+=2){
+        calc(i);
+    }
+    for(int i=1;i<=10;++i)PDE1(meow[i]);
 }

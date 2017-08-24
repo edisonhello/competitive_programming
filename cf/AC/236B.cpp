@@ -48,7 +48,6 @@ using namespace std;
 #define y1 Enyetuenwuevue
 #define left Ugbemugbem
 #define ws Osas
-#define dec tetteterette
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -133,5 +132,20 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int pre[1000009];
+void init(int n){
+    pre[1]=1;
+    for(int i=2;i<=n;++i){
+        pre[i]+=2;
+        for(int j=i*2;j<=n;j+=i){
+            pre[j]++;
+        }
+    }
+}
 int main(){
+    int a,b,c; cin>>a>>b>>c;
+    init(a*b*c+4);
+    int ans=0;
+    for(int i=1;i<=a;++i)for(int j=1;j<=b;++j)for(int k=1;k<=c;++k)ans=(ans+pre[i*j*k])&((1<<30)-1);
+    cout<<ans<<endl;
 }
