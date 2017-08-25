@@ -131,5 +131,76 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
+int a[50004],BIT[50004],sz;
+ll ans[50004],na;
+vector<int> num;
+struct Q{int l,r,bl,i;
+Q(int l=0,int r=0,int bl=0,int i=0):l(l),r(r),bl(bl),i(i){};} qs[50004];
+bool cmp_mo(const Q &a,const Q &b){return a.bl==b.bl?a.r<b.r:a.bl<b.bl;}
+void add(int x,int v){
+    while(x<50004){
+        BIT[x]+=v;
+        x+=lowbit(x);
+    }
+}
+int query(int x,int v=0){
+    while(x>0){
+        v+=BIT[x];
+        x-=lowbit(x);
+    } return v;
+}
+void addr(int x){
+    na+=sz-query(x);
+    PDE2(sz,query(x));
+    add(x,1);
+    ++sz;
+}
+void addl(int x){
+    na+=query(x-1);
+    add(x,1);
+    ++sz;
+}
+void ersl(int x){
+    na-=query(x-1);
+    add(x,-1);
+    --sz;
+}
+void ersr(int x){
+    na-=sz-query(x);
+    add(x,-1);
+    --sz;
+}
 int main(){
+    int n; scanf("%d",&n);
+    int blockSize=int(sqrt(n)+1.);
+    for(int i=1;i<=n;++i){
+        scanf("%d",a+i);
+        num.push_back(a[i]);
+    }
+    if(DEBUG){for(int i=1;i<=n;++i)cout<<a[i]<<" ";cout<<endl;}
+    sort(num.begin(),num.end());
+    num.resize(unique(num.begin(),num.end())-num.begin());
+    for(int i=1;i<=n;++i)a[i]=lower_bound(num.begin(),num.end(),a[i])-num.begin()+2;
+    if(DEBUG){for(int i=1;i<=n;++i)cout<<a[i]<<" ";cout<<endl;}
+    int q; scanf("%d",&q);
+    for(int i=0,l,r;i<q;++i){
+        scanf("%d%d",&l,&r);
+        PDE2(l,r);
+        qs[i]=Q(l,r,l/blockSize,i);
+    }
+    sort(qs,qs+q,cmp_mo);
+    int L=1,R=0;
+    for(int i=0;i<q;++i){
+        Q cur=qs[i];
+        PDE4(cur.l,cur.r,cur.bl,cur.i);
+        PDE2(na,sz);
+        while(R<cur.r)addr(a[++R]);
+        while(R>cur.r)ersr(a[R--]);
+        PDE2(na,sz);
+        while(L<cur.l)ersl(a[L++]);
+        while(L>cur.l)addl(a[--L]);
+        PDE2(na,sz);
+        ans[cur.i]=na;
+    }
+    for(int i=0;i<q;++i)printf("%lld\n",ans[i]);
 }

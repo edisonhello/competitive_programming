@@ -131,5 +131,51 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-8;
 const ll mod=1e9+7;
 
-int main(){
+#define int long long
+int n,m,a,b,d;
+struct edge{int v,c,p;edge(int v=0,int c=0,int p=0):v(v),c(c),p(p){};};
+vector<edge> G[40004];
+int dis[40004];
+bool u[40004];
+int dij(int s,int t,int d){
+    PDE3(s,t,d);
+    MS(dis,0x3f); dis[s]=0; MS0(u);
+    priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
+    pq.push(pair<int,int>(0,s));
+    while(pq.size()){
+        while(pq.size() && u[pq.top().second])pq.pop();
+        u[pq.top().second]=1;
+        if(pq.top().second==t)break;
+        for(edge e:G[pq.top().second]){
+            if(u[e.v])continue;
+            if(dis[e.v]>dis[pq.top().second]+e.c+e.p*d){
+                dis[e.v]=dis[pq.top().second]+e.c+e.p*d;
+                pq.push(pair<int,int>(dis[e.v],e.v));
+            }
+        }
+    }
+    return dis[t];
+}
+int get(int d){
+    return dij(a,b,d)+dij(b,a,d);
+}
+main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    cin>>n>>m>>a>>b>>d;
+    while(m--){
+        PDE1(m);
+        int n,nn,c,p,cc,pp; cin>>n>>nn>>c>>p>>cc>>pp;
+        G[n].push_back(edge(nn,c,p));
+        G[nn].push_back(edge(n,cc,pp));
+    }
+    int la=get(0),ra=get(d-1);
+    int me=min(la,ra),op=max(la,ra),L=0,R=d-1;
+    while(L<R){
+        int mid=(L+R)>>1;
+        int ml=get(mid),mr=get(mid+1);
+        op=max(op,max(ml,mr));
+        if(ml<mr)L=mid+1;
+        else R=mid;
+    }
+    cout<<op-me<<endl;
 }
