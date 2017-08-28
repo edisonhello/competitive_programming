@@ -12,7 +12,6 @@ from bs4 import BeautifulSoup
 # config
 
 # the testdata will append at the end of the testdata list
-problem_id = '1994' # problem id
 input_suffix = '.in'
 output_suffix = '.out'
 filename_format = '%02d%s'
