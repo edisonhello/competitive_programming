@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 import requests
 import random
 import string
+from getpass import getpass as getpass
 from bs4 import BeautifulSoup
 
 # config
@@ -14,14 +15,12 @@ from bs4 import BeautifulSoup
 # the testdata will append at the end of the testdata list
 input_suffix = '.in'
 output_suffix = '.out'
-filename_format = '%02d%s'
+filename_format = '%d%s'
 time_limit = '1000'
 memory_limit = '65536'
 
 # end config
 
-sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
-sign_up_post_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
    
 session = requests.Session()
 
@@ -47,6 +46,10 @@ print('Successful log in')
 problem_id = int(input('Problem ID: '))
 num_start = int(input('Testdata start number: '))
 num_end = int(input('Testdata end number: '))
+
+sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
+sign_up_post_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
+
 for i in range(num_start, num_end + 1):
     print('processing %d...' % i)
     rel = session.get(sign_up_get_url)

@@ -7,33 +7,25 @@ from __future__ import unicode_literals
 import requests
 import random
 import string
+from getpass import getpass as getpass
 from bs4 import BeautifulSoup
 
 # config
 
-problem_id = '1995' # problem id
-num_start = 0 # testdata No. range, []
-num_end = 7
-upload_input = False # if you want to update the testdata files
-upload_output = False
 input_suffix = '.in'
 output_suffix = '.out'
-input_prefix = ''
-output_prefix = ''
-filename_format = '%s%02d%s' # % (prefix, id, suffix)
-time_limit = '900'
-memory_limit = '23040'
-
-TIOJusername = "" #enter your TIOJ username
-TIOJpassword = "" #enter your TIOJ password
+filename_format = '%d%s'
+time_limit = '1000'
+memory_limit = '131072'
 
 # end config
 
-url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
    
 session = requests.Session()
 
 def login():
+    TIOJusername = input('Username: ')
+    TIOJpassword = getpass('Password: ')
     print('logging in...')
     global session
     rel = session.get('http://tioj.ck.tp.edu.tw/users/sign_in')
@@ -50,6 +42,16 @@ def login():
     rel = session.post('http://tioj.ck.tp.edu.tw/users/sign_in', data=data)
 
 login()
+print('Successful log in')
+problem_id = int(input('Problem ID: '))
+num_start = int(input('Testdata start number: '))
+num_end = int(input('Testdata end number: '))
+upload_input = bool(input('Reupload input? 1 for yes. ') == "1")
+upload_output = bool(input('Reupload output? 1 for yes. ') == "1")
+
+url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
+sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
+sign_up_post_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
 
 rel = session.get(url)
 soup = BeautifulSoup(rel.text, "html.parser")
@@ -90,8 +92,8 @@ for i in lst:
     }
     
     files = {}
-    if upload_input: files['testdatum[test_input]'] = open(filename_format % (input_prefix, c, input_suffix), 'rb')
-    if upload_output: files['testdatum[test_output]'] = open(filename_format % (output_prefix, c, output_suffix), 'rb')
+    if upload_input: files['testdatum[test_input]'] = open(filename_format % (c, input_suffix), 'rb')
+    if upload_output: files['testdatum[test_output]'] = open(filename_format % (c, output_suffix), 'rb')
     rel = session.post(post_url, data = data, files = files)
 
     print('Modify %d(%d)!!' % (c, i))
