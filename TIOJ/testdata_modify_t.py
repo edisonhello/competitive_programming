@@ -15,8 +15,6 @@ from bs4 import BeautifulSoup
 input_suffix = '.in'
 output_suffix = '.out'
 filename_format = '%d%s'
-time_limit = '1000'
-memory_limit = '131072'
 
 # end config
 
@@ -46,6 +44,8 @@ print('Successful log in')
 problem_id = int(input('Problem ID: '))
 num_start = int(input('Testdata start number: '))
 num_end = int(input('Testdata end number: '))
+time_limit = int(input('New time limit: '))
+memory_limit = int(input('New memory limit: '))
 upload_input = bool(input('Reupload input? 1 for yes. ') == "1")
 upload_output = bool(input('Reupload output? 1 for yes. ') == "1")
 

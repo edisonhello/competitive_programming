@@ -131,7 +131,7 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-set<ll> ps;
+map<ll,int> ps;
 vector<ll> prime;
 bool p[100000];
 void init(){
@@ -146,15 +146,26 @@ void init(){
 
 void dec(ll x){
     for(ll i:prime){
-        int tmp=0; ll pin=1;
+        int tmp=0;
         while(x%i==0){
             x/=i;
             ++tmp;
-            pin*=i;
         }
-        if(tmp)ps.insert(pin);
+        if(tmp)ps[i]|=(1<<(tmp-1));
     }
-    if(x>1)ps.insert(x);
+    if(x>1)ps[x]|=1;
+}
+
+map<int,int> sg;
+int grundy(int x){
+PDE1(x);
+    auto it=sg.find(x);
+    if(it!=sg.end())return it->second;
+    set<int> sgg;
+    for(int i=1;(1<<(i-1))<=x;++i)sgg.insert(grundy((x>>i)|(x&((1<<(i-1))-1))));
+    int ptr=0;
+    while(sgg.find(ptr)!=sgg.end())++ptr;
+    sg[x]=ptr; return ptr;
 }
 
 int main(){
@@ -165,7 +176,8 @@ int main(){
     }
     int ans=0;
     PDE1(ps);
-    ans=ps.size()&1;
+    for(auto i:ps)ans^=grundy(i.second);
+    PDE2(sg,ans);
     if(ans)cout<<"Mojtaba"<<endl;
     else cout<<"Arpa"<<endl;
 }
