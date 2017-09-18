@@ -47,8 +47,6 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
-#define exp expexpexpexp
-#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -130,8 +128,21 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-13;
+const ld eps=1e-8;
 const ll mod=1e9+7;
 
+inline int rd(){return abs((int(rand())<<16)|rand());}
+
+int MAXN=500,n;
+set<pair<int,int>> edge;
+
 int main(){
+    srand(time(NULL));
+    n=5;
+    while(rd()%200!=0){
+        int u=rd()%n,v=rd%n;
+        if(edge.find(pair<int,int>(u,v))==edge.end()){
+            edge.insert(pair<int,int>(u,v));
+        }
+    }
 }

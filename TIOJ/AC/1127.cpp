@@ -47,8 +47,6 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
-#define exp expexpexpexp
-#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -133,5 +131,27 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll dp[45][1<<4];
+
 int main(){
+    dp[1][1<<2]=1;
+    dp[1][7]=1;
+    for(int i=2;i<=41;++i){
+        dp[i][0]=dp[i-1][7];
+        dp[i][1]=dp[i-1][6];
+        dp[i][2]=dp[i-1][5];
+        dp[i][3]=dp[i-1][4]+dp[i-1][7];
+        dp[i][4]=dp[i-1][3];
+        dp[i][5]=dp[i-1][2];
+        dp[i][6]=dp[i-1][1]+dp[i-1][7];
+        dp[i][7]=dp[i][4]+dp[i][1]+dp[i-1][0];
+    }
+    if(DEBUG)for(int i=1;i<=5;++i){
+        for(int j=0;j<8;++j){
+            cout<<dp[i][j]<<" ";
+        } cout<<endl;
+    }
+    int n; while(cin>>n){
+        cout<<dp[n][7]<<endl;
+    }
 }

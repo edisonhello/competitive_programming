@@ -47,8 +47,6 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
-#define exp expexpexpexp
-#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -130,8 +128,34 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-13;
+const ld eps=1e-8;
 const ll mod=1e9+7;
 
+bool u[555],C[555][555];
+int match[555];
+vector<int> G[555];
+bool dfs(int now){
+    PDE1(now);
+    if(u[now])return 0; u[now]=1;
+    for(int i=0;i<G[now].size();++i){
+        if(match[G[now][i]]==-1 || dfs(match[G[now][i]])){
+            match[now]=G[now][i];
+            match[G[now][i]]=now;
+            return 7122;
+        }
+    } return 0;
+}
 int main(){
+    int n,m; while(cin>>n>>m){
+        while(m--){
+            int u,v; cin>>u>>v;
+            C[u][v]=1;
+        }
+        for(int i=0;i<n;++i)for(int j=0;j<n;++j)if(i!=j&&C[i][j]&&C[j][i])G[i].push_back(j),G[j].push_back(i);
+        for(int i=0;i<n;++i)match[i]=-1;
+        int ans=0;
+        for(int i=0;i<n;++i)if(match[i]==-1 && (memset(u,0,sizeof(u)),dfs(i)))++ans;
+        cout<<ans<<endl;
+        for(int i=0;i<n;++i)G[i].clear();
+    }
 }

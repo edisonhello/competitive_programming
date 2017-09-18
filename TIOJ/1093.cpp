@@ -47,8 +47,6 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
-#define exp expexpexpexp
-#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -133,5 +131,65 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct p{
+    ld x,y;
+    p(ld x=0,ld y=0):x(x),y(y){};
+    inline ld len(){return sqrt(this->x*this->x+this->y*this->y);}
+};
+p operator+(const p &a,const p &b){return p(a.x+b.x,a.y+b.y);}
+p operator-(const p &a,const p &b){return p(a.x-b.x,a.y-b.y);}
+p operator/(const p &a,const int &n){return p(a.x/n,a.y/n);}
+ld operator^(const p &a,const p &b){return a.x*b.y-a.y*b.x;}
+ostream& operator<<(ostream &ostm,const p &a){ostm<<"("<<a.x<<","<<a.y<<")";return ostm;}
+struct cc{
+    p cen;
+    ld r;
+    cc(p cen=p(),ld r=0):cen(cen),r(r){};
+};
+bool operator>(const cc &a,const p &b){return a.r+eps>=(a.cen-b).len();}
+ostream& operator<<(ostream &ostm,const cc &a){ostm<<"{"<<a.r<<":"<<a.cen<<"}";return ostm;}
+
+cc buildc(const p p1,const p p2){return cc((p1+p2)/2,(p1-p2).len()/2);}
+cc buildc(const p p1,const p p2,const p p3){
+    if(((p1-p2)^(p1-p3))<eps){
+        ld l12=(p2-p1).len(),l13=(p3-p1).len(),l23=(p3-p2).len();
+        if(l12>=l13 && l12>=l23)return buildc(p1,p2);
+        if(l13>=l12 && l13>=l23)return buildc(p1,p3);
+        return buildc(p2,p3);
+    }
+    ld t1=p1.x*p1.x+p1.y+p1.y,t2=p2.x*p2.x+p2.y+p2.y,t3=p3.x*p3.x+p3.y+p3.y;
+    ld tmp=p1.x*p2.y+p2.x*p3.y+p3.x*p1.y-p1.y*p2.x-p2.y*p3.x-p3.y*p1.x;
+    ld x=(t2*p3.y+t1*p2.y+t3*p1.y-t2*p1.y-t3*p2.y-t1*p3.y)/tmp/2;
+    ld y=(t3*p2.x+t2*p1.x+t1*p3.x-t1*p2.x-t2*p3.x-t3*p1.x)/tmp/2;
+    return cc(p(x,y),(p(x,y)-p1).len());
+}
+
+vector<p> pts;
+ld dis(ld x1,ld y1,ld x2,ld y2){
+    return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+}
 int main(){
+    srand(5140);
+    int n,m; while(cin>>n>>m,n){
+        pts.clear();
+        for(int i=0;i<m;++i){
+            ld x,y; cin>>x>>y;
+            pts.emplace_back(x,y);
+        }
+        random_shuffle(pts.begin(),pts.end());
+        PDE1(pts);
+        cc ans=buildc(pts[0],pts[1]);
+        for(int i=2;i<m;++i){
+            if(ans>pts[i])continue;
+            PDE2(ans.r,(ans.cen-pts[i]).len());
+            ans=buildc(pts[0],pts[i]);
+            PDE2(i,ans);
+            for(int j=1;j<i;++j){
+                if(ans>pts[j])continue;
+                PDE3(i,j,ans);
+                ans=buildc(pts[0],pts[i],pts[j]);
+            }
+        }
+        cout<<fixed<<setprecision(3)<<ans.r<<endl;
+    }
 }
