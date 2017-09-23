@@ -13,8 +13,6 @@
 #include<stack>
 #include<map>
 #include<set>
-#include<unordered_map>
-#include<unordered_set>
 #include<bitset>
 #include<vector>
 #include<utility>
@@ -25,16 +23,11 @@ using namespace std;
 #define ld long double
 #define X first
 #define Y second
-#define SZ(x) ((int)(x).size())
-#define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
-#define el putchar('\n')
-#define spc putchar(' ')
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
@@ -46,13 +39,15 @@ using namespace std;
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
-#define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
-#define y2 Enyetuenwuevue
+#define y1 Enyetuenwuevue
 #define left Ugbemugbem
-#define Osas
+#define ws Osas
+#define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -70,6 +65,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
+#define DEBUG 1
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -79,16 +75,18 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
-#define endl '\n'
 #define getchar gtx
-#ifdef WEA
-#define FIN freopen("in","r",stdin)
-#define FOUT freopen("out","w",stdout)
-#else
 #define FIN ;
 #define FOUT ;
+#define DEBUG 0
 #endif
-#endif
+
+#define lowbit(x) ((x)&(-(x)))
+
+#if __cplusplus >= 201103L
+#include<unordered_map>
+#include<unordered_set>
+#include<tuple>
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
@@ -96,10 +94,8 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-
-#define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
     const int N=1048576;
@@ -128,38 +124,21 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
-void JIZZ(){cout<<"Poor Sereja!\n";exit(0);}
+#endif
+
+void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int n,m;
-pii blu[2222],red[2222];
-// blu goes y and red goes x
-
-
-bool check(int t){
-    
-}
-
 int main(){
-    cin>>n>>m;
-    for(int i=0;i<n;++i){
-        int x,y;cin>>x>>y;
-        blu[i]={x+y,y-x};
+    int n; while(cin>>n){
+        vint v; for(int i=0,t;i<n;++i){
+            cin>>t; v.pb(t);
+        } sort(v.begin(),v.end()); ll ans=0;
+        for(int i=0,j=v.size()-1;i<=j;++i,--j){
+            ans+=v[j]-v[i];
+        } cout<<ans<<endl;
     }
-    for(int i=0;i<m;++i){
-        int x,y;cin>>x>>y;
-        red[i]={x+y,y-x};
-    }
-    if(n==1 || m==1)JIZZ();
-
-    int L=1,R=4000009;
-    while(R>L){
-        int mid=L+R>>1;
-        if(check(mid))R=mid;
-        else L=mid+1;
-    }
-    cout<<L<<endl;
 }
