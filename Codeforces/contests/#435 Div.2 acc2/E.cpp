@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -132,5 +133,37 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
+ll asum,b[100009],bsum[100009];
+set<ll> bb;
+void getans(){
+    auto upit=bb.lower_bound(asum);
+    ll val1=(upit==bb.end()?0x3f3f3f3f3f3f3f3f:(asum-(*upit)));
+    ll val2=(upit==bb.begin()?0x3f3f3f3f3f3f3f3f:(asum-(*(--upit))));
+    PDE2(val1,val2);
+    cout<<min(abs(val1),abs(val2))<<endl;
 }
+int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n,m,q; cin>>n>>m>>q;
+    for(int i=0,t;i<n;++i){
+        cin>>t; t*=(i&1?-1:1);
+        asum+=t;
+    }
+    PDE1(asum);
+    for(int i=0;i<m;++i)cin>>b[i];
+    for(int i=0;i<n;++i)bsum[0]+=b[i]*(i&1?-1:1);
+    for(int i=1;i<=m-n;++i)bsum[i]=(bsum[i-1]-b[i-1])*(-1)+(b[i+n-1]*(n&1?1:-1));
+    if(DEBUG)for(int i=0;i<=m-n;++i)PDE2(i,bsum[i]);
+    for(int i=0;i<=m-n;++i)bb.insert(bsum[i]);
+    getans();
+    while(q--){
+        int l,r; ll v; cin>>l>>r>>v;
+        if((r-l+1)&1){
+            if(l&1)asum+=v;
+            else asum-=v;
+        }
+        getans();
+    }
+}
+// 30514179 60:20 WA 4
+// 30514594 63:10 AC

@@ -131,6 +131,55 @@ void JIZZ(){cout<<"";exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
+#define int long long
 
-int main(){
+bool u[5009][5009];
+bool _sg[5009][5009];
+bool sg(int a,int b){
+    if(a==0 && b==0)return 0;
+    if(u[a][b])return _sg[a][b];
+    bool rt=0;
+    if(a>0)rt|=(!sg(a-1,b));
+    if(b>0)rt|=(!sg(a,b-1));
+    if(a>=b && b)rt|=(!sg(a-b,b));
+    if(b>=a && a)rt|=(!sg(a,b-a));
+    u[a][b]=1;
+    return _sg[a][b]=rt;
+}
+int count(int a,int b){
+    int cnt=0;
+    while(a && b){
+        if(a>=b)cnt+=a/b, a%=b;
+        else cnt+=b/a, b%=a;
+    } return cnt;
+}
+bool go(int a,int b){
+    if(a==0 && b==0)return 0;
+    if(a%2==1 && b%2==1)return 0;
+    if(a%2==1 || b%2==1)return 1;
+    if(a==0 || b==0)return max(a,b)&1;
+    if(a>=b)return !go(a-b,b);
+    else return !go(a,b-a);
+}
+main(){
+    for(int i=0;i<=20;++i){
+        for(int j=i;j<=20;++j){
+            int goo=go(i,j);
+            int sgg=sg(i,j);
+            if(goo!=sgg)PDE4(i,j,goo,sgg);
+        }
+    }
+    int n; cin>>n;
+    while(n--){
+        int a,b; cin>>a>>b;
+        cout<<(go(a,b)?">//<":">\\\\<")<<endl;
+    }
+    if(!(cin>>n))return 0;
+    for(int i=0;i<=n;++i){
+        for(int j=0;j<=n;++j){
+            if(!sg(i,j))cout<<"("<<setw(2)<<i<<","<<setw(2)<<j<<") ";
+            else cout<<"        ";
+        }
+        cout<<endl;
+    }
 }

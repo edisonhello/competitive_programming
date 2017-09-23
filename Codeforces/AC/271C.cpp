@@ -133,4 +133,13 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n,k; cin>>n>>k; if(n<k*3)return cout<<-1<<endl,0;
+    int avg=n/k;
+    for(int i=0;i<n-k;++i){
+        cout<<min(i/(avg-1),k-1)+1<<" ";
+    }
+    for(int i=n-k;i<n;++i){
+        cout<<i-(n-k)+1<<" ";
+    }
+    cout<<endl;
 }

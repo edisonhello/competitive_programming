@@ -131,6 +131,28 @@ void JIZZ(){cout<<"";exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
+int k;
+
+int sg(int x){
+    if(!(k&1)){
+        if(x<=2)return x;
+        else return !(x&1);
+    }
+    else{
+        if(x<=3)return x&1;
+        if(x==4)return 2;
+        if(x&1)return 0;
+        if(sg(x/2)==1)return 2;
+        return 1;
+    }
+}
 
 int main(){
+    int n; cin>>n>>k;
+    int ans=0;
+    for(int i=0,t;i<n;++i){
+        cin>>t;
+        ans^=sg(t);
+    }
+    cout<<(ans?"Kevin":"Nicky")<<endl;
 }

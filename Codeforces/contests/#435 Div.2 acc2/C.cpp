@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -132,5 +133,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+set<int> use;
 int main(){
+    int n,x; cin>>n>>x;
+    if(n==1)return cout<<"YES\n"<<x<<endl,0;
+    if(n==2){
+        if(x==0)return cout<<"NO\n",0;
+        return cout<<"YES\n"<<(x^1)<<" "<<1<<endl,0;
+    }
+    int ptr=999999;
+    cout<<"YES\n";
+    while((n>4 && x!=0) || (x==0 && n-4>2)){
+        n-=4;
+        cout<<ptr<<" "; --ptr;
+        cout<<ptr<<" "; --ptr;
+        cout<<ptr<<" "; --ptr;
+        cout<<ptr<<" "; --ptr;
+    }
+    if(n==1){
+        return cout<<x<<endl,0;
+    }
+    if(x==0){
+        for(int i=1;i<n;++i)cout<<(1<<(i-1))<<" ";
+        cout<<(1<<(n-1))-1<<endl;
+        return 0;
+    }
+    if(n==2){
+        return cout<<1<<" "<<(x^1)<<endl,0;
+    }
+    if(n==3){
+        return cout<<1<<" "<<2<<" "<<(x^3)<<endl,0;
+    }
+    if(n==4)return cout<<1<<" "<<2<<" "<<4<<" "<<(x^7)<<endl,0;
+    assert(1==0);
 }
+// 30508575 26:45 WA main 12

@@ -133,4 +133,18 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n,m,k; cin>>n>>m>>k;
+    vint ppp; while(n--){
+        int t; cin>>t; ppp.pb(t-1);
+    }
+    sort(ppp.begin(),ppp.end()); reverse(ppp.begin(),ppp.end());
+    int ans=0;
+    for(int i:ppp){
+        if(k>=m)break;
+        ans++;
+        k+=i;
+        
+    }
+    if(k<m)cout<<-1;
+else    cout<<ans<<endl;
 }

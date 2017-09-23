@@ -133,4 +133,10 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    string s; cin>>s;
+    while(s.back()=='0')s.pop_back();
+    for(int i=0;i<s.length();++i){
+        if(s[i]!=s[s.length()-1-i])return cout<<"NO"<<endl,0;
+    }
+    cout<<"YES"<<endl;
 }

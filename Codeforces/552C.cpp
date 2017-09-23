@@ -133,4 +133,20 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    ll w,m; cin>>w>>m;
+    if(w==2)return cout<<"YES"<<endl,0;
+    set<ll> st[2]; st[1].insert(0);
+    ll fama=1;
+    for(int i=0;fama<=m*w;i^=1,fama*=w){
+        for(auto it:st[i^1]){
+            st[i].insert(it+fama);
+            st[i].insert(it-fama);
+            st[i].insert(it);
+        }
+        if(st[i].find(m)!=st[i].end()){
+            return cout<<"YES"<<endl,0;
+        }
+    }
+    cout<<"NO"<<endl;
+    
 }

@@ -132,5 +132,46 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vint G[100005];
+int p[20][100005],d[100005],sz[100005];
+ld vd[100005],vu[100005];
+void dfs1(int now,int pa,int dep){
+    d[now]=dep;
+    p[0][now]=pa;
+    sz[now]=1;
+    for(int i=1;(1<<i)<dep;++i){
+        p[i][now]=p[i-1][p[i-1][now]];
+    }
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs1(i,now,dep+1);
+        sz[now]+=sz[i];
+    }
+    for(int i:G[now]){
+        if(i==pa)continue;
+        vd[now]+=((ld)sz[i]/(sz[now]-1))*(vd[i]+1);
+        PDE2((ld)sz[i],(sz[now]-1));
+    }
+}
+void dfs2(int now,int pa,ld uv){
+    vu[now]=uv;
+    ld dtt=uv;
+    for(int i:G[now]){
+        dtt+=vd[i];
+    }
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs2(i,now,dtt/
+    }
+}
 int main(){
+    int n,m; rit(n,m);
+    for(int i=1;i<n;++i){
+        int u,v; rit(u,v);
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    dfs1(1,0,1);
+    dfs2(1,0,0);
+    if(DEBUG){for(int i=1;i<=n;++i)cout<<vd[i]<<" ";cout<<endl;}
 }

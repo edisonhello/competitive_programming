@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -46,8 +47,6 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
-#define exp expexpexpexp
-#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -129,8 +128,13 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-13;
+const ld eps=1e-8;
 const ll mod=1e9+7;
 
 int main(){
+    int t; cin>>t; while(t--){
+        int a,b,c; cin>>a>>b>>c;
+        if(c%(a+b)>=a)cout<<"Impossible"<<endl;
+        else cout<<"Possible"<<endl;
+    }
 }

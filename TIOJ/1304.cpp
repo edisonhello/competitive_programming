@@ -13,8 +13,6 @@
 #include<stack>
 #include<map>
 #include<set>
-#include<unordered_map>
-#include<unordered_set>
 #include<bitset>
 #include<vector>
 #include<utility>
@@ -25,16 +23,11 @@ using namespace std;
 #define ld long double
 #define X first
 #define Y second
-#define SZ(x) ((int)(x).size())
-#define LN(x) ((int)(x).length())
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(), (x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
-#define el putchar('\n')
-#define spc putchar(' ')
 #define SS stringstream
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
@@ -46,13 +39,15 @@ using namespace std;
 #define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
-#define CIO ios_base::sync_with_stdio(0);
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
-#define y2 Enyetuenwuevue
+#define y1 Enyetuenwuevue
 #define left Ugbemugbem
-#define Osas
+#define ws Osas
+#define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -70,7 +65,7 @@ using namespace std;
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
-#define DEBUG "jizz"
+#define DEBUG 1
 #else
 #define PDE1(a) ;
 #define PDE2(a,b) ;
@@ -80,17 +75,18 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
-#define endl '\n'
 #define getchar gtx
-#define DEBUG 0
-#ifdef WEA
-#define FIN freopen("in","r",stdin)
-#define FOUT freopen("out","w",stdout)
-#else
 #define FIN ;
 #define FOUT ;
+#define DEBUG 0
 #endif
-#endif
+
+#define lowbit(x) ((x)&(-(x)))
+
+#if __cplusplus >= 201103L
+#include<unordered_map>
+#include<unordered_set>
+#include<tuple>
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
@@ -98,10 +94,8 @@ template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<T
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const priority_queue<T> &inp){priority_queue<T> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
+template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-
-#define lowbit(x) ((x)&(-(x)))
 
 inline int gtx(){
     const int N=1048576;
@@ -130,101 +124,34 @@ template<typename ...Args>
 inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
 template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
+#endif
+
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
-#ifndef WEAK
-#include"lib1965.h"
-#endif
 
-#define ull uint64_t
-// ull *a,b[420000];
-// int n,nblock,blockSize,blockST[420000][4][16],bigST[20][420000];
-ull *a,*b;
-int n,nblock,blockSize,*blockST[4][16],*bigST[20],*lg;
-
-inline void jizz(){
-    b=new ull[nblock+87];
-
-    for(int i=0;i<4;++i){
-        for(int j=0;j<blockSize+1;++j){
-            blockST[i][j]=new int[nblock+87];
-        }
-    }
-
-    int lognblock=ceil(log2(nblock));
-    for(int i=0;i<lognblock+2;++i){
-        bigST[i]=new int[nblock];
-    }
-}
-inline void doLog(){
-    lg=new int[n+5];
-    lg[1]=lg[2]=0;
-    for(int i=2;i<=n;++i)lg[i]=lg[i>>1]+1;
-}
-inline ull buildBlockST(int n,int l,int r){
-    int s=r-l+1; ull mx=0;
-    for(int i=l;i<=r;++i)blockST[0][i-l][n]=i,mx=max(mx,a[i]);
-    for(int i=1,d=1;d<s;++i,d<<=1){
-        for(int j=l;j+(d<<1)-1<=r;++j){
-            blockST[i][j-l][n] = a[blockST[i-1][j-l][n]] > a[blockST[i-1][j+d-l][n]] ? blockST[i-1][j-l][n] : blockST[i-1][j+d-l][n];
-        }
-    } return mx;
-}
-inline void buildBigST(){
-    for(int i=0;i<nblock;++i)bigST[0][i]=i;
-    for(int i=1,d=1;d<nblock;++i,d<<=1){
-        for(int j=0;j+(d<<1)-1<nblock;++j){
-            bigST[i][j] = b[bigST[i-1][j]] > b[bigST[i-1][j+d]] ? bigST[i-1][j] : bigST[i-1][j+d];
-        }
-    }
-}
-void init(int N,ull C[]){
-    a=C; n=N; blockSize=ceil(log2(n)/2), nblock=ceil((double)n/blockSize);
-    jizz(); doLog();
-    for(int i=0;i<nblock;++i)b[i]=buildBlockST(i,i*blockSize,min((i+1)*blockSize-1,n-1));
-    buildBigST();
-}
-
-inline ull queryBlock(int n,int l,int r){
-    int d=r-l+1;
-    int lv=lg[d],nblockSize=n*blockSize;
-    return max(a[blockST[lv][l-nblockSize][n]],a[blockST[lv][r-(1<<lv)+1-nblockSize][n]]);
-}
-inline ull queryBig(int l,int r){
-    if(r<l)return 0;
-    int d=r-l+1;
-    int lv=lg[d];
-    return max(b[bigST[lv][l]],b[bigST[lv][r-(1<<lv)+1]]);
-}
-ull RMQ(int l,int r){
-    if(r-l==1)return a[l]; --r;
-    int lblock=l/blockSize;
-    int rblock=r/blockSize;
-    PDE4(l,r,lblock,rblock);
-    if(lblock==rblock){
-        return queryBlock(lblock,l,r);
-    }
-    else{
-        return max(queryBlock(lblock,l,(lblock+1)*blockSize-1)
-              ,max(queryBig(lblock+1,rblock-1)
-                  ,queryBlock(rblock,rblock*blockSize,r)));
-    }
-}
-
-
-#ifdef WEAK
-ull C[10000007];
 int main(){
-    int N;cin>>N;
-    for(int i=0;i<N;++i)cin>>C[i];
-    init(N,C);
-    int M;cin>>M;
-    for(int i=0;i<M;++i){
-        int L,R;cin>>L>>R;
-        cout<<RMQ(L,R)<<endl;
+    int n; cin>>n;
+    int tot=0;
+    PQ<int,vector<int>,less<int>> pq;
+    for(int i=0;i<n;++i){
+        int t; cin>>t;
+        tot+=t;
+        pq.push(t);
     }
+    int hp; cin>>hp;
+    while(pq.size()){
+        if(hp<0)break;
+        if(pq.top()<10)break;
+        int meow=pq.top(); pq.pop();
+        int kill=min(max(100,meow*4/10),meow);
+        meow-=kill;
+        tot-=kill;
+        if(meow)pq.push(meow);
+        hp-=tot/10;
+    }
+    if(hp>=0)cout<<"yes\n"<<hp<<endl;
+    else cout<<"no\n"<<tot<<endl;
 }
-#endif

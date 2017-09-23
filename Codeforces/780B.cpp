@@ -132,5 +132,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int n;
+ld x[60009],v[60009];
+bool can(ld t){
+    ld L=-1e10,R=1e10;
+    for(int i=0;i<n;++i){
+        L=max(L,x[i]-v[i]*t);
+        R=min(R,x[i]+v[i]*t);
+        if(L>R)return 0;
+    } return 1;
+}
 int main(){
+    cin>>n;
+    for(int i=0;i<n;++i)cin>>x[i];
+    for(int i=0;i<n;++i)cin>>v[i];
+    ld L=0,R=1e10;
+    while(R-L>1e-7){
+        ld M=(L+R)/2;
+        if(can(M))R=M;
+        else L=M;
+    }
+    cout<<fixed<<setprecision(15)<<L<<endl;
 }

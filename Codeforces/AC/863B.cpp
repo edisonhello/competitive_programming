@@ -132,5 +132,23 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[222];
 int main(){
+    int n; cin>>n; n*=2;
+    for(int i=0;i<n;++i)cin>>a[i];
+    sort(a,a+n);
+    ll mn=1ll<<55;
+    for(int i=0;i<n;++i){
+        for(int j=i+1;j<n;++j){
+            ll tha=0;
+            int pre=0;
+            for(int k=0;k<n;++k){
+                if(k==i||k==j)continue;
+                if(pre==0)pre=a[k];
+                else tha+=abs(a[k]-pre),pre=0;
+            }
+            mn=min(mn,tha);
+        }
+    }
+    cout<<mn<<endl;
 }

@@ -25,7 +25,7 @@ using namespace std;
 #define Y second
 #define rz(x) resize(x)
 #define pb(x) push_back(x)
-#define pii pair<int,int>
+#define pii pair<ll,ll>
 #define pll pair<ll,ll>
 #define vint vector<int>
 #define SS stringstream
@@ -132,5 +132,37 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+pii rec[1006];
+pii res[1006];
+int tra[4][4],trb[4][4];
+pii operator+(const pii &a,const pii &b){return pii(a.X+b.X,a.Y+b.Y);}
+pii operator-(const pii &a,const pii &b){return pii(a.X-b.X,a.Y-b.Y);}
+pii operator*(const pii &a,const ll &b){return pii(a.X*b,a.Y*b);}
+void meow(pii &oldres,int &a,int &b,pii &newres,pii &rec){
+    if(a==b)newres=oldres;
+    else if((a==3 && b==2) || (a==2 && b==1) || (a==1 && b==3)){
+        newres=oldres;
+        ++newres.first;
+    }
+    else{
+        newres=oldres;
+        ++newres.second;
+    }
+    int na=tra[a][b],nb=trb[a][b];
+    rec={a=na,b=nb};
+}
 int main(){
+    ll k; int a,b; cin>>k>>a>>b; rec[0]={a,b};
+    for(int i=1;i<=3;++i)for(int j=1;j<=3;++j)cin>>tra[i][j];
+    for(int i=1;i<=3;++i)for(int j=1;j<=3;++j)cin>>trb[i][j];
+    for(int i=1;i<=1000;++i)meow(res[i-1],a,b,res[i],rec[i]);
+    if(k<=1000)return cout<<res[k].first<<" "<<res[k].second<<endl,0;
+    for(ll i=999;;--i){
+        if(rec[i]==rec[1000]){
+            PDE2((res[1000]-res[i]),((k-i)/(1000-i)));
+            PDE2((res[1000]-res[i])*((k-i)/(1000-i)),(res[i+(k-i)%(1000-i)]-res[i]));
+            pii na=(res[1000]-res[i])*((k-i)/(1000-i))+res[i]+(res[i+(k-i)%(1000-i)]-res[i]);
+            return cout<<na.X<<" "<<na.Y<<endl,0;
+        }
+    }
 }

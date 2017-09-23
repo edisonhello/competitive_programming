@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -132,5 +133,57 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
+void cans(int x,int y){
+    cout<<"! "<<x+1<<" "<<y+1<<endl;
+    exit(0);
 }
+int main(){
+    int len; cin>>len;
+    string str; for(int i=0;i<len;++i)str+="0";
+    cout<<"? "<<str<<endl;
+    int base; cin>>base;
+    str[0]='1';
+    cout<<"? "<<str<<endl;
+    int ref; cin>>ref;
+    if(ref>base){
+        int pos0=0;
+        str[0]='0';
+        int L=1,R=len-1;
+        while(R>L){
+            int mid=(L+R)>>1;
+            for(int i=L;i<=mid;++i)str[i]='1';
+            cout<<"? "<<str<<endl;
+            int tans; cin>>tans;
+            for(int i=L;i<=mid;++i)str[i]='0';
+            if(tans == base+(mid-L+1)){
+                L=mid+1;
+            }
+            else{
+                R=mid;
+            }
+        }
+        int pos1=L;
+        cans(pos0,pos1);
+    }
+    else{
+        int pos1=0;
+        str[0]='0';
+        int L=1,R=len-1;
+        while(R>L){
+            int mid=(L+R)>>1;
+            for(int i=L;i<=mid;++i)str[i]='1';
+            cout<<"? "<<str<<endl;
+            int tans; cin>>tans;
+            for(int i=L;i<=mid;++i)str[i]='0';
+            if(tans == base-(mid-L+1)){
+                L=mid+1;
+            }
+            else R=mid;
+        }
+        int pos0=L;
+        cans(pos0,pos1);
+    }
+}
+// 30510036 34:55 WA 1
+// 30510119 35:25 WA 9
+// 30511703 44:42 AC

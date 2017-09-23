@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -132,5 +133,28 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+map<int,int> s;
 int main(){
+    int n; cin>>n;
+    int x; cin>>x;
+    while(n--){
+        int t; cin>>t;
+        s.insert({t,1});
+    }
+    int ans=0;
+    PDE1(s);
+    if(s.find(x)!=s.end()){
+        ans+=s[x];
+        s[x]=0;
+    }
+    PDE1(s);
+    for(int i=0;i<x;++i){
+        if(s.find(i)==s.end()){
+            PDE1(i);
+            ++ans;
+        }
+    }
+    cout<<ans<<endl;
 }
+// 30503120 05:15 CE
+// 30503303 05:47 AC

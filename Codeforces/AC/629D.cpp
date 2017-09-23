@@ -132,5 +132,35 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll v[100009];
+int lv[100009];
+ld BIT[100009];
+vector<ll> nm;
+void add(int x,ld v){
+    while(x<100009){
+        BIT[x]=max(BIT[x],v);
+        x+=lowbit(x);
+    }
+}
+ld query(int x,ld rt=0){
+    while(x>0){
+        rt=max(rt,BIT[x]);
+        x-=lowbit(x);
+    } return rt;
+}
 int main(){
+    int n; cin>>n;
+    for(int i=0;i<n;++i){
+        ll r,h; cin>>r>>h;
+        v[i]=r*r*h;
+        nm.pb(v[i]);
+    }
+    sort(nm.begin(),nm.end());
+    nm.resize(unique(nm.begin(),nm.end())-nm.begin());
+    for(int i=0;i<n;++i)lv[i]=lower_bound(nm.begin(),nm.end(),v[i])-nm.begin()+1;
+    for(int i=n-1;i>=0;--i){
+        ld mx=query(100008-(lv[i]+1));
+        add(100008-lv[i],mx+(ld)v[i]);
+    }
+    cout<<fixed<<setprecision(15)<<query(100008)*PI<<endl;
 }

@@ -132,5 +132,29 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[2222];
+int _1[2222],_2[2222];
 int main(){
+    int n; rit(n);
+    for(int i=1;i<=n;++i)rit(_1[i]);
+    for(int i=1,t;i<=n;++i)rit(t),_2[t]=i;
+    for(int i=1;i<=n;++i)a[i]=_2[_1[i]];
+    if(DEBUG){for(int i=1;i<=n;++i)cout<<a[i]<<" ";cout<<endl;}
+    vector<pii> v;
+    ll tc=0;
+    for(int _=1;_<=n;++_){
+        int mgr=0;
+        for(int i=1;i<=n;++i){
+            if(a[i]>i)mgr=i;
+            else if(a[i]<a[mgr] && i!=a[i]){
+                v.push_back({mgr,i});
+                tc+=abs(i-mgr);
+                swap(a[i],a[mgr]);
+                if(a[i]>i)mgr=i;
+                else mgr=0;
+            }
+        }
+    }
+    printf("%lld\n%u\n",tc,v.size());
+    for(auto i:v)printf("%d %d\n",i.first,i.second);
 }

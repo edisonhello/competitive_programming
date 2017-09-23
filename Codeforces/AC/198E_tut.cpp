@@ -132,5 +132,60 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct mag{
+    ll d,r; int p,m;
+} mags[250008];
+vector<ll> ds;
+PQ<pii,vector<pii>,greater<pii>> BIT[555555];
+bool u[250008];
+void add(int x,int m,int id){
+    while(x<555555){
+        BIT[x].push({m,id});
+        x+=lowbit(x);
+    }
+}
+void query(int x,int p,queue<int> &q){
+    while(x>0){
+        PDE2(x,p);
+        while(BIT[x].size() && BIT[x].top().first<=p){
+            if(!u[BIT[x].top().second])q.push(BIT[x].top().second),u[BIT[x].top().second]=1;
+            BIT[x].pop();
+        }
+        PDE1(q);
+        x-=lowbit(x);
+    }
+}
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    ll x,y,r; int p,n; cin>>x>>y>>p>>r>>n;
+    ds.pb(r*r);
+    for(int i=1;i<=n;++i){
+        ll xx,yy,rr; int mm,pp; cin>>xx>>yy>>mm>>pp>>rr;
+        ll dd=(xx-x)*(xx-x)+(yy-y)*(yy-y);
+        rr=rr*rr;
+        mags[i]={dd,rr,pp,mm};
+        ds.pb(dd);
+        ds.pb(rr);
+    }
+    sort(ds.begin(),ds.end());
+    r=lower_bound(ds.begin(),ds.end(),r*r)-ds.begin()+1;
+    for(int i=1;i<=n;++i)mags[i].d=lower_bound(ds.begin(),ds.end(),mags[i].d)-ds.begin()+1,mags[i].r=lower_bound(ds.begin(),ds.end(),mags[i].r)-ds.begin()+1;
+    if(DEBUG){
+        PDE2(r,p);
+        for(int i=1;i<=n;++i){
+            PDE4(mags[i].d,mags[i].m,mags[i].p,mags[i].r);
+        }
+    }
+    queue<int> q;
+    int ans=0;
+    q.push(0);
+    mags[0]={0,r,p,0};
+    for(int i=1;i<=n;++i)add(mags[i].d,mags[i].m,i);
+    while(q.size()){
+        ++ans;
+        PDE1(q.front());
+        mag &pm=mags[q.front()]; q.pop();
+        query(pm.r,pm.p,q);
+    }
+    cout<<ans-1<<endl;
 }

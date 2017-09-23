@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -132,5 +133,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
+vint G[100005];
+ll sz[5];
+void dfs(int now,int pa,int grp){
+    sz[grp]+=1;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs(i,now,grp^1);
+    }
 }
+int main(){
+    int n; cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[v].pb(u);
+        G[u].pb(v);
+    }
+    dfs(1,1,0);
+    ll ans=0;
+    ans=sz[0]*sz[1]-(n-1);
+    cout<<ans<<endl;
+}
+// 30504368 09:09 AC

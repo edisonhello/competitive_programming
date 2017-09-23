@@ -24,6 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
+#define reset(x,n) (x).clear(),(x).resize(n)
 #define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -131,6 +132,13 @@ void JIZZ(){cout<<"";exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
-
+int arr[110];
 int main(){
+    int n,x,cnt=0;
+    cin>>n>>x;
+    for(int i=0;i<n;++i)cin>>arr[i];
+    for(int i=0;i<n;++i)if(arr[i]<x)++cnt;
+    cnt=x-cnt;
+    for(int i=0;i<n;++i)if(arr[i]==x)++cnt;
+    cout<<cnt<<endl;
 }

@@ -132,5 +132,30 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+pii a[200005];
+int spa[20][400005];
+vint nn;
 int main(){
+    int n; cin>>n;
+    for(int i=0;i<n;++i){
+        int u,v; cin>>u>>v;
+        a[i]={u,v+1};
+        nn.pb(u); nn.pb(v+1);
+    }
+    sort(nn.begin(),nn.end());
+    for(int i=0;i<n;++i){
+        a[i].X=lower_bound(nn.begin(),nn.end(),a[i].X)-nn.begin();
+        a[i].Y=lower_bound(nn.begin(),nn.end(),a[i].Y)-nn.begin()-1;
+        ++spa[0][a[i].X];
+        --spa[0][a[i].Y+1];
+    }
+    for(int i=1;i<400005;++i)spa[0][i]+=spa[0][i-1];
+    for(int d=1,D=1;D<400005;++d,D<<=1)for(int i=0;i+D<400005;++i)spa[d][i]=min(spa[d-1][i],spa[d-1][i+D]);
+    for(int i=0;i<n;++i){
+        int l=a[i].X,r=a[i].Y;
+        int D=r-l+1,d=0;
+        for(int Dd=D;Dd;Dd>>=1,++d); --d;
+        int v=min(spa[d][l],spa[d][r+1-(1<<d)]);
+        if(v>1)return cout<<i+1<<endl,0;
+    } cout<<-1<<endl;
 }

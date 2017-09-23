@@ -132,5 +132,82 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<pii> G[100005];
+int num[100005];
+int pos[100005];
+int sz[100005];
+int etoi[100005];
+vint BIT[100005];
+
+void dfs(int now,int pa,int cnt,int dep,int cf){
+    num[now]=cnt;
+    sz[cnt]++;
+    pos[now]=dep;
+    etoi[cf]=now;
+    for(auto i:G[now]){
+        if(i.X==pa)continue;
+        dfs(i.X,now,cnt,dep+1,i.Y);
+    }
+}
+void add(vint &BIT,int x,int v){
+    PDE3(BIT,x,v);
+    while(x<BIT.size()){
+        BIT[x]+=v;
+        x+=lowbit(x);
+    }
+}
+int qry(vint &BIT,int x,int v=0){
+    PDE2(BIT,x);
+    while(x>0){
+        v+=BIT[x];
+        x-=lowbit(x);
+    } return v;
+}
+
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n; cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[u].pb(pii(v,i)), G[v].pb(pii(u,i));
+    }
+    int root=1;
+    for(int i=1;i<=n;++i)if(G[i].size()>2u)root=i;
+    int cnt=0;
+    for(auto i:G[root]){
+        dfs(i.X,root,++cnt,1,i.Y);
+    }
+    for(int i=1;i<=cnt;++i){
+        BIT[i]=vint(sz[i]+3,0);
+        PDE3(i,BIT[i],BIT[i].size());
+        for(int ii=1;ii<=sz[i];++ii)add(BIT[i],ii,1);
+    }
+    int q; cin>>q;
+    while(q--){
+        int cmd; cin>>cmd;
+        if(cmd==3){
+            int pa,pb; cin>>pa>>pb;
+            PDE2(BIT[num[pa]],BIT[num[pb]]);
+            int apa=qry(BIT[num[pa]],pos[pa]);
+            int bpa=qry(BIT[num[pb]],pos[pb]);
+            if(num[pa]==num[pb]){
+                if(pos[pa]>pos[pb])swap(pa,pb),swap(apa,bpa);
+                if(bpa-apa!=pos[pb]-pos[pa])cout<<-1<<endl;
+                else cout<<bpa-apa<<endl;
+            }
+            else{
+                if(apa!=pos[pa] || bpa!=pos[pb])cout<<-1<<endl;
+                else if(num[pa]!=num[pb])cout<<apa+bpa<<endl;
+            }
+        }
+        else if(cmd==2){
+            int eid; cin>>eid;
+            PDE3(etoi[eid],num[etoi[eid]],BIT[num[etoi[eid]]]);
+            add(BIT[num[etoi[eid]]],pos[etoi[eid]],-1);
+        }
+        else{
+            int eid; cin>>eid;
+            add(BIT[num[etoi[eid]]],pos[etoi[eid]],1);
+        }
+    }
 }

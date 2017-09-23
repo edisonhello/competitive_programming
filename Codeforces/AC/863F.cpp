@@ -132,5 +132,71 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct edge{
+    int u,v,cap,cst;
+    edge(int u=0,int v=0,int cap=0,int cst=0):u(u),v(v),cap(cap),cst(cst){}
+};
+vector<edge> edg;
+vint G[555];
+
+void addEdge(int u,int v,int cap,int cst){
+    PDE4(u,v,cap,cst);
+    G[u].pb(edg.size());
+    edg.emplace_back(u,v,cap,cst);
+    G[v].pb(edg.size());
+    edg.emplace_back(v,u,0,-cst);
+}
+int cf[555],bn[555],d[555],inq[555];
+int go(int &ncst){
+    queue<int> q; q.push(0);
+    memset(bn,0,sizeof(bn)); bn[0]=0x3f3f3f3f;
+    memset(d,0x3f,sizeof(d)); d[0]=0;
+    memset(inq,0,sizeof(inq)); inq[0]=1;
+    while(q.size()){
+        int np=q.front(); q.pop();
+        for(int i:G[np]){
+            edge &e=edg[i];
+            if(!e.cap)continue;
+            if(d[e.v]<=d[e.u]+e.cst)continue;
+            d[e.v]=d[e.u]+e.cst;
+            bn[e.v]=min(bn[e.u],e.cap);
+            cf[e.v]=i;
+            if(!inq[e.v])inq[e.v]=1,q.push(e.v);
+        }
+        inq[np]=0;
+    }
+    if(d[543]==0x3f3f3f3f)return 0;
+    for(int u=543;u;u=edg[cf[u]].u){
+        edg[cf[u]].cap-=bn[543];
+        edg[cf[u]^1].cap+=bn[543];
+    }
+    ncst+=bn[543]*d[543];
+    return 1;
+}
+int go(){
+    int cost=0;
+    while(go(cost));
+    return cost;
+}
+
+int lb[55],ub[55];
 int main(){
+    int n,q; cin>>n>>q;
+    for(int i=1;i<=n;++i)lb[i]=1,ub[i]=n;
+    while(q--){
+        int c,l,r,v; cin>>c>>l>>r>>v;
+        if(c==1)for(int i=l;i<=r;++i)lb[i]=max(lb[i],v);
+        else for(int i=l;i<=r;++i)ub[i]=min(ub[i],v);
+    }
+    for(int i=1;i<=n;++i){
+        addEdge(0,i,1,0);
+        for(int ii=lb[i];ii<=ub[i];++ii)addEdge(i,ii+55,1,0);
+        if(ub[i]<lb[i])return cout<<-1<<endl,0;
+    }
+    for(int i=1;i<=n;++i){
+        for(int j=1;j<=n;++j){
+            addEdge(i+55,543,1,j*2-1);
+        }
+    }
+    cout<<go()<<endl;
 }

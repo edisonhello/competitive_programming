@@ -132,5 +132,32 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct op{int a,b,c;};
+int ori[200006];
+stack<op> qs;
+int ms[111];
+void meow(const op &o,int &ind){
+    if(o.b>ind || o.c<ind)return;
+    if(o.a==1){
+        --ind;
+        if(ind<o.b)ind=o.c;
+    }
+    else{
+        ind=o.c-(ind-o.b);
+    }
+}
 int main(){
+    int n,q,m; cin>>n>>q>>m;
+    for(int i=1;i<=n;++i)cin>>ori[i];
+    while(q--){
+        int a,b,c; cin>>a>>b>>c;
+        qs.push({a,b,c});
+    }
+    for(int i=1;i<=m;++i)cin>>ms[i];
+    while(qs.size()){
+        op &o=qs.top();
+        for(int i=1;i<=m;++i)meow(o,ms[i]);
+        qs.pop();
+    }
+    for(int i=1;i<=m;++i)cout<<ori[ms[i]]<<" "; cout<<endl;
 }

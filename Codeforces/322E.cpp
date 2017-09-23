@@ -132,5 +132,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vint G[100009];
+char ch[100009];
+int go(int now,int pa){
+    set<int> st;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        st.insert(go(i,now));
+    }
+    int ptr=0;
+    while(st.find(ptr)!=st.end())++ptr;
+    ch[now]='Z'-ptr;
+    return ptr;
+}
 int main(){
+    int n; cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[v].pb(u); G[u].pb(v);
+    }
+    go(1,1);
+    for(int i=1;i<=n;++i)cout<<ch[i]<<" "; cout<<endl;
 }
