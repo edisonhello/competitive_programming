@@ -133,5 +133,14 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll dp[100005][4];
+ll a[100005];
 int main(){
+    for(int i=0;i<100005;++i)for(int j=0;j<4;++j)dp[i][j]=-4e18;
+    ll n,p,q,r; cin>>n>>p>>q>>r;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=n;++i)dp[i][0]=max(dp[i-1][0],a[i]*p);
+    for(int i=1;i<=n;++i)dp[i][1]=max(dp[i-1][1],dp[i][0]+q*a[i]);
+    for(int i=1;i<=n;++i)dp[i][2]=max(dp[i-1][2],dp[i][1]+r*a[i]);
+    cout<<dp[n][2]<<endl;
 }

@@ -133,5 +133,31 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int cnt[200009],a[200009],hold[200009];
+queue<int> q;
 int main(){
+    int n; cin>>n;
+    for(int i=0;i<n;++i){
+        cin>>a[i];
+        cnt[a[i]]++;
+    }
+    for(int i=1;i<=n;++i){
+        if(!cnt[i])q.push(i);
+    }
+    int chs=0;
+    for(int i=0;i<n;++i){
+        if(cnt[a[i]]>1){
+            if(a[i]<=q.front() && !hold[a[i]]){
+                hold[a[i]]=1;
+                continue;
+            }
+            --cnt[a[i]];
+            a[i]=q.front(); q.pop();
+            chs++;
+        }
+    }
+    cout<<chs<<endl;
+    for(int i=0;i<n;++i){
+        cout<<a[i]<<" ";
+    } cout<<endl;
 }

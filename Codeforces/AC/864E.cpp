@@ -133,5 +133,47 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int t[111],d[111],p[111],dp[111][2222],last[111][2222],id[111];
 int main(){
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>t[i]>>d[i]>>p[i],id[i]=i;
+	for(int i=1;i<=n;++i){
+        for(int j=1;j<=n-i;++j){
+            if(d[j]>d[j+1]){
+                swap(t[j],t[j+1]);
+                swap(d[j],d[j+1]);
+                swap(p[j],p[j+1]);
+                swap(id[j],id[j+1]);
+            }
+        }
+    }
+    for(int i=1;i<=n;++i){
+        for(int j=1;j<=2000;++j){
+            if(j>=t[i] && dp[i-1][j-t[i]]+p[i]>dp[i-1][j] && j<d[i]){
+                dp[i][j]=dp[i-1][j-t[i]]+p[i];
+                last[i][j]=i;
+            }
+            else{
+                dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+                if(dp[i][j-1]>dp[i-1][j])last[i][j]=-1;
+            }
+        }
+    }
+    int ni=n,nj=2000;
+    stack<int> save;
+    while(ni>0){
+        if(last[ni][nj]>0){
+            save.push(ni);
+            nj-=t[ni];
+            --ni;
+        }
+        else if(last[ni][nj]==-1){
+            --nj;
+        }
+        else --ni;
+    }
+    cout<<dp[n][2000]<<endl<<save.size()<<endl;
+    while(save.size()){
+        cout<<id[save.top()]<<" "; save.pop();
+    }
 }

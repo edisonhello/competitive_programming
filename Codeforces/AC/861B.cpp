@@ -24,8 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define pb push_back
-#define eb emplace_back
+#define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -133,5 +132,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<pii> v;
+bool can(int n){
+    for(auto i:v){
+        if((i.X-1)/n+1!=i.Y)return 0;
+    } return 1;
+}
 int main(){
+    int n,m; cin>>n>>m;
+    for(int i=0;i<m;++i){
+        int u,vv; cin>>u>>vv;
+        v.push_back({u,vv});
+    }
+    set<int> ans;
+    for(int i=1;i<=100;++i){
+        if(can(i))ans.insert((n-1)/i+1);
+    }
+    if(ans.size()>1u)cout<<-1<<endl;
+    else cout<<*ans.begin()<<endl;
 }

@@ -24,8 +24,7 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define pb push_back
-#define eb emplace_back
+#define pb(x) push_back(x)
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -134,4 +133,12 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    ll n,k,nn; cin>>n>>k; nn=n;
+    ll cnt2=0,cnt5=0;
+    while(n%2==0)++cnt2,n/=2;
+    while(n%5==0)++cnt5,n/=5;
+    ll qw=1;
+    while(cnt2<k)qw*=2,++cnt2;
+    while(cnt5<k)qw*=5,++cnt5;
+    cout<<qw*nn<<endl;
 }

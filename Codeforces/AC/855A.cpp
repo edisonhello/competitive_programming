@@ -134,4 +134,10 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n; cin>>n; set<string> st; while(n--){
+        string s; cin>>s;
+        if(st.find(s)==st.end())cout<<"NO"<<endl;
+        else cout<<"YES"<<endl;
+        st.insert(s);
+    }
 }

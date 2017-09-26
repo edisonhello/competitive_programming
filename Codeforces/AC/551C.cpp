@@ -133,5 +133,40 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll a[100005],aa[100005];
+bool can(ll ltime,ll n,ll m,ll rest){
+    for(int i=1;i<=n;++i)a[i]=aa[i];
+    ll i=0,nwlft=0;
+    while(i<=n){
+        while(a[i]){
+            PDE4(a[i],nwlft,ltime,i);
+            if(nwlft>=a[i])nwlft-=a[i],a[i]=0;
+            else{
+                a[i]-=nwlft; nwlft=0;
+                if(m==0)return 0;
+                --m; nwlft=ltime-i;
+            }
+        }
+        if(i==rest)break;
+        if(!nwlft){
+            if(m==0)return 0;
+            --m; nwlft=ltime-i;
+        }
+        --nwlft,++i;
+    } return 1;
+}
+
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    ll n,m,rest=0; cin>>n>>m;
+    for(int i=1;i<=n;++i)cin>>a[i],rest=(a[i]?i:rest),aa[i]=a[i];
+    // ll n=5,m=1,rest=10;
+    // for(int i=1;i<=n;++i)a[i]=1000000000,aa[i]=1000000000;
+
+    ll L=0,R=1e17;
+    while(R>L){
+        ll M=(L+R)>>1;
+        if(can(M,n,m,rest))R=M;
+        else L=M+1;
+    } cout<<L<<endl;
 }

@@ -134,4 +134,16 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n; cin>>n; map<int,int> mp; while(n--){
+        int t; cin>>t; mp[t]++;
+    } if(mp.size()!=2u)return cout<<"NO"<<endl,0;
+    int pre=0;
+    for(auto i:mp){
+        if(!pre)pre=i.Y;
+        else if(pre!=i.Y)return cout<<"NO"<<endl,0;
+    }
+    cout<<"YES"<<endl;
+    for(auto i:mp){
+        cout<<i.X<<" ";
+    } cout<<endl;
 }

@@ -127,11 +127,32 @@ template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"-1";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    ll a,b,f,k; cin>>a>>b>>f>>k;
+    ll fu=b; ll ans=0;
+    for(int _=0;_<k;++_){
+        fu-=f;
+        if(fu<0)JIZZ();
+        if((_==k-1&&fu<a-f)||(_!=k-1&&fu<(a-f)*2)){
+            ans++;
+            fu=b;
+        }
+        fu-=a-f;
+        if(fu<0)JIZZ();
+        ++_;
+        if(!(_<k))break;
+        fu-=(a-f);
+        if(fu<0)JIZZ();
+        if((_==k-1&&fu<f)||(_!=k-1&&fu<f*2)){
+            ++ans;
+            fu=b;
+        }
+        fu-=f;
+    } cout<<ans<<endl;
 }

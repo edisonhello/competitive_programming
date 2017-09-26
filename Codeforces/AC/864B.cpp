@@ -24,8 +24,8 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
-#define pb(x) push_back(x)
+#define pb push_back
+#define eb emplace_back
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -47,6 +47,8 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -128,19 +130,21 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int N,M;
-int r(){return rand()%N+1;}
-
 int main(){
-    cin>>N; M=N;
-    cout<<N<<" "<<M<<endl;
-    for(int i=1;i<=N;++i)cout<<r()<<" "; cout<<endl;
-    while(M--){
-        cout<<r()%2+1<<" ";
-        int lll=r(),rr=r(); if(lll>rr)swap(lll,rr);
-        cout<<lll<<" "<<rr<<endl;
-    }
+    int n; string st; cin>>n>>st;
+    int cnt[234]={0},ns=0,an=0;
+    for(char c:st){
+        if(c>='A'&&c<='Z'){
+            memset(cnt,0,sizeof(cnt));
+            ns=0;
+        }
+        else{
+            ++cnt[c];
+            if(cnt[c]==1)ns++;
+            an=max(an,ns);
+        }
+    } cout<<an<<endl;
 }
