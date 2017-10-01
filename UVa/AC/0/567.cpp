@@ -24,8 +24,8 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
-#define pb(x) push_back(x)
+#define pb push_back
+#define eb emplace_back
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -47,6 +47,8 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -128,21 +130,24 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-ll L,C[50005],pre[50005],dp[50005];
-deque<pair<ll,ll>> li;
-ll cst(ll x){return (x-L)*(x-L);}
+int d[22][22];
 int main(){
-    int n; scanf("%d%lld",&n,&L);
-    for(int i=1;i<=n;++i)scanf("%lld",&C[i]),pre[i]=pre[i-1]+C[i];
-    MS(dp,0x3f); dp[0]=0;
-    // dp[i] = max j {dp[j-1] + pre[i]*pre[i] + pre[j-1] + i*i + j*j + L*L - 2*pre[i]*pre[j-1] + 2*i*pre[i] - 2*j*pre[i] - 2*L*pre[i] - 2*i*pre[j-1] + 2*j*pre[j-1] + 2*L*pre[j-1] - 2*i*j - 2*i*L + 2*j*L} 
-    for(int i=1;i<=n;++i){
-        // for(int j=i;j>0;--j){
-            // ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
-            // dp[i]=min(dp[i],nv);
-        // }
-    } printf("%lld\n",dp[n]);
+    string s; int _,ts=0; while(cin>>_){
+        ++ts; for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)d[i][j]=55556,d[i][i]=0;
+        int ptr=1; do{
+            for(int i=0,t;i<_;++i){
+                cin>>t;
+                d[ptr][t]=d[t][ptr]=1;
+            }
+            ++ptr; cin>>_;
+        }while(ptr<=19);
+        for(int k=1;k<=20;++k)for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)d[i][j]=min(d[i][j],d[i][k]+d[k][j]);
+        cout<<"Test Set #"<<ts<<endl;
+        while(_--){
+            int a,b; cin>>a>>b; printf("%2d to %2d: %d\n",a,b,d[a][b]);
+        } puts("");
+    }
 }

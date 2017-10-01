@@ -24,8 +24,8 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
-#define pb(x) push_back(x)
+#define pb push_back
+#define eb emplace_back
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -47,6 +47,8 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -128,21 +130,53 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-ll L,C[50005],pre[50005],dp[50005];
-deque<pair<ll,ll>> li;
-ll cst(ll x){return (x-L)*(x-L);}
+struct edge{int u,v,c;
+edge(int u=0,int v=0,int c=0):u(u),v(v),c(c){}};
+vector<edge> edg;
+int d[555];
+void I(){for(int i=0;i<555;++i)d[i]=i;}
+int F(int x){return x==d[x]?x:d[x]=F(d[x]);}
+void U(int x,int y){d[F(x)]=F(y);}
+bool C(int x,int y){return F(x)==F(y);}
+bool cmp(const edge &a,const edge &b){return a.c<b.c;}
 int main(){
-    int n; scanf("%d%lld",&n,&L);
-    for(int i=1;i<=n;++i)scanf("%lld",&C[i]),pre[i]=pre[i-1]+C[i];
-    MS(dp,0x3f); dp[0]=0;
-    // dp[i] = max j {dp[j-1] + pre[i]*pre[i] + pre[j-1] + i*i + j*j + L*L - 2*pre[i]*pre[j-1] + 2*i*pre[i] - 2*j*pre[i] - 2*L*pre[i] - 2*i*pre[j-1] + 2*j*pre[j-1] + 2*L*pre[j-1] - 2*i*j - 2*i*L + 2*j*L} 
-    for(int i=1;i<=n;++i){
-        // for(int j=i;j>0;--j){
-            // ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
-            // dp[i]=min(dp[i],nv);
-        // }
-    } printf("%lld\n",dp[n]);
+    int n,m; scanf("%d%d",&n,&m);
+    while(m--){
+        int u,v,c; scanf("%d%d%d",&u,&v,&c);
+        edg.pb(edge(u,v,c));
+    }
+    int s,t; scanf("%d%d",&s,&t);
+    sort(edg.begin(),edg.end(),cmp);
+    int mn=0,mx=0,ptr=0; I();
+    while(ptr<edg.size()){
+        edge &e=edg[ptr];
+        if(!C(e.u,e.v)){
+            PDE2(e.u,e.v);
+            U(e.u,e.v);
+            if(C(s,t)){
+                I(); int i=ptr;
+                for(;;--i){
+                    U(edg[i].u,edg[i].v);
+                    if(C(s,t))break;
+                }
+                if(mx*edg[i].c>edg[ptr].c*mn || mx==0){
+                    mx=edg[ptr].c;
+                    mn=edg[i].c;
+                }
+                I();
+                ptr=i;
+            }
+        }
+        ++ptr;
+    }
+    if(mn==0 && mx==0)printf("IMPOSSIBLE\n");
+    else{
+        int g=__gcd(mn,mx);
+        mn/=g, mx/=g;
+        if(mn==1)printf("%d\n",mx);
+        else printf("%d/%d\n",mx,mn);
+    }
 }

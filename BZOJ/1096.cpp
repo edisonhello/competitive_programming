@@ -5,9 +5,6 @@
 #include<cmath>
 #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
 #include<deque>
 #include<queue>
 #include<stack>
@@ -24,8 +21,8 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
-#define pb(x) push_back(x)
+#define pb push_back
+#define eb emplace_back
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -47,6 +44,8 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -87,15 +86,6 @@ using namespace std;
 #include<unordered_set>
 #include<tuple>
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-
 inline int gtx(){
     const int N=1048576;
     static char __buffer[N];
@@ -125,24 +115,21 @@ template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
-
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-ll L,C[50005],pre[50005],dp[50005];
-deque<pair<ll,ll>> li;
-ll cst(ll x){return (x-L)*(x-L);}
+ll x[1000006],p[1000006],c[1000006];
+ll dp[2][1000006];
 int main(){
-    int n; scanf("%d%lld",&n,&L);
-    for(int i=1;i<=n;++i)scanf("%lld",&C[i]),pre[i]=pre[i-1]+C[i];
-    MS(dp,0x3f); dp[0]=0;
-    // dp[i] = max j {dp[j-1] + pre[i]*pre[i] + pre[j-1] + i*i + j*j + L*L - 2*pre[i]*pre[j-1] + 2*i*pre[i] - 2*j*pre[i] - 2*L*pre[i] - 2*i*pre[j-1] + 2*j*pre[j-1] + 2*L*pre[j-1] - 2*i*j - 2*i*L + 2*j*L} 
+    int n; scanf("%d",&n);
+    for(int i=1;i<=n;++i)scanf("%lld%lld%lld",&x[i],&p[i],&c[i]);
+    ll pp=0;
     for(int i=1;i<=n;++i){
-        // for(int j=i;j>0;--j){
-            // ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
-            // dp[i]=min(dp[i],nv);
-        // }
-    } printf("%lld\n",dp[n]);
+        dp[1][i]=min(dp[0][i-1],dp[1][i-1])+c[i];
+        pp+=p[i];
+        dp[0][i]=min(dp[0][i-1],dp[1][i-1])+pp*(x[i+1]-x[i]);
+        if(dp[1][i]<=dp[0][i])pp=0;
+    }
+    printf("%lld\n",dp[1][n]);
 }

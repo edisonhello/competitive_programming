@@ -24,8 +24,8 @@ using namespace std;
 #define X first
 #define Y second
 #define rz(x) resize(x)
-#define reset(x,n) (x).clear(),(x).resize(n)
-#define pb(x) push_back(x)
+#define pb push_back
+#define eb emplace_back
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define vint vector<int>
@@ -47,6 +47,8 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
 #define NO cout<<"NO"<<endl
@@ -128,21 +130,23 @@ inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-8;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-ll L,C[50005],pre[50005],dp[50005];
-deque<pair<ll,ll>> li;
-ll cst(ll x){return (x-L)*(x-L);}
+int xst[14][1111][1111],nst[14][1111][1111];
 int main(){
-    int n; scanf("%d%lld",&n,&L);
-    for(int i=1;i<=n;++i)scanf("%lld",&C[i]),pre[i]=pre[i-1]+C[i];
-    MS(dp,0x3f); dp[0]=0;
-    // dp[i] = max j {dp[j-1] + pre[i]*pre[i] + pre[j-1] + i*i + j*j + L*L - 2*pre[i]*pre[j-1] + 2*i*pre[i] - 2*j*pre[i] - 2*L*pre[i] - 2*i*pre[j-1] + 2*j*pre[j-1] + 2*L*pre[j-1] - 2*i*j - 2*i*L + 2*j*L} 
-    for(int i=1;i<=n;++i){
-        // for(int j=i;j>0;--j){
-            // ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
-            // dp[i]=min(dp[i],nv);
-        // }
-    } printf("%lld\n",dp[n]);
+    int a,b,n; scanf("%d%d%d",&a,&b,&n);
+    if(n==1)return printf("0\n"),0;
+    for(int i=0;i<a;++i)for(int j=0;j<b;++j)scanf("%d",&xst[0][i][j]),nst[0][i][j]=xst[0][i][j];
+    for(int D=1,d=1;D<min(a,b);++d,D<<=1)for(int i=0;i<a-D;++i)for(int j=0;j<b-D;++j)
+        nst[d][i][j]=min(min(nst[d-1][i][j],nst[d-1][i][j+D]),min(nst[d-1][i+D][j],nst[d-1][i+D][j+D])),
+        xst[d][i][j]=max(max(xst[d-1][i][j],xst[d-1][i][j+D]),max(xst[d-1][i+D][j],xst[d-1][i+D][j+D]));
+    int mn=1<<30,d=0; for(;(1<<d)<n;++d); --d;
+    PDE1(d);
+    for(int i=0;i<a-n+1;++i)for(int j=0;j<b-n+1;++j){
+        mn=min(mn,max(max(xst[d][i][j],xst[d][i][j+n-(1<<d)]),max(xst[d][i+n-(1<<d)][j],xst[d][i+n-(1<<d)][j+n-(1<<d)]))-min(min(nst[d][i][j],nst[d][i][j+n-(1<<d)]),min(nst[d][i+n-(1<<d)][j],nst[d][i+n-(1<<d)][j+n-(1<<d)])));
+        PDE3(i,j,mn);
+        PDE2(max(max(xst[d][i][j],xst[d][i][j+n-(1<<d)]),max(xst[d][i+n-(1<<d)][j],xst[d][i+n-(1<<d)][j+n-(1<<d)])),min(min(nst[d][i][j],nst[d][i][j+n-(1<<d)]),min(nst[d][i+n-(1<<d)][j],nst[d][i+n-(1<<d)][j+n-(1<<d)])));
+    }
+    printf("%d\n",mn);
 }
