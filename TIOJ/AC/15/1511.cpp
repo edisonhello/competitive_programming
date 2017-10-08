@@ -19,7 +19,7 @@
 
 using namespace std;
 
-#define ll long long
+#define ll __int128
 #define ld long double
 #define X first
 #define Y second
@@ -97,7 +97,7 @@ template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stac
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
 template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
+ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10;if(st.empty())st.push(0);while(st.size())ostm<<st.top(),st.pop();return ostm;}
 
 inline int gtx(){
     const int N=1048576;
@@ -134,5 +134,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+
+
+ll R(ll n){
+    if(n&1)return 0;
+    return (n/2-1)*n;
+}
+ll O(ll n){
+    return ((n-3)/2)*((n-3)/2+1)/2*n;
+}
+ll A(ll n){
+    return -O(n)-R(n)+n*(n-1)*(n-2)/6;
+}
+
 int main(){
+    int nn; while(cin>>nn){
+        ll n=nn;
+        string s; getline(cin,s);
+        if(s[1]=='R')cout<<R(n)<<endl;
+        else if(s[1]=='A')cout<<A(n)<<endl;
+        else cout<<O(n)<<endl;
+    }
 }
