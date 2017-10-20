@@ -1,5 +1,3 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
-
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
@@ -137,4 +135,20 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n,m; cin>>n>>m;
+    vector<pii> v;
+    while(n--){
+        int x,y; cin>>x>>y;
+        v.eb(x,y+x);
+    }
+    sort(v.begin(),v.end(),[](const pii &a,const pii &b){return a.Y<b.Y;});
+    for(int i=0;i<v.size()-1;++i){
+        if(v[i+1].X<v[i].X)v[i+1].X=v[i].X;
+    }
+    while(m--){
+        int t; cin>>t;
+        auto it=upper_bound(v.begin(),v.end(),pii(999999999,t),[](const pii &a,const pii &b){return a.Y<b.Y;});
+        if(it==v.begin())cout<<-1<<endl;
+        else cout<<(--it)->X<<endl;
+    }
 }

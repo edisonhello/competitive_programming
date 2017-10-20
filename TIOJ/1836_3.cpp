@@ -1,5 +1,3 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
-
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
@@ -99,7 +97,7 @@ template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stac
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
 template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-// ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
+ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
 
 inline int gtx(){
     const int N=1048576;
@@ -136,5 +134,103 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+inline ll gcd(ll x,ll y){
+    if(!x)return y;
+    if(!y)return x;
+    return __gcd(x,y);
+}
+
+struct meow{
+    meow *l,*r;
+    ll val,gcd;
+    int sz,pos,lpos,rpos;
+    meow(int pos=0,ll val=0):l(0),r(0),val(val),gcd(val),sz(1),pos(pos),lpos(pos),rpos(pos){};
+    ll lval(){return l?l->gcd:0;}
+    ll rval(){return r?r->gcd:0;}
+    int llpos(){return l?l->lpos:pos;}
+    int rrpos(){return r?r->rpos:pos;}
+    int lz(){return l?l->sz:0;}
+    int rz(){return r?r->sz:0;}
+};
+struct node{
+    meow *root;
+    node *l,*r;
+    node():root(0),l(0),r(0){}
+} *root;
+void printMeow(meow *now){
+    if(!now)return;
+    if(now->l)cout<<"[",printMeow(now->l),cout<<"]";
+    cout<<pii(now->val,now->gcd);
+    if(now->r)cout<<"[",printMeow(now->r),cout<<"]";
+}
+
+void pull(meow *now){
+    if(!now)return;
+    now->gcd=gcd(now->val,gcd(now->lval(),now->rval()));
+    now->sz=1+now->lz()+now->rz();
+    now->lpos=now->llpos();
+    now->rpos=now->rrpos();
+}
+void rotate(meow *&now){
+    if(now->lz()>now->rz()+2){
+        meow *tmp=now->l;
+        now->l=tmp->r;
+        tmp->r=now;
+        now=tmp;
+        pull(now->r);
+        pull(now);
+    }
+    else if(now->rz()>now->lz()+2){
+        meow *tmp=now->r;
+        now->r=tmp->l;
+        tmp->l=now;
+        now=tmp;
+        pull(now->l);
+        pull(now);
+    }
+}
+void insert(meow *&now,int x,ll val){
+    if(!now){now=new meow(x,val); return;}
+    if(now->pos==x){now->val=val; pull(now); return;}
+    if(now->pos>x){insert(now->l,x,val); pull(now); rotate(now);}
+    else{insert(now->r,x,val); pull(now); rotate(now);}
+}
+ll modify(node *&now,int xl,int xr,int mx,int my,ll val){
+    if(!now)now=new node();
+    if(xl==xr){insert(now->root,my,val); return val;}
+#define xm ((xl+xr)>>1)
+    ll lv=0,rv=0;
+    if(mx<=xm)lv=modify(now->l,xl,xm,mx,my,val);
+    else rv=modify(now->r,xm+1,xr,mx,my,val);
+    insert(now->root,my,lv=gcd(lv,rv)); return lv;
+}
+
+ll query(meow *now,int ql,int qr){
+    if(!now)return 0;
+    if(ql<=now->lpos && now->rpos<=qr)return now->gcd;
+    ll rt=0;
+    if(ql<=now->pos && now->pos<=qr)rt=now->val;
+    if(ql<now->pos)rt=gcd(rt,query(now->l,ql,qr));
+    if(qr>now->pos)rt=gcd(rt,query(now->r,ql,qr));
+    return rt;
+}
+ll query(node *now,int xl,int xr,int xql,int xqr,int yql,int yqr){
+    if(!now)return 0;
+    if(xqr<xl || xr<xql)return 0;
+    if(xql<=xl&&xr<=xqr)return query(now->root,yql,yqr);
+    return gcd(query(now->l,xl,xm,xql,xqr,yql,yqr),query(now->r,xm+1,xr,xql,xqr,yql,yqr));
+#undef xm
+}
+
 int main(){
+    int r,c,n; cin>>r>>c>>n; while(n--){
+        int cmd; cin>>cmd; if(cmd==1){
+            int p,q; ll k; cin>>p>>q>>k;
+            modify(root,0,r,p,q,k);
+        }
+        else{
+            int p,q,u,v; cin>>p>>q>>u>>v;
+            cout<<query(root,0,r,p,u,q,v)<<endl;
+        }
+    }
 }

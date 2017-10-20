@@ -1,4 +1,4 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
+#pragma GCC optimize("Ofast,no-stack-protector")
 
 #include<cassert>
 #include<cstdio>
@@ -136,5 +136,24 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll fac[2000009],invfac[2000009];
+ll pw(ll b,ll n,ll m,ll a=1){
+    while(n){
+        if(n&1)a=a*b%m;
+        b=b*b%m; n>>=1;
+    } return a;
+}
+void init(){
+    fac[0]=1; for(int i=1;i<=2000000;++i)fac[i]=fac[i-1]*i%mod;
+    for(int i=0;i<=2000000;++i)invfac[i]=pw(fac[i],mod-2,mod);
+}
+ll getc(int n){
+    return fac[n<<1]*invfac[n+1]%mod*invfac[n]%mod;
+}
+
 int main(){
+    init();
+    int t; cin>>t; while(t--){
+        int n; cin>>n; cout<<getc(n>>1)<<endl;
+    }
 }

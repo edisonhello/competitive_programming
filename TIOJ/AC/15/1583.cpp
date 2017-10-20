@@ -1,5 +1,3 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
-
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
@@ -137,4 +135,17 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    int n; cin>>n;
+    vector<pair<string,ld>> v;
+    while(n--){
+        string s; ld wei,hei; cin>>s>>wei>>hei;
+        v.eb(s,wei/hei/hei);
+    }
+    sort(v.begin(),v.end(),[](const pair<string,ld> &a,const pair<string,ld> &b){return a.Y>b.Y;});
+    int cnt=0;
+    for(auto &i:v){
+        if(cnt==10)break;
+        cout<<i.X<<endl;
+        ++cnt;
+    }
 }

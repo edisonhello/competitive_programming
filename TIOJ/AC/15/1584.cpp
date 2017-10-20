@@ -1,5 +1,3 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
-
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
@@ -136,5 +134,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+string mp[1005];
 int main(){
-}
+    int ts; cin>>ts; while(ts--){
+    int x,y,hp,g; cin>>x>>y>>hp>>g;
+    int hx,hy;
+    for(int i=0;i<x;++i){
+        cin>>mp[i];
+        for(int j=0;j<y;++j){
+            if(mp[i][j]=='D'){
+                hx=i,hy=j;
+            }
+        }
+    }
+    vint d;
+    for(int i=0;i<x;++i){
+        for(int j=0;j<y;++j){
+            if(mp[i][j]=='e'){
+                d.pb(abs(i-hx)+abs(j-hy));
+            }
+        }
+    }
+    sort(d.begin(),d.end());
+    PDE1(d);
+    int eat=0,ptr=0;
+    while(hp>0 && ptr<d.size()){
+        hp-=d[ptr];
+        if(hp<=0)break;
+        hp+=g;
+        if(hp<=0)break;
+        hp-=d[ptr];
+        if(hp<=0)break;
+        ++eat; ++ptr;
+    }
+    cout<<eat<<endl;
+}}

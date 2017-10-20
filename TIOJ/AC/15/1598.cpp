@@ -1,4 +1,4 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
+#pragma GCC optimize("Ofast,no-stack-protector")
 
 #include<cassert>
 #include<cstdio>
@@ -136,5 +136,41 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int p[100005];
+
+bool okk(int pcc,const int &TL,int tgpp){
+    int t=0,pp=1; ++tgpp;
+    while(1){
+        if(pp*2<=tgpp)++t,pp<<=1;
+        else{
+            ++t;
+            pcc-=pp-(tgpp-pp);
+            pp=tgpp;
+            t+=(pcc-1)/pp+1;
+            break;
+        }
+    } return t<=TL;
+}
+
+#define M ((L+R)>>1)
+bool ok(int TL,const int &n,int b){
+    for(int i=0;i<n;++i){
+        int L=0,R=b+1;
+        while(R>L){
+            if(okk(p[i],TL,M))R=M;
+            else L=M+1;
+        } b-=L;
+        if(b<0)return 0;
+    } return 1;
+}
+
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n,b; cin>>n>>b;
+    for(int i=0;i<n;++i)cin>>p[i];
+    int L=1,R=1000005;
+    while(R>L){
+        if(ok(M,n,b))R=M;
+        else L=M+1;
+    } cout<<L<<endl;
 }

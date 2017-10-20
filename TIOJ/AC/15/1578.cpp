@@ -1,5 +1,3 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
-
 #include<cassert>
 #include<cstdio>
 #include<cstdlib>
@@ -7,9 +5,6 @@
 #include<cmath>
 #include<ctime>
 #include<algorithm>
-#include<iostream>
-#include<iomanip>
-#include<sstream>
 #include<deque>
 #include<queue>
 #include<stack>
@@ -91,16 +86,6 @@ using namespace std;
 #include<unordered_set>
 #include<tuple>
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-// ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
-
 inline int gtx(){
     const int N=1048576;
     static char __buffer[N];
@@ -130,11 +115,18 @@ template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
-
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll L[33][33];
 int main(){
+    int r,c; rit(r,c);
+    for(int i=1;i<=r;++i){
+        for(int j=1;j<=i;++j){
+            if(j==1||j==i)L[i][j]=i;
+            else L[i][j]=L[i-1][j-1]*L[i][j-1]/(L[i][j-1]-L[i-1][j-1]);
+        }
+    }
+    printf("%lld",L[r][c]);
 }
