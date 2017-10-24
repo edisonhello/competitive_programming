@@ -130,27 +130,20 @@ template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"-1";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-PQ<pii,vector<pii>,less<pii>> pq;
 int main(){
     int n; cin>>n;
-    for(int i=1;i<n;++i){
-        int g; cin>>g;
-        pq.push(pii(g,i));
-    }
-    set<int> st; st.insert(0); st.insert(n);
-    ll ans=0;
-    while(pq.size()){
-        auto up=st.lower_bound(pq.top().Y);
-        auto lo=up; --lo;
-        ans+=((ll)(pq.top().Y-*lo)*(ll)(*up-pq.top().Y))*(ll)pq.top().X;
-        st.insert(pq.top().Y);
-        pq.pop();
-    }
-    cout<<ans<<endl;
+    ll hp; cin>>hp;
+    ll mxhp=hp;
+    int cnt=0;
+    while(n--){
+        ll enm; cin>>enm; if(enm>=mxhp)JIZZ();
+        if(hp>enm)hp-=enm;
+        else ++cnt,hp=mxhp-enm;
+    } cout<<cnt<<endl;
 }

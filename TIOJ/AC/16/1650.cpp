@@ -136,21 +136,25 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-PQ<pii,vector<pii>,less<pii>> pq;
+bool ispol(string &s){
+    for(int i=0;i<(s.size()>>1);++i)if(s[i]!=s[s.size()-1-i])return 0; return 1;
+}
+void print(string &s){for(char &c:s)cout<<(int)c<<" ";cout<<endl;}
+void poli(string &s){
+    string ss;
+    for(int i=0;i<s.size();++i)ss+=(char)(s[i]+s[s.size()-1-i]);
+    for(int i=0;i<ss.size()-1;++i)if(ss[i]>9)ss[i+1]+=ss[i]/10,ss[i]%=10;
+    while(ss[ss.size()-1]>9)ss+=(char)0,ss[ss.size()-1]+=ss[ss.size()-2]/10,ss[ss.size()-2]%=10;
+    s=""; for(int i=ss.size()-1;i>=0;--i)s+=ss[i];
+}
+void dig(string &s){for(char &c:s)c-='0';}
 int main(){
-    int n; cin>>n;
-    for(int i=1;i<n;++i){
-        int g; cin>>g;
-        pq.push(pii(g,i));
+    string s; cin>>s; dig(s);
+    int cnt=0;
+    while(cnt<=5000){
+        if(ispol(s)){cout<<cnt<<endl; exit(0);}
+        poli(s);
+        ++cnt;
     }
-    set<int> st; st.insert(0); st.insert(n);
-    ll ans=0;
-    while(pq.size()){
-        auto up=st.lower_bound(pq.top().Y);
-        auto lo=up; --lo;
-        ans+=((ll)(pq.top().Y-*lo)*(ll)(*up-pq.top().Y))*(ll)pq.top().X;
-        st.insert(pq.top().Y);
-        pq.pop();
-    }
-    cout<<ans<<endl;
+    cout<<"no"<<endl;
 }

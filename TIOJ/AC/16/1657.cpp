@@ -136,21 +136,12 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-PQ<pii,vector<pii>,less<pii>> pq;
 int main(){
-    int n; cin>>n;
-    for(int i=1;i<n;++i){
-        int g; cin>>g;
-        pq.push(pii(g,i));
+    int n,m; while(cin>>n>>m){
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=m;++j){
+                cout<<i<<"*"<<j<<"="<<i*j<<" ";
+            } cout<<endl;
+        }
     }
-    set<int> st; st.insert(0); st.insert(n);
-    ll ans=0;
-    while(pq.size()){
-        auto up=st.lower_bound(pq.top().Y);
-        auto lo=up; --lo;
-        ans+=((ll)(pq.top().Y-*lo)*(ll)(*up-pq.top().Y))*(ll)pq.top().X;
-        st.insert(pq.top().Y);
-        pq.pop();
-    }
-    cout<<ans<<endl;
 }

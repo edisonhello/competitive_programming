@@ -136,21 +136,31 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-PQ<pii,vector<pii>,less<pii>> pq;
+#ifndef WEAK
+#include "lib1635.h"
+#else
+int Initialize(){int t; cout<<"n = "; cin>>t; return t;}
+int Max(int xi,int xj){int t; cout<<xi<<" "<<xj<<" "; cin>>t; return t;}
+void Report(int ans){cout<<ans<<endl;}
+#endif
+
 int main(){
-    int n; cin>>n;
-    for(int i=1;i<n;++i){
-        int g; cin>>g;
-        pq.push(pii(g,i));
+    int L=1,n,R=n=Initialize();
+    int pl=0,pr=0;
+    int pml=-1,pmr=-1,pans=-1,ans;
+    while((pl!=L||pr!=R)&&R>L){
+        pl=L,pr=R;
+        int ml=L+(R-L)/2;
+        int mr=ml+1;
+        if(pml==ml&&pmr==mr)ans=pans;
+        else ans=0;
+        pml=ml, pmr=mr;
+        PDE4(L,R,ml,mr);
+        if((ans?ans:pans=Max(ml,mr))==mr)L=ml;
+        else R=mr;
     }
-    set<int> st; st.insert(0); st.insert(n);
-    ll ans=0;
-    while(pq.size()){
-        auto up=st.lower_bound(pq.top().Y);
-        auto lo=up; --lo;
-        ans+=((ll)(pq.top().Y-*lo)*(ll)(*up-pq.top().Y))*(ll)pq.top().X;
-        st.insert(pq.top().Y);
-        pq.pop();
-    }
-    cout<<ans<<endl;
+    PDE3(pml,pmr,n);
+    if(pml==2&&pmr==3&&pans==2)Report(Max(1,2));
+    else if(pml==n-1&&pmr==n)Report(pans);
+    else Report(L+(R-L)/2);
 }

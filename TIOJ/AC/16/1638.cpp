@@ -136,21 +136,21 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-PQ<pii,vector<pii>,less<pii>> pq;
+pair<ld,ld> pt[100008];
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
     int n; cin>>n;
-    for(int i=1;i<n;++i){
-        int g; cin>>g;
-        pq.push(pii(g,i));
+    for(int i=0;i<n;++i){
+        ld x,y,k; cin>>x>>y>>k;
+        pt[i]={x*x+y*y,k};
     }
-    set<int> st; st.insert(0); st.insert(n);
-    ll ans=0;
-    while(pq.size()){
-        auto up=st.lower_bound(pq.top().Y);
-        auto lo=up; --lo;
-        ans+=((ll)(pq.top().Y-*lo)*(ll)(*up-pq.top().Y))*(ll)pq.top().X;
-        st.insert(pq.top().Y);
-        pq.pop();
+    sort(pt,pt+n);
+    ld now=0,mx=-1e20;
+    for(int i=0;i<n;++i){
+        now+=pt[i].Y;
+        if(i!=n-1 && pt[i+1].X==pt[i].X)continue;
+        now=max(now,(ld)0);
+        mx=max(mx,now);
     }
-    cout<<ans<<endl;
+    cout<<fixed<<setprecision(0)<<mx<<endl;
 }
