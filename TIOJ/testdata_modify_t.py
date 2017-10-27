@@ -15,8 +15,11 @@ from bs4 import BeautifulSoup
 input_suffix = '.in'
 output_suffix = '.out'
 filename_format = '%d%s'
+<<<<<<< HEAD
 time_limit = '1000'
 memory_limit = '131072'
+=======
+>>>>>>> e7f12a0a838a45bb2c56995dc4fc6629d6ca612e
 
 # end config
 
@@ -46,8 +49,15 @@ print('Successful log in')
 problem_id = int(input('Problem ID: '))
 num_start = int(input('Testdata start number: '))
 num_end = int(input('Testdata end number: '))
+<<<<<<< HEAD
 upload_input = bool(input('Reupload input? 1 for yes.') == "1")
 upload_output = bool(input('Reupload output? 1 for yes.') == "1")
+=======
+time_limit = int(input('New time limit: '))
+memory_limit = int(input('New memory limit: '))
+upload_input = bool(input('Reupload input? 1 for yes. ') == "1")
+upload_output = bool(input('Reupload output? 1 for yes. ') == "1")
+>>>>>>> e7f12a0a838a45bb2c56995dc4fc6629d6ca612e
 
 url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
 sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
@@ -92,8 +102,8 @@ for i in lst:
     }
     
     files = {}
-    if upload_input: files['testdatum[test_input]'] = open(filename_format % (input_prefix, c, input_suffix), 'rb')
-    if upload_output: files['testdatum[test_output]'] = open(filename_format % (output_prefix, c, output_suffix), 'rb')
+    if upload_input: files['testdatum[test_input]'] = open(filename_format % (c, input_suffix), 'rb')
+    if upload_output: files['testdatum[test_output]'] = open(filename_format % (c, output_suffix), 'rb')
     rel = session.post(post_url, data = data, files = files)
 
     print('Modify %d(%d)!!' % (c, i))

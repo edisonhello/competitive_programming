@@ -1,67 +1,58 @@
-// UVa 1658
-int n;
-struct edge{
-    int u,v,f,c;
-    edge(int u,int v,int f,int c):u(u),v(v),f(f),c(c){};
-};
-vector<int> G[2222];
-vector<edge> edg;
-void init(){
-    for(int i=0;i<2222;++i)G[i].clear();
-    edg.clear();
-}
-void ae(int u,int v,int f,int c){
-    G[u].push_back(edg.size());
-    G[v].push_back(edg.size()+1);
-    edg.push_back(edge(u,v,f,c));
-    edg.push_back(edge(v,u,0,-c));
-}
-
-vector<bool> inq;
-vector<int> nc,bn,cf;
-int floww(int &nf){
-    queue<int> q;
-    nc.clear(), nc.resize(2222);
-    bn.clear(), bn.resize(2222);
-    cf.clear(), cf.resize(2222);
-    inq.clear(),inq.resize(2222);
-    for(int i=0;i<2222;++i)nc[i]=1e7;
-    q.push(1); nc[1]=0; bn[1]=878787;
-    while(q.size()){
-        for(int i:G[q.front()]){
-            edge e=edg[i];
-            if(e.f>0 && nc[e.v] > nc[q.front()]+e.c){
-                bn[e.v]=min(e.f,bn[q.front()]);
-                nc[e.v]=nc[q.front()]+e.c;
-                cf[e.v]=i;
-                if(!inq[e.v])q.push(e.v),inq[e.v]=1;
+template <typename T> class minCostMaxFlow{
+private:
+    struct edge{
+        int u,v,cap,cst;
+        edge(int u=0,int v=0,T cap=0,T cst=0):u(u),v(v),cap(cap),cst(cst){};
+    };
+    int n;
+    vector<bool> inq;
+    vector<int> source;
+    vector<T> bottle,cost;
+    vector<vector<int>> G;
+    vector<edge> edg;
+    T INF;
+    bool wolf(int s,int t,T &_flow,T &_cost){
+        fill(inq.begin(),inq.end(),0);
+        fill(cost.begin(),cost.end(),INF);
+        bottle[s]=INF; cost[s]=0;
+        queue<int> q; q.push(s);
+        while(q.size()){
+            for(int &eid:G[q.front()])if(edg[eid].cap>0 && cost[edg[eid].v]>cost[edg[eid].u]+edg[eid].cst){
+                if(!inq[edg[eid].v])inq[edg[eid].v]=1,q.push(edg[eid].v);
+                bottle[edg[eid].v]=min(bottle[edg[eid].u],edg[eid].cap);
+                cost[edg[eid].v]=cost[edg[eid].u]+edg[eid].cst;
+                source[edg[eid].v]=eid;
             }
+            inq[q.front()]=0; q.pop();
         }
-        inq[q.front()]=0; q.pop();
-    }
-    if(nc[n]>7777777 || bn[n]<=0)return 0;
-    for(int u=n;u!=1;u=edg[cf[u]].u){
-        edg[cf[u]].f-=bn[n];
-        edg[cf[u]^1].f+=bn[n];
-    }
-    return nf+=nc[n]*bn[n];
-}
-
-int mcmf(){
-    int ans=0;
-    floww(ans),floww(ans);
-    return ans;
-}
-
-main(){
-    int m; while(cin>>n>>m){
-        init();
-        for(int i=2;i<n;++i)ae(i,i+n,1,0);
-        while(m--){
-            int u,v,c; cin>>u>>v>>c; if(u>1&&u<n)u+=n;
-            ae(u,v,1,c);
+        if(cost[t]==INF)return 0;
+        for(int u=t;u!=s;u=edg[source[u]].u){
+            edg[source[u]].cap-=bottle[t];
+            edg[source[u]^1].cap+=bottle[t];
         }
-        cout<<mcmf()<<endl;
+        _flow+=bottle[t]; _cost+=bottle[t]*cost[t];
+        return 1;
     }
-}
-
+public:
+    minCostMaxFlow(int n=0,T inf=1073741824){setN(n); INF=inf;}
+    int setN(int N){
+        inq.resize(N);
+        source.resize(N);
+        bottle.resize(N);
+        cost.resize(N);
+        G.clear(); G.resize(N);
+        edg.clear();
+        return n=N;
+    }
+    void addEdge(int u,int v,T cap,T cst){
+        G[u].push_back(edg.size());
+        edg.emplace_back(u,v,cap,cst);
+        G[v].push_back(edg.size());
+        edg.emplace_back(v,u,0,-cst);
+    }
+    pair<T,T> flow(int s,int t){
+        T flow=0,cost=0;
+        while(wolf(s,t,flow,cost));
+        return pair<T,T>(flow,cost);
+    }
+};

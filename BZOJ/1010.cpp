@@ -132,18 +132,17 @@ const ld eps=1e-8;
 const ll mod=1e9+7;
 
 ll L,C[50005],pre[50005],dp[50005];
+deque<pair<ll,ll>> li;
 ll cst(ll x){return (x-L)*(x-L);}
 int main(){
     int n; scanf("%d%lld",&n,&L);
     for(int i=1;i<=n;++i)scanf("%lld",&C[i]),pre[i]=pre[i-1]+C[i];
     MS(dp,0x3f); dp[0]=0;
+    // dp[i] = max j {dp[j-1] + pre[i]*pre[i] + pre[j-1] + i*i + j*j + L*L - 2*pre[i]*pre[j-1] + 2*i*pre[i] - 2*j*pre[i] - 2*L*pre[i] - 2*i*pre[j-1] + 2*j*pre[j-1] + 2*L*pre[j-1] - 2*i*j - 2*i*L + 2*j*L} 
     for(int i=1;i<=n;++i){
-        for(int j=i;j>0;--j){
-            ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
-            if(nv<=dp[i]){
-                dp[i]=nv;
-                PDE3(i,j,nv);
-            }
-        }
+        // for(int j=i;j>0;--j){
+            // ll nv=dp[j-1]+cst(pre[i]-pre[j-1]+i-j);
+            // dp[i]=min(dp[i],nv);
+        // }
     } printf("%lld\n",dp[n]);
 }
