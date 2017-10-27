@@ -15,11 +15,6 @@ from bs4 import BeautifulSoup
 input_suffix = '.in'
 output_suffix = '.out'
 filename_format = '%d%s'
-<<<<<<< HEAD
-time_limit = '1000'
-memory_limit = '131072'
-=======
->>>>>>> e7f12a0a838a45bb2c56995dc4fc6629d6ca612e
 
 # end config
 
@@ -49,15 +44,10 @@ print('Successful log in')
 problem_id = int(input('Problem ID: '))
 num_start = int(input('Testdata start number: '))
 num_end = int(input('Testdata end number: '))
-<<<<<<< HEAD
-upload_input = bool(input('Reupload input? 1 for yes.') == "1")
-upload_output = bool(input('Reupload output? 1 for yes.') == "1")
-=======
 time_limit = int(input('New time limit: '))
 memory_limit = int(input('New memory limit: '))
 upload_input = bool(input('Reupload input? 1 for yes. ') == "1")
 upload_output = bool(input('Reupload output? 1 for yes. ') == "1")
->>>>>>> e7f12a0a838a45bb2c56995dc4fc6629d6ca612e
 
 url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
 sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
