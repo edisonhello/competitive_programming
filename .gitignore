@@ -2,6 +2,8 @@
 !*.*
 !*/
 
+testdata
+
 *.o
 *.exe
 *.in
