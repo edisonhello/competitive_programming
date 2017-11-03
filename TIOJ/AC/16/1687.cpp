@@ -20,14 +20,20 @@ inline bool isanc(int anc,int p){
     return in[anc]<=in[p] && out[p]<=out[anc];
 }
 inline int getlca(int pa,int pb){
-    int stp=16;
-    while(stp>=0 && p[stp][pa]==0)--stp;
-    while(stp>=0){
-        if(!isanc(p[stp][pa],pb))pa=p[stp][pa];
-        --stp;
+    if(d[pb]<d[pa])swap(pa,pb);
+    for(int i=0;i<18;++i){
+        if((1<<i)&(d[pb]-d[pa])){
+            pb=p[i][pb];
+        }
     }
-    if(!isanc(pa,pb))pa=p[0][pa];
-    return pa;
+    if(pa==pb)return pa;
+    for(int i=17;i>=0;--i){
+        if(p[i][pa]!=p[i][pb]){
+            pa=p[i][pa];
+            pb=p[i][pb];
+        }
+    }
+    return p[0][pa];
 }
 inline int getpa(int pa,int stp){
     for(int i=0;(1<<i)<=stp;++i){
