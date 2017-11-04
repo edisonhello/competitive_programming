@@ -101,7 +101,7 @@ template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 // ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
 
-inline int gtx(){
+inline char gtx(){
     const int N=1048576;
     static char __buffer[N];
     static char *__p=__buffer,*__end=__buffer;
