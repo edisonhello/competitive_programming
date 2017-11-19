@@ -1,9 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 int main(){
-    int n; cin>>n;
+    int n; while(cin>>n){
+    bool yes=1;
     for(int i=2;i*i<=n;++i){
-        if(n%i==0)cout<<"YES\n",exit(0);
+        if(n%i==0){yes=0; break;}
     }
-    cout<<"NO\n";
+    cout<<(yes?"YES":"NO")<<"\n";}
 }
