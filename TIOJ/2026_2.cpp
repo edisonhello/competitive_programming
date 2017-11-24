@@ -1,23 +1,11 @@
 // #pragma GCC optimize("Ofast,no-stack-protector")
 
-#include<cassert>
 #include<cstdio>
 #include<cstdlib>
-#include<cstring>
-#include<cmath>
-#include<ctime>
 #include<algorithm>
-#include<iostream>
 #include<iomanip>
-#include<sstream>
-#include<deque>
-#include<queue>
 #include<stack>
-#include<map>
-#include<set>
-#include<bitset>
-#include<vector>
-#include<utility>
+#include<queue>
 
 using namespace std;
 
@@ -91,15 +79,6 @@ using namespace std;
 #include<unordered_set>
 #include<tuple>
 
-template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.X<<","<<p.Y<<")";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
-template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
-template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
-template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
-// ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
 
 inline char gtx(){
     const int N=1048576;
@@ -130,11 +109,31 @@ template<typename ...Args>
 inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
-
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
+    priority_queue<int,vector<int>,greater<int>> gt;
+    priority_queue<int,vector<int>,less<int>> ls;
+    int qu[2],ptr=0;
+    int n,c,x; rit(n); while(n--){
+        rit(c); if(c==1){
+            rit(x); if(gt.empty())gt.push(x),ls.push(x);
+            else{
+                qu[ptr++]=x;
+                if(ptr==2){
+                    if(qu[0]>qu[1])swap(qu[0],qu[1]);
+                    if(qu[0]>=gt.top()){
+                        gt.push(qu[0]); gt.push(qu[1]); gt.pop(); ls.push(gt.top());
+                    }
+                    else if(qu[1]<=ls.top()){
+                        ls.push(qu[0]); ls.push(qu[1]); ls.pop(); gt.push(ls.top());
+                    }
+                    else ls.push(qu[0]), gt.push(qu[1]);
+                    ptr=0;
+                }
+            }
+        } else printf("%d\n",ls.top());
+    }
 }
