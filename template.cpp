@@ -106,7 +106,7 @@ inline char gtx(){
     static char __buffer[N];
     static char *__p=__buffer,*__end=__buffer;
     if(__p==__end){
-        if((__end=__buffer+fread_unlocked(__buffer,1,N,stdin))==__buffer)return EOF;
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
         __p=__buffer;
     } return *__p++;
 }

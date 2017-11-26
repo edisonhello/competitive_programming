@@ -1,5 +1,26 @@
 #include<bits/stdc++.h>
 using namespace std;
+#define getchar gtx
+inline char gtx(){
+    const int N=1048576;
+    static char __buffer[N];
+    static char *__p=__buffer,*__end=__buffer;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
+}
+
+template<typename T>
+inline bool rit(T &x){
+    char c=0; bool fg=0;
+    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    c=='-' ? (fg=1,x=0) : (x=c&15);
+    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
+    if(fg)x=-x; return true;
+}
+template<typename T,typename ...Args>
+inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
 struct edge{
     int u,v,w;
@@ -21,14 +42,15 @@ void dfs2(int now,int ccc){
     v[now]=1; bel[now]=ccc;
     for(int &eid:iG[now])if(!v[edg[eid].u])dfs2(edg[eid].u,ccc);
 }
-long long dfs3(int now){
-    if(dp[now])return dp[now];
+void dfs3(int now){
+    if(dp[now])return;
     for(auto i:cG[now]){
         dfs3(i.first);
         dp[now]=max(dp[now],i.second+dp[i.first]);
-    } return dp[now]+=bcw[now];
+    } 
+    dp[now]+=bcw[now];
 }
-long long meow(long long w){
+inline long long meow(long long w){
     long long L=0,R=14444,M;
     while(R>L){
         M=(L+R+1)>>1;
@@ -38,10 +60,9 @@ long long meow(long long w){
     return w*L-((L-1)*L*(L+1))/6;
 }
 signed main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int n,m; cin>>n>>m;
+    int n,m; rit(n,m);
     while(m--){
-        int u,v,w; cin>>u>>v>>w;
+        int u,v,w; rit(u,v,w);
         G[u].push_back(edg.size());
         iG[v].push_back(edg.size());
         edg.emplace_back(u,v,w);
@@ -52,6 +73,7 @@ signed main(){
         if(bel[e.u]==bel[e.v])bcw[bel[e.u]]+=meow(e.w);
         else cG[bel[e.u]].emplace_back(bel[e.v],e.w);
     }
-    int st; cin>>st; st=bel[st];
-    cout<<dfs3(st)<<'\n';
+    int st; rit(st); st=bel[st];
+    dfs3(st);
+    printf("%lld\n",dp[st]);
 }
