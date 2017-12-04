@@ -68,4 +68,4 @@ for i in range(num_start, num_end + 1):
         'testdatum[test_input]': open(filename_format % (i, input_suffix), 'rb'),
         'testdatum[test_output]': open(filename_format % (i, output_suffix), 'rb')
     })
-    print('Create %d.' % i)
+    print('%d created.' % i)

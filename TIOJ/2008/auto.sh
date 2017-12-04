@@ -1,4 +1,4 @@
-for((i=4; i<=10; i++));
+for((i=41; i<=43; i++));
 do
     rm $i.in $i.out
     ./gen > $i.in
