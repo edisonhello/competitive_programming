@@ -9,8 +9,6 @@ int dp(int n,int m){
     if(_dp[n][m])return _dp[n][m];
     _dp[n][m]=12344555;
     for(int i=1;i<=n;++i){
-        _dp[n][m]=min(_dp[n][m],dp(n-i,i)+dp(m-i,n))+1;
-        _dp[n][m]=min(_dp[n][m],dp(i,m-i)+dp(n-i,m))+1;
         _dp[n][m]=min(_dp[n][m],dp(i,m)+dp(n-i,m));
         _dp[n][m]=min(_dp[n][m],dp(i,n)+dp(m-i,n));
     }

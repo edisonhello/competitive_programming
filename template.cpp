@@ -1,4 +1,5 @@
 // #pragma GCC optimize("Ofast,no-stack-protector")
+#pragma comment(linker,"/STACK:36777216")
 
 #include<cassert>
 #include<cstdio>
