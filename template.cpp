@@ -123,6 +123,16 @@ inline bool rit(T &x){
 template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
+/* template<class T>void writeInt(T x, char endc = '\n'){
+    static char _buf[4096],*ptr=_buf,*end=_buf+4096;
+    if(x<0)*ptr++='-',x=-x; if(x==0)*ptr++='0';
+    char* s=ptr;
+    while(x){T t=x/10; char c=x-10*t+'0'; *ptr++=c; x=t;}
+    char* f=ptr-1; while(s<f)swap(*s,*f), ++s,--f;
+    if(ptr>end)cout.write(_buf,ptr-_buf), ptr=_buf;
+    *ptr++=endc;
+} */
+
 inline void pit(int x){printf("%d",x);}
 inline void pln(ll x){printf("%I64d",x);}
 template<typename ...Args>
