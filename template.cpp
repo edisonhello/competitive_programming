@@ -1,5 +1,6 @@
 // #pragma GCC optimize("Ofast,no-stack-protector")
 #pragma comment(linker,"/STACK:36777216")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 
 #include<cassert>
 #include<cstdio>
@@ -26,7 +27,6 @@ using namespace std;
 #define ld long double
 #define X first
 #define Y second
-#define rz(x) resize(x)
 #define pb push_back
 #define eb emplace_back
 #define pii pair<int,int>
@@ -37,12 +37,9 @@ using namespace std;
 #define PRF(...) printf(__VA_ARGS__)
 #define MS(x,v) memset((x),(v),sizeof(x))
 #define MS0(x) memset((x),0,sizeof(x))
-#define MSB(x) memset((x),0x3f,sizeof(x))
-#define MSBB(x) memset((x),0x7f,sizeof(x))
-#define MSM(x) memset((x),0xff,sizeof(x))
-#define MSMB(x) memset((x),0x80,sizeof(x))
 #define PAR(x,n) for(int ___=0;___<(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
+#define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
 
 #define tm Ovuvuevuevue
@@ -59,11 +56,19 @@ using namespace std;
 #define No cout<<"No"<<endl
 
 #ifdef WEAK
+#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL_((0,__VA_ARGS__,5,4,3,2,1))
+#define VA_NUM_ARGS_IMPL_(tuple) VA_NUM_ARGS_IMPL tuple
+#define VA_NUM_ARGS_IMPL(_0,_1,_2,_3,_4,_5,N,...) N
+#define macro_dispatcher(macro, ...) macro_dispatcher_(macro, VA_NUM_ARGS(__VA_ARGS__))
+#define macro_dispatcher_(macro, nargs) macro_dispatcher__(macro, nargs)
+#define macro_dispatcher__(macro, nargs) macro_dispatcher___(macro, nargs)
+#define macro_dispatcher___(macro, nargs) macro ## nargs
 #define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
 #define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
+#define PDE(...) macro_dispatcher(PDE, __VA_ARGS__)(__VA_ARGS__)
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
@@ -71,6 +76,7 @@ using namespace std;
 #define FOUT freopen("out","w",stdout)
 #define DEBUG 1
 #else
+#define PDE(...) ;
 #define PDE1(a) ;
 #define PDE2(a,b) ;
 #define PDE3(a,b,c) ;
@@ -102,6 +108,8 @@ template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 // ostream& operator<<(ostream &ostm,const __int128 &val){__int128 cpy=val; stack<int> st; while(cpy)st.push(cpy%10),cpy/=10; while(st.size())ostm<<st.top(),st.pop();return ostm;}
 
+// #define getchar gtx
+// #define fread fread_unlocked
 inline char gtx(){
     const int N=1048576;
     static char __buffer[N];
