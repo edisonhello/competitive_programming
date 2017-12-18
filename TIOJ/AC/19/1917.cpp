@@ -9,24 +9,26 @@ ostream& operator<<(ostream &ostm,const __int128 &val){if(!val){ostm<<"0"; retur
 bitset<1008> vx,vy;
 int n,match[1005];
 int128 L,U,daydng[1005],ngtdng[1005];
-int128 w[1005][1005],llable[1005],rlable[1005],dw;
+int128 w[1005][1005],llable[1005],rlable[1005],slack[1005];
 vector<pair<int,int>> forbid;
 bool print;
 
 bool find(int x){
-    if(print)cout<<"find: x = "<<x<<endl;
+    // if(print)cout<<"find: x = "<<x<<endl;
     vx[x]=1;
     for(int i=1;i<=n;++i){
-        if(vy[i] || w[x][i]==-1)continue;
+        if(vy[i])continue;
         int128 ww=llable[x]+rlable[i]-w[x][i];
+        // if(print)cout<<"now i is "<<i<<" , ww is "<<ww<<endl;
         if(ww==0){
             vy[i]=1;
+            // if(print)cout<<"ready go to "<<match[i]<<" , now dw is "<<dw<<endl;
             if(!match[i] || (!vx[match[i]] && find(match[i]))){
                 match[i]=x;
                 return 1;
             }
         } 
-        else if(ww>0)dw=min(ww,dw);
+        else if(ww>0)slack[i]=min(slack[i],ww);
         else assert(false);
     } return 0;
 }
@@ -46,35 +48,40 @@ int main(){
         // for(int i=1;i<=n;++i){for(int j=1;j<=n;++j)cout<<w[i][j]<<" ";cout<<endl;}cout<<endl;
         for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)w[i][j]=wmax+10-w[i][j];
         // for(int i=1;i<=n;++i){for(int j=1;j<=n;++j)cout<<w[i][j]<<" ";cout<<endl;}cout<<endl;
-        for(auto &i:forbid)w[i.first][i.second]=-1;
-        for(int i=1;i<=n;++i){for(int j=1;j<=n;++j)cout<<w[i][j]<<" ";cout<<endl;}cout<<endl;
+        for(auto &i:forbid)w[i.first][i.second]=-(1ll<<60);
+        // for(int i=1;i<=n;++i){for(int j=1;j<=n;++j)cout<<w[i][j]<<" ";cout<<endl;}cout<<endl;
         memset(llable,-1,sizeof(llable)); memset(rlable,0,sizeof(rlable));
         for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)llable[i]=max(llable[i],w[i][j]);
         memset(match,0,sizeof(match));
         bool keep=1;
         for(int i=1,vircnt=0;i<=n && keep;++i,vircnt=0){
-            cout<<"alive when i: "<<i<<endl;
-            if(i==6)print=1;
+            // cout<<"alive when i: "<<i<<endl;
+            // if(i==6)print=1;
             while("jizz"){
-                // ++vircnt; if(vircnt>=6*n){keep=0; break;}
+                ++vircnt; if(vircnt>=6*n){keep=0; break;}
                 vx.reset(); vy.reset();
-                dw=4500000000000000000ll;
+                memset(slack,0x3f,sizeof(slack));
                 if(find(i))break;
-                if(dw==4500000000000000000ll){keep=0; break;}
+                int128 dw=1ll<<60; dw*=1000;
+                for(int i=1;i<=n;++i)if(!vy[i])dw=min(dw,slack[i]);
+                if(dw>(1ll<<60)){keep=0; break;}
                 for(int i=1;i<=n;++i){
                     if(vx[i])llable[i]-=dw;
                     if(vy[i])rlable[i]+=dw;
                 }
-                if(!print)continue;
-                cout<<"dw: "<<dw<<endl;
-                cout<<"llable: "; for(int i=1;i<=n;++i)cout<<llable[i]<<" "; cout<<endl;
-                cout<<"rlable: "; for(int i=1;i<=n;++i)cout<<rlable[i]<<" "; cout<<endl;
-                cout<<"match: "; for(int i=1;i<=n;++i)cout<<match[i]<<" "; cout<<endl;
-                static int dwcb2=0;
-                if(dw==2)++dwcb2;
-                if(dwcb2>=8)return 7122;
+                // if(!print)continue;
+                // cout<<"dw: "<<dw<<endl;
+                // cout<<"llable: "; for(int i=1;i<=n;++i)printf("%2d ",llable[i]); cout<<endl;
+                // cout<<"rlable: "; for(int i=1;i<=n;++i)printf("%2d ",rlable[i]); cout<<endl;
+                // cout<<"match : "; for(int i=1;i<=n;++i)printf("%2d ",match[i]); cout<<endl;
+                // static int dwcb2=0;
+                // if(dw==2)++dwcb2;
+                // if(dwcb2>=8)return 7122;
             }
         }
+        // cout<<"KM over."<<endl;
+        // cout<<"match : "; for(int i=1;i<=n;++i)printf("%2d ",match[i]); cout<<endl;
+        if(keep)for(auto &i:forbid)if(match[i.second]==i.first){keep=0; break;}
         if(!keep)cout<<"no"<<endl;
         else{
             int128 ans=0;
