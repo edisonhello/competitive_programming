@@ -171,7 +171,7 @@ void init(){
 }
 
 int a[10000007];
-ll needp[700000];
+int needp[700000];
 
 void dec(ll x,ll wei){
     // PDE("dec",x,wei);
@@ -193,10 +193,8 @@ ll cnt(ll x,ll p){
 
 int main(){
     int n; rit(n);
-    // int n=1000000;
     while(n--){
         int c; rit(c); ++a[c];
-        // ++a[10000000];
     }
     for(int i=10000005;i>=1;--i)a[i]+=a[i+1];
     memset(minp,-1,sizeof(minp));
@@ -210,7 +208,7 @@ int main(){
     for(int i=0;i<p.size();++i){
         if(needp[i]==0)continue;
         PDE(p[i],needp[i]);
-        ll L=p[i],R=460000000000000000ll;
+        ll L=p[i],R=2000000000000000000ll;
         while(R>L){
             ll M=(L+R)>>1;
             if(cnt(M,p[i])>=needp[i])R=M;

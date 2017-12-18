@@ -1,6 +1,6 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
+#pragma GCC optimize("Ofast,no-stack-protector")
 #pragma comment(linker,"/STACK:36777216")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 
 #include<cassert>
 #include<cstdio>
@@ -155,5 +155,69 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
+bitset<10000007> _p;
+vector<ll> p;
+int minp[10000007];
+void init(){
+    for(ll i=2;i<10000007;++i){
+        if(_p[i])continue;
+        p.push_back(i);
+        minp[i]=p.size()-1;
+        for(ll j=i*i;j<10000007;j+=i){
+            minp[j]=p.size()-1;
+            _p[j]=1;
+        }
+    }
 }
+
+int a[10000007];
+ll needp[700000];
+
+void dec(ll x,ll wei){
+    // PDE("dec",x,wei);
+    while(x>1){
+        needp[minp[x]]+=wei;
+        x/=p[minp[x]];
+        // PDE(x);
+    }
+}
+
+ll cnt(ll x,ll p){
+    ll rt=0;
+    while(x){
+        rt+=x/p;
+        x/=p;
+    }
+    return rt;
+}
+
+int main(){
+    int n; rit(n);
+    // int n=1000000;
+    while(n--){
+        int c; rit(c); ++a[c];
+        // ++a[10000000];
+    }
+    for(int i=10000005;i>=1;--i)a[i]+=a[i+1];
+    memset(minp,-1,sizeof(minp));
+    init();
+    for(int i=2;i<10000007;++i){
+        if(a[i]){
+            dec(i,a[i]);
+        }
+    }
+    ll mx=1;
+    for(int i=0;i<p.size();++i){
+        if(needp[i]==0)continue;
+        PDE(p[i],needp[i]);
+        ll L=p[i],R=460000000000000000ll;
+        while(R>L){
+            ll M=(L+R)>>1;
+            if(cnt(M,p[i])>=needp[i])R=M;
+            else L=M+1;
+        }
+        mx=max(mx,L);
+    }
+    cout<<mx<<endl;
+}
+// tutorial by waynetuinfor
