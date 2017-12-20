@@ -1,6 +1,6 @@
 // #pragma GCC optimize("Ofast,no-stack-protector")
 #pragma comment(linker,"/STACK:36777216")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 
 #include<cassert>
 #include<cstdio>
@@ -41,7 +41,6 @@ using namespace std;
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
-#define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
 
 #define tm Ovuvuevuevue
 #define y1 Enyetuenwuevue
@@ -156,5 +155,91 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
+bitset<300005> v,inloop;
+vector<int> G[300005];
+stack<int> st; 
+int loopcnt,loopl[100005],loopr[100005];
+vector<int> isloopl[300005],isloopr[300005];
+int lreach[300005],loopinseg[100005],contain;
+ll reachpre[300005];
+
+void dfs(int now,int p){
+    PDE(now);
+    v[now]=1;
+    st.push(now);
+    for(int i:G[now]){
+        if(i==p)continue;
+        if(v[i] && !inloop[i]){
+            PDE(now,i);
+            int mx=i,mn=i;
+            inloop[i]=1;
+            do{
+                mx=max(st.top(),mx);
+                mn=min(st.top(),mn);
+                inloop[st.top()]=1;
+                st.pop();
+            }while(st.top()!=i);
+            PDE("out while",st.size());
+            st.pop();
+            loopl[loopcnt]=mn;
+            loopr[loopcnt]=mx;
+            ++loopcnt;
+        }
+        else if(!v[i])dfs(i,now);
+    }
 }
+
+int main(){
+    int n,m; rit(n,m);
+    while(m--){
+        int u,v; rit(u,v);
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    for(int i=1;i<=n;++i)if(!v[i])dfs(i,-1);
+    for(int i=0;i<loopcnt;++i){
+        isloopl[loopl[i]].push_back(i);
+        isloopr[loopr[i]].push_back(i);
+    }
+    if(DEBUG)for(int i=1;i<=n;++i)PDE(isloopl[i],isloopr[i]);
+    for(int L=1,R=0;L<=n;++L){
+        for(int &id:isloopl[L-1]){
+            --loopinseg[id];
+            if(loopinseg[id]==1)--contain;
+        }
+        while(!contain && R<=n){
+            ++R;
+            for(int &id:isloopl[R]){
+                ++loopinseg[id];
+            }
+            for(int &id:isloopr[R]){
+                ++loopinseg[id];
+                if(loopinseg[id]==2)++contain;
+            }
+        }
+        lreach[L]=R-1;
+        lreach[L]-=L-1;
+        PDE(L,lreach[L]);
+    }
+    for(int i=1;i<=n;++i)reachpre[i]=reachpre[i-1]+lreach[i];
+    int q; rit(q); while(q--){
+        int x,y; rit(x,y);
+        int L=x,R=y;
+        while(R>L){
+            int M=((L+R)>>1);
+            if(lreach[M]>=y-M+1)R=M;
+            else L=M+1;
+        }
+        PDE(x,y,L,R);
+        if(lreach[L]<R-L+1)printf("%lld\n",reachpre[y]-reachpre[x-1]);
+        else{
+            PDE(reachpre[L-1]-reachpre[x-1],(y-L+1)*1ll*(y-L+1)-(y-L+1)*1ll*(y-L)/2);
+            printf("%lld\n",reachpre[L-1]-reachpre[x-1]+(y-L+1)*1ll*(y-L+1)-(y-L+1)*1ll*(y-L)/2);
+        }
+    }
+}
+// 33432863 100:45 WA pretest 3
+// 33433404 104:58 WA pretest 3
+// 33433606 106:25 WA pretest 3
+// 33434408 112:38 AC
+// boost thinking by adrien, no cheat

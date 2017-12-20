@@ -41,7 +41,6 @@ using namespace std;
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
-#define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
 
 #define tm Ovuvuevuevue
 #define y1 Enyetuenwuevue
@@ -156,5 +155,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[100005];
+vector<int> hm[100005];
 int main(){
+    int n; cin>>n; ++n;
+    vector<int> t1,t2;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=2;i<=n;++i){
+        if(a[i-1]!=1 && a[i]!=1){
+            int ptr=1; hm[0].push_back(0);
+            for(int ii=1,fd=1;ii<=n;++ii){
+                while(a[ii]--)if(ii==i && fd){
+                    t1.push_back(hm[ii-1][0]);
+                    t2.push_back(hm[ii-1][1]);
+                    hm[ii].push_back(ptr); ++ptr;
+                    fd=0;
+                }
+                else{
+                    t1.push_back(hm[ii-1][0]);
+                    t2.push_back(hm[ii-1][0]);
+                    hm[ii].push_back(ptr); ++ptr;
+                }
+            }
+            cout<<"ambiguous"<<endl;
+            for(int i:t1)cout<<i<<" "; cout<<endl;
+            for(int i:t2)cout<<i<<" "; cout<<endl;
+            exit(0);
+        }
+    }
+    cout<<"perfect"<<endl;
 }
+// 33414565 09:38 AC

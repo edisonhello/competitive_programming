@@ -41,7 +41,6 @@ using namespace std;
 #define PAR1(x,n) for(int ___=1;___<=(n);++___)cout<<x[___]<<" ";cout<<'\n';
 #define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
-#define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
 
 #define tm Ovuvuevuevue
 #define y1 Enyetuenwuevue
@@ -156,5 +155,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int _[2][155];
 int main(){
+    int n; cin>>n;
+    int *a=_[0],*b=_[1];
+    a[0]=1;
+    for(int i=1;i<=n;++i){
+        // int neg=((i-1)/2)&1;
+        int neg=i&1;
+        if(!neg)neg=1; else neg=-1;
+        for(int i=1;i<155;++i){
+            b[i]+=a[i-1]*neg;
+        }
+        bool chk=1;
+        for(int i=1;i<155;++i){
+            if(abs(b[i])>1)chk=0;
+        }
+        if(!chk){
+            for(int i=1;i<155;++i){
+                b[i]-=a[i-1]*neg;
+            }
+            neg=-neg;
+            for(int i=1;i<155;++i){
+                b[i]+=a[i-1]*neg;
+            }
+        }
+        swap(a,b);
+    }
+    if(a[n]==-1)for(int i=0;i<=n;++i)a[i]=-a[i];
+    if(b[n-1]==-1)for(int i=0;i<n;++i)b[i]=-b[i];
+    cout<<n<<endl;
+    for(int i=0;i<=n;++i)cout<<a[i]<<" "; cout<<endl;
+    cout<<n-1<<endl;
+    for(int i=0;i<n;++i)cout<<b[i]<<" "; cout<<endl;
 }
+// 33419801 24:28 WA pretest 1
+// 33420289 26:16 AC
