@@ -76,6 +76,7 @@ using namespace std;
 #define FIN freopen("in","r",stdin)
 #define FOUT freopen("out","w",stdout)
 #define DEBUG 1
+#define exit(x) cout<<"exit code "<<x<<endl, exit(0)
 #else
 #define PDE(...) ;
 #define PDE1(a) ;
