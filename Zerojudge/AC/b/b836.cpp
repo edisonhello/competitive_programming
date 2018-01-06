@@ -1,30 +1,13 @@
-#include<iostream>
-#include<cmath>
-#define ll long long
-#define ld long double
+#include<bits/stdc++.h>
 using namespace std;
+#define ll long long 
+#define ld long double
+
 int main(){
-    ll n,m,h,a;
-    while(cin>>n>>m){
-        if(!n||!m){
-            cout<<"Go Kevin!!\n";
-            continue;
-        }
-        h=sqrt((ld)(2*n/m));
-        h-=300;
-        if(h<1)h=1;
-        // cout<<h;
-        for(;;++h){
-            a=(1+1+(h-1)*m)*h/2;
-            //cout<<"a = "<<a<<endl;
-            if(a>n){
-                cout<<"No Stop!!\n";
-                break;
-            }
-            else if(a==n){
-                cout<<"Go Kevin!!\n";
-                break;
-            }
-        }
+    ld n,m; while(cin>>n>>m){
+        ld sq=sqrt(m*m-m*4+4+n*m*8);
+        ld x=((m-2)+sq)/(m*2);
+        if(abs(x-round(x))>1e-9)cout<<"No Stop!!"<<endl;
+        else cout<<"Go Kevin!!"<<endl;
     }
 }
