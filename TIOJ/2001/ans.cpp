@@ -64,12 +64,12 @@ int main(){
     }
 
     ld L=0,R=1e30*n/k,ans=1e40;
-    int timer=123;
+    int timer=170;
     while(timer--){
         ld M=(L+R)/2;
         if(use(M)>k)L=M;
         else R=M,ans=min(ans,dp[n]);
     }
     // cout<<"cost: "<<L<<endl;
-    cout<<fixed<<setprecision(20)<<ans-L*k<<endl;
+    cout<<fixed<<setprecision(10)<<ans-L*k<<endl;
 }
