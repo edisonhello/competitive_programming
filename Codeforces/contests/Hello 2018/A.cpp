@@ -158,5 +158,8 @@ const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
-    CPPinput;
+    ll n,m; cin>>n>>m;
+    if(n>30)cout<<m<<endl;
+    else cout<<m%(1<<n)<<endl;
 }
+// 34005854 01:09 AC

@@ -157,6 +157,30 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<int> G[1004];
 int main(){
-    CPPinput;
+    int n; cin>>n;
+    for(int i=2;i<=n;++i){
+        int t; cin>>t;
+        G[t].pb(i);
+    }
+    for(int i=1;i<=n;++i){
+        if(G[i].empty())continue;
+        int leaf=0;
+        for(int ii:G[i]){
+            if(G[ii].empty())++leaf;
+        }
+        if(leaf<3){
+            PDE(i);
+            cout<<"No"<<endl;
+            exit(0);
+        }
+    }
+    cout<<"Yes"<<endl;
 }
+// 34008817 06:11 AC
+//          77:39 Successful Hack
+//          83:27 Successful Hack
+//          89:59 Successful Hack
+//          99:16 Successful Hack
+//          104:24 Successful Hack

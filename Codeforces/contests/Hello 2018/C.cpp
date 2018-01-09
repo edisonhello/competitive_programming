@@ -157,6 +157,27 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll c[33];
+ll dp[33];
 int main(){
-    CPPinput;
+    int n; cin>>n;
+    ll l; cin>>l;
+    for(int i=1;i<=n;++i)cin>>c[i];
+    for(int i=n+1;i<=30;++i)c[i]=(1ll<<55);
+    for(int i=1;i<30;++i){
+        if(c[i+1]>c[i]*2)c[i+1]=c[i]*2;
+    }
+    for(int i=30;i>=1;--i){
+        if(l&(1<<(i-1)))dp[i]=dp[i+1]+c[i];
+        else dp[i]=dp[i+1];
+        PDE(i,dp[i]);
+    }
+    ll ans=dp[1];
+    for(int i=30;i>=1;--i){
+        ans=min(ans,dp[i]+c[i]);
+    }
+    cout<<ans<<endl;
+
 }
+// 34012591 14:42 WA main 8
+// AC distance: 1 line

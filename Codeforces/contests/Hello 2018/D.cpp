@@ -157,6 +157,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
-    CPPinput;
+struct prob{
+    int tm,limp,i;
+} a[200005];
+
+bitset<200005> cho;
+int n,T;
+
+bool canget(int sco){
+    cho.reset();
+    int tt=T,choed=0;
+    for(int i=0;i<n;++i){
+        if(a[i].limp>=sco && tt>=a[i].tm)tt-=a[i].tm,++choed,cho[a[i].i]=1;
+        if(choed>=sco)return 1;
+    }
+    return choed>=sco;
 }
+
+int main(){
+    cin>>n>>T;
+    for(int i=0;i<n;++i){
+        cin>>a[i].limp>>a[i].tm;
+        a[i].i=i;
+    }
+    sort(a,a+n,[](const prob &a,const prob &b){return a.tm<b.tm;});
+    int L=0,R=n;
+    while(R>L){
+        int M=(L+R+1)>>1;
+        if(canget(M))L=M;
+        else R=M-1;
+    }
+    cout<<L<<endl;
+    cout<<L<<endl;
+    for(int i=0;i<n;++i)if(cho[i])cout<<i+1<<" "; cout<<endl;
+}
+// 34015495 25:05 WA main 15
+// AC distance: 1 line

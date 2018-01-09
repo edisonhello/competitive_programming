@@ -157,6 +157,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int to[10000],pre[10000],last[10000],child[10000];
+int n,m,e;
+
+void ae(int u,int v){
+    to[e]=v;
+    pre[e]=last[u];
+    last[u]=e++;
+}
+
 int main(){
     CPPinput;
+    for(int i=1;i<=10000;++i)last[i]=-1;
+    cin>>n;
+    for(int i=1;i<n;++i){
+        int p; cin>>p;
+        ae(p,i+1);
+    }
+    for(int u=1;u<=n;++u){
+        for(int e=last[u];e!=-1;e=pre[e])child[u]++;
+    }
+    for(int u=1;u<=n;++u){
+        for(int e=last[u];e!=-1;e=pre[e]){
+            int v=to[e];
+            if(child[v]>0)child[u]--;
+        }
+    }
+    for(int i=1;i<=n;++i){
+        if(!(child[i]==0 || child[i]>=3))cout<<"No"<<endl;
+    }
+
 }
