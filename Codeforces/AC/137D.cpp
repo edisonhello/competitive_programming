@@ -179,6 +179,9 @@ bool issqu(vector<pii> &v){
     PDE("squ",len,ok);
     return ok;
 }
+bool isline(vector<pii> &v){
+    return (v[1].X-v[0].X)*(v[2].Y-v[0].Y)==(v[1].Y-v[0].Y)*(v[2].X-v[0].X);
+}
 bool isrec(vector<pii> &v){
     vector<ld> len;
     for(int i=0;i<4;++i){
@@ -192,6 +195,13 @@ bool isrec(vector<pii> &v){
     for(int i=2;i<3;++i)if(!almost(len[i],len[i+1]))ok=0;
     for(int i=4;i<5;++i)if(!almost(len[i],len[i+1]))ok=0;
     if(!almost(sqrt(len[0]*len[0]+len[2]*len[2]),len[4]))ok=0;
+    for(int i=0;i<(1<<4);++i){
+        if(bitset<4>(i).count()==3){
+            vector<pii> line;
+            for(int j=0;j<4;++j)if(i&(1<<j))line.push_back(v[j]);
+            if(isline(line))ok=0;
+        }
+    }
     return ok;
 }
 
