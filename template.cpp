@@ -1,6 +1,7 @@
 // #pragma GCC optimize("Ofast,no-stack-protector")
 #pragma comment(linker,"/STACK:36777216")
 // #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
 #include<cstdio>
