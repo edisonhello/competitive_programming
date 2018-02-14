@@ -1,3 +1,4 @@
+#pragma GCC optimize("no-stack-protector")
 #include<bits/stdc++.h>
 using namespace std;
 #define ll long long
@@ -7,9 +8,9 @@ struct Q{
     int l,i;
 };
 vector<Q> qs[100007];
-
+// bool print;
 int a[100007];
-ll ans[100007];
+ll ans[500007];
 struct node{
     node *l,*r;
     ll val,tag;
@@ -50,6 +51,7 @@ void modify(node *now,int l,int r,int ml,int mr,ll v){
     pull(now);
 } 
 ll query(node *now,int l,int r,int ql,int qr){
+    // if(print)cout<<"querying: "<<now<<" "<<l<<" "<<r<<" "<<ql<<" "<<qr<<endl;
     if(r<ql || qr<l)return 0;
     if(ql<=l&&r<=qr)return now->val;
     push(now,l,r);
@@ -57,10 +59,16 @@ ll query(node *now,int l,int r,int ql,int qr){
 }
 
 int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
     int n,q; cin>>n>>q;
+    // int n=100000,q=500000;
     for(int i=1;i<=n;++i)cin>>a[i];
+    // for(int i=1;i<=n;++i)a[i]=(rand()*rand())&((1<<31)-1);
     for(int i=1;i<=q;++i){
         int l,r; cin>>l>>r;
+        // int l=((rand()*rand())&((1<<31)-1))%n+1,r=((rand()*rand())&((1<<31)-1))%n+1;
+        // if(r<l)swap(l,r);
+        // cout<<"add query "<<l<<" to "<<r<<endl;
         qs[r].push_back({l,i});
     }
     build(root=new node(),1,n);
@@ -80,15 +88,18 @@ int main(){
         if(p==0)p=i;
         else p=min(p,i);
         int prvr=i;
-        if(a[i])for(auto i:(*it)){
+        for(auto i:(*it)){
             // cout<<"segments: from "<<i.second<<" to "<<prvr<<" is "<<i.first<<endl;
             modify(root,1,n,i.second,prvr,i.first);
             prvr=i.second-1;
         }
         for(auto q:qs[i]){
+            // cout<<"query "<<q.i<<" : from "<<q.l<<" to "<<i<<endl;
+            // if(i==141)print=1;
             ans[q.i]=query(root,1,n,q.l,i);
         }
+        // cout<<"queryed"<<endl;
         swap(it,prv);
     }
-    for(int i=1;i<=q;++i)cout<<ans[i]<<endl;
+    for(int i=1;i<=q;++i)cout<<ans[i]<<'\n';
 }
