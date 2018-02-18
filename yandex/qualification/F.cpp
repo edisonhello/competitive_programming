@@ -146,6 +146,61 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vint G[200006];
+int d[200006],cf[200006];
+
+void dfs(int now,int pa,int dep){
+    cf[now]=pa;
+    d[now]=dep;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs(i,now,dep+1);
+    }
+}
+bitset<200006> v;
+vint dd;
+int ans1,ans2,n;
+
+void rdfs(int now,int pa,int lft){
+    v[now]=1;
+    if(lft<0)return;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        rdfs(i,now,lft-1);
+    }
+}
+
+bool can(int mxd){
+    ans1=dd[mxd],ans2=dd[(dd.size()-mxd-1==mxd?mxd+1:dd.size()-mxd-1)];
+    v.reset();
+    rdfs(ans1,ans1,mxd);
+    rdfs(ans2,ans2,mxd);
+    return v.count()>=n;
+}
+
 int main(){
     CPPinput;
+    cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[u].pb(v); G[v].pb(u);
+    }
+    dfs(1,1,1);
+    int far=-1,fard=-1;
+    for(int i=1;i<=n;++i)if(d[i]>fard)fard=d[i],far=i;
+    dfs(far,far,1);
+    int far2=-1; fard=-1;
+    for(int i=1;i<=n;++i)if(d[i]>fard)fard=d[i],far2=i;
+    for(int u=far2;u!=far;u=cf[u])dd.pb(u);
+    dd.pb(far);
+    int L=1,R=(dd.size()+1)/2;
+    while(R>L){
+        int M=(L+R)>>1;
+        if(can(M))R=M;
+        else L=M+1;
+    }
+    PDE(L);
+    can(L);
+    cout<<ans1<<" "<<ans2<<endl;
+
 }

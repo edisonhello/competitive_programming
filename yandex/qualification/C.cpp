@@ -146,6 +146,15 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll pw(ll b,ll n,ll m,ll a=1){
+    while(n){
+        if(n&1)a=a*b%m;
+        b=b*b%m; n>>=1;
+    } return a;
+}
+
 int main(){
     CPPinput;
+    ll n; cin>>n;
+    cout<<pw(n,(n-1)*(n-1),mod)<<endl;
 }

@@ -146,6 +146,35 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<vector<int>> ans;
+
 int main(){
     CPPinput;
+    int n; cin>>n;
+    vector<int> arow;
+    ans.resize(n);
+    for(int i=0;i<n;++i){
+        int t; cin>>t; 
+        arow.pb(t);
+    }
+    for(int _=1;_<2*n;++_){
+        vint tmp;
+        int fnd=-1;
+        for(int i=0;i<n;++i){
+            int t; cin>>t;
+            tmp.pb(t);
+            for(int j=0;j<n;++j){
+                if(arow[j]==t){
+                    fnd=j;
+                }
+            }
+        }
+        if(fnd!=-1)ans[fnd]=tmp;
+    }
+    for(auto v:ans){
+        for(int i:v){
+            cout<<i<<" ";
+        } 
+    }
+    cout<<endl;
 }

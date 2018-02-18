@@ -146,6 +146,46 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[100008];
+set<int> s;
+map<int,int> in;
+unordered_map<string,int> mp;
+
+int gid(string &str){
+    int &it=mp[str];
+    if(it==0)it=mp.size();
+    return it;
+}
+
 int main(){
     CPPinput;
+    int n,m; cin>>n>>m;
+    for(int i=0;i<n;++i){
+        string str;
+        cin>>str;
+        a[i]=gid(str);
+    }
+    for(int i=0;i<m;++i){
+        string str; cin>>str;
+        s.insert(gid(str));
+    }
+    int L=0,R=0;
+    ll ans=0;
+    while(L<n){
+        while(R<n && in.size()<s.size()){
+            if(s.find(a[R])!=s.end())++in[a[R]];
+            ++R;
+        }
+        PDE(L,R);
+        if(in.size()>=s.size()){
+            ans+=n-R+1;
+        }
+        if(s.find(a[L])!=s.end()){
+            auto it=in.find(a[L]);
+            --it->second;
+            if(it->second==0)in.erase(it);
+        }
+        ++L;
+    }
+    cout<<ans<<endl;
 }

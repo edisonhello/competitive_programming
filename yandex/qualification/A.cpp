@@ -148,4 +148,15 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    string s; getline(cin,s);
+    SS ss(s); set<int> sample; int t; while(ss>>t){sample.insert(t);}
+    int q; cin>>q; while(q--){
+        int cnt=0;
+        for(int i=0;i<6;++i){
+            int t; cin>>t;
+            if(sample.find(t)!=sample.end())++cnt;
+        }
+        if(cnt>=3)cout<<"Lucky"<<endl;
+        else cout<<"Unlucky"<<endl;
+    }
 }
