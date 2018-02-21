@@ -1,4 +1,4 @@
-// #pragma GCC optimize("Ofast,no-stack-protector")
+// #pragma GCC optimize("no-stack-protector")
 #pragma comment(linker,"/STACK:36777216")
 // #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
@@ -22,7 +22,11 @@
 #include<vector>
 #include<utility>
 
+// #include<ext/pb_ds/assoc_container.hpp>
+// #include<ext/pb_ds/tree_policy.hpp>
+
 using namespace std;
+// using namespace __gnu_pbds;
 
 #define ll long long
 #define ld long double
@@ -37,7 +41,6 @@ using namespace std;
 #define PQ priority_queue
 #define PRF(...) printf(__VA_ARGS__)
 #define MS(x,v) memset((x),(v),sizeof(x))
-#define MS0(x) memset((x),0,sizeof(x))
 #define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
 #define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
