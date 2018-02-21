@@ -27,6 +27,7 @@ int main(){
         else x=x*10+c-'0';
     }
     if(x)b.push_back(x);
+    if(a.size()!=b.size())return printf("-1\n"),0;
     for(int i=0;i<a.size();++i)pos[a[i]]=i;
     for(int i=0;i<b.size();++i)b[i]=pos[b[i]];
     int ans=0,cnt;
