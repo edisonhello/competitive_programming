@@ -11,7 +11,7 @@ bitset<3000006> v;
 int main(){
     int x=0;
     char c;
-    while((c=getchar())!='\n'){
+    while((c=getchar_unlocked())!='\n'){
         if(c==' '){
             if(x)a.push_back(x);
             x=0;
@@ -19,7 +19,7 @@ int main(){
         else x=x*10+c-'0';
     }
     if(x)a.push_back(x),x=0;
-    while((c=getchar())!='\n'){
+    while((c=getchar_unlocked())!='\n'){
         if(c==' '){
             if(x)b.push_back(x);
             x=0;
