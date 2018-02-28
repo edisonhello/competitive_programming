@@ -7,11 +7,16 @@ struct CRT{
 } *info;
 
 CRT merge(CRT x,CRT y){
-    // new a = x.a + x.m * t =- y.a (mod y.m)
+    // new a = x.a + x.m * t = y.a (mod y.m)
     // let g = gcd(x.m, y.m)
-    // (y.a - x.a) / g =- x.m / g * t (mod y.m)
+    // (y.a - x.a) / g = x.m / g * t (mod y.m)
     // so calc x.m * t + y.m * k = g by extgcd
-    // (x.m / g) * t + (y.m / g) * k = 1
+    // if(x.m==-1 || abs(x.a-y.a)%__gcd(x.m,y.m))return {-1,-1};
+    if(x.m==-1)return {-1,-1};
+    // ll t=0,k=0; ll g=extgcd(x.m,t,y.m,k);
+    ll t=0,k=0;
+    ll g=__gcd(x.m,y.m);
+    ll k=(y.a-x.a)*inv(x.m,y.m/g)%(y.m/g);
 }
 
 int main(){

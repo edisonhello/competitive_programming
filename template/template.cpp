@@ -1,6 +1,4 @@
 // #pragma GCC optimize("no-stack-protector")
-#pragma comment(linker,"/STACK:36777216")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -66,7 +64,7 @@ using namespace std;
 #define macro_dispatcher_(macro, nargs) macro_dispatcher__(macro, nargs)
 #define macro_dispatcher__(macro, nargs) macro_dispatcher___(macro, nargs)
 #define macro_dispatcher___(macro, nargs) macro ## nargs
-#define PDE1(a) cout<<#a<<" = "<<(a)<<'\n'
+#define PDE1(a) cout<<#a<<" = "<<(a)<<endl
 #define PDE2(a,b) cout<<#a<<" = "<<(a)<<" , ", PDE1(b)
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
@@ -106,41 +104,12 @@ template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<
 template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
 template<typename TA,typename TB> ostream& operator<<(ostream &ostm, const map<TA,TB> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const set<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
+template<typename T> ostream& operator<<(ostream &ostm,const multiset<T> &s){ostm<<"[ ";for(auto &it:s)ostm<<it<<" ";ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const stack<T> &inp){stack<T> st=inp;ostm<<"[ ";while(!st.empty()){ostm<<st.top()<<" ";st.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const queue<T> &inp){queue<T> q=inp;ostm<<"[ ";while(!q.empty()){ostm<<q.front()<<" ";q.pop();}ostm<<"]";return ostm;}
 template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm,const priority_queue<TA,TB,TC> &inp){priority_queue<TA,TB,TC> pq=inp;ostm<<"[ ";while(!pq.empty()){ostm<<pq.top()<<" ";pq.pop();}ostm<<"]";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm,const deque<T> &inp){deque<T> dq=inp;ostm<<"[ ";while(!dq.empty()){ostm<<dq.front()<<" ";dq.pop_front();}ostm<<"]";return ostm;}
 // ostream& operator<<(ostream &ostm,const __int128 &val){if(!val){ostm<<"0"; return ostm;} bool mns=0; __int128 cpy=(val<0?mns=1,-val:val); stack<char> st; while(cpy)st.push(cpy%10+'0'),cpy/=10; if(mns)st.push('-'); while(st.size())ostm<<st.top(),st.pop(); return ostm;}
-
-// #define getchar gtx
-// #define fread fread_unlocked
-inline char gtx(){
-    const int N=1048576;
-    static char __buffer[N];
-    static char *__p=__buffer,*__end=__buffer;
-    if(__p==__end){
-        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-        __p=__buffer;
-    } return *__p++;
-}
-
-template<typename T>
-inline bool rit(T &x){
-    char c=0; bool fg=0;
-    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
-    c=='-' ? (fg=1,x=0) : (x=c&15);
-    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
-    if(fg)x=-x; return true;
-}
-template<typename T,typename ...Args>
-inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
-
-inline void pit(int x){printf("%d",x);}
-inline void pln(ll x){printf("%I64d",x);}
-template<typename ...Args>
-inline void pit(int x,Args ...args){printf("%d ",x);pit(args...);}
-template<typename ...Args>
-inline void pln(ll x,Args ...args){printf("%I64d ",x);pit(args...);}
 #endif
 
 void JIZZ(){cout<<"";exit(0);}
