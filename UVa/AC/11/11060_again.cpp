@@ -13,7 +13,10 @@ int gid(string s){
 }
 
 int main(){
-    int n; cin>>n;
+    int n,ks=0; while(cin>>n){
+    for(int i=0;i<1234;++i)G[i].clear();
+    mp.clear();
+    memset(deg,0,sizeof(int)*1234);
     for(int i=1;i<=n;++i){
         string s; cin>>s;
         int id=gid(s);
@@ -36,10 +39,9 @@ int main(){
             if(deg[i]==0)pq.push(i);
         }
     }
+    cout<<"Case #"<<(++ks)<<": Dilbert should drink beverages in this order:";
     for(int i:ans){
-        cout<<rem[i];
-        if(i!=ans.back())cout<<" ";
+        cout<<" "<<rem[i];
     }
-    cout<<endl;
-}
-// AC
+    cout<<".\n"<<endl;
+}}
