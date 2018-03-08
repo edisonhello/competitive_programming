@@ -28,7 +28,7 @@ int main(){
     // cout<<"conG "<<ans<<endl;
     auto meow=[&](int *a,int sz){
         memset(connect,0,sizeof(connect));
-        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>> pq;
+        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,less<pair<int,pair<int,int>>>> pq;
         for(int i=0;i<sz;++i){
             int gpos=lower_bound(G,G+g,a[i])-G;
             int ctg=1000000000;
