@@ -1,0 +1,2 @@
+#include<bits/stdc++.h>
+using namespace std;void no(){cout<<"Impossible"<<endl; exit(0);}vector<int> a;int d[453];int F(int x){return x==d[x]?x:d[x]=F(d[x]);}void U(int x,int y){d[F(x)]=F(y);}bool C(int x,int y){return F(x)==F(y);}int main(){int n,m,i,u,v,c; cin>>n>>m;for(i=1;i<=2*n;++i)d[i]=i;while(m--){cin>>u>>v>>c;if(c){if(C(u,v+n)||C(u+n,v))no();U(u,v);U(u+n,v+n);}else{if(C(u,v)||C(u+n,v+n))no();U(u,v+n);U(u+n,v);}}for(i=1;i<=n;++i)if(F(i)>n)a.push_back(i);cout<<a.size()<<'\n';for(int i:a)cout<<i<<" ";}

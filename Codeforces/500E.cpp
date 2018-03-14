@@ -45,7 +45,7 @@ int main(){
         if(to[0][i]==i){
             to[0][i]=i+1;
             cost[0][i]=x[i+1]-right[0][i];
-            right[0][i]=x[i+1];
+            right[0][i]=right[0][i+1];
         }
     }
 
