@@ -39,7 +39,7 @@ set<int>* dfs(int now,set<int> *exi){
         delete iit;
     }
     for(auto q:qs[now]){
-        ans[q.i]=(exi->find(q.x)!=exi->end());
+        ans[q.i]=(djs[now]==now && exi->find(q.x)!=exi->end());
     }
     if(ptG[now].size()){
         if(now==djs[now]){
