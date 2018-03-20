@@ -1,4 +1,4 @@
-#pragma GCC optimize("no-stack-protector")
+#pragma GCC optimize("no-stack-protector,Ofast")
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -19,6 +19,7 @@ bool dfs(int x){
 }
 
 int main(){
+    srand(time(0));
     int m; while(scanf("%d%d",&n,&m)==2){
         memset(noG,0,sizeof(noG));
         memset(match,-1,sizeof(match));
@@ -42,6 +43,7 @@ if(n&1){puts("Kevin you cheat !"); continue;}
                 G[(i+1)*n+j].push_back(i*n+j);
             }
         }
+        for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)random_shuffle(G[i*n+j].begin(),G[i*n+j].end());
         int cnt=0;
         for(int i=1;i<=n;++i){
             for(int j=1;j<=n;++j){
