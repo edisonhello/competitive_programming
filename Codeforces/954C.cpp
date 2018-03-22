@@ -70,6 +70,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #define FIN ;
 #define FOUT ;
 #define DEBUG 0
@@ -83,12 +84,42 @@ using namespace std;
 #include<tuple>
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(){cout<<"NO";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int n,a[200006];
 int main(){
     CPPinput;
+    cin>>n;
+    for(int i=0;i<n;++i)cin>>a[i];
+    int jump=0;
+    for(int i=1;i<n;++i){
+        if(a[i]==a[i-1])JIZZ();
+    }
+    for(int i=1;i<n;++i){
+        if(abs(a[i]-a[i-1])!=1){
+            PDE(jump,abs(a[i]-a[i-1]));
+            if(jump && jump!=abs(a[i]-a[i-1]))JIZZ();
+            jump=abs(a[i]-a[i-1]);
+        }
+    }
+    if(!jump){
+        cout<<"YES"<<endl;
+        cout<<1000000000<<" "<<1000000000<<endl;
+        return 0;
+    }
+    for(int i=1;i<n;++i){
+        int aa=a[i-1]%jump,bb=a[i]%jump;
+        if(aa==0 && bb==1 && a[i]==a[i-1]+1){
+            JIZZ();
+        }
+        else if(aa==1 && bb==0 && a[i-1]==a[i]+1){
+            JIZZ();
+        }
+    }
+    cout<<"YES"<<endl;
+    cout<<1000000000<<" "<<jump<<endl;
 }

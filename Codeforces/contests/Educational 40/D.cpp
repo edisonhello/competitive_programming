@@ -70,6 +70,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #define FIN ;
 #define FOUT ;
 #define DEBUG 0
@@ -89,6 +90,42 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vint G[1111];
+int ds[1111],dt[1111];
+bitset<1111> v,ext[1111];
 int main(){
     CPPinput;
+    int n,m,s,t; cin>>n>>m>>s>>t;
+    while(m--){
+        int u,v; cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+        ext[u][v]=ext[v][u]=1;
+    }
+    auto bfs=[&](int s,int *d){
+        v.reset();
+        queue<int> q; q.push(s);
+        v[s]=1;
+        while(q.size()){
+            int now=q.front(); q.pop();
+            for(int i:G[now]){
+                if(v[i])continue;
+                v[i]=1;
+                q.push(i);
+                d[i]=d[now]+1;
+            }
+        }
+    };
+    bfs(s,ds); bfs(t,dt);
+    int ans=0,mnd=min(ds[t],dt[s]);
+    for(int i=1;i<=n;++i){
+        for(int j=i+1;j<=n;++j){
+            if(min(ds[i]+dt[j],ds[j]+dt[i])+1<mnd || ext[i][j])continue;
+            else{
+                ++ans;
+                PDE(i,j);
+            }
+        }
+    }
+    cout<<ans<<endl;
 }

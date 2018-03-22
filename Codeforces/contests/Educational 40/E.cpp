@@ -70,6 +70,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #define FIN ;
 #define FOUT ;
 #define DEBUG 0
@@ -86,9 +87,48 @@ using namespace std;
 void JIZZ(){cout<<"";exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-13;
+const ld eps=1e-9;
 const ll mod=1e9+7;
+
+bool same(ld a,ld b){return abs(a-b)<eps;}
+
+ld a[200005],t[200005];
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    ld T; cin>>T;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=n;++i)cin>>t[i];
+    PQ<pair<ld,ld>,vector<pair<ld,ld>>,greater<pair<ld,ld>>> hi;
+    PQ<pair<ld,ld>,vector<pair<ld,ld>>,less<pair<ld,ld>>> low;
+    ld hi_v=0,hi_h=0,low_v=0,low_h=0;
+    ld ans=0;
+    for(int i=1;i<=n;++i){
+        if(same(T,t[i]))ans+=a[i];
+        else if(t[i]<T){
+            low.emplace(t[i],a[i]);
+        }
+        else{
+            hi.emplace(t[i],a[i]);
+        }
+    }
+    while(low.size() && hi.size()){
+        auto hii=hi.top(),lww=low.top();
+        hi.pop(); low.pop();
+        ld hi_h=(hii.first-T)*hii.second;
+        ld lw_h=(T-lww.first)*lww.second;
+        PDE(hii,lww,hi_h,lw_h);
+        if(hi_h>lw_h){
+            ans+=lww.second+lw_h/(hii.first-T);
+            hii.second-=lw_h/(hii.first-T);
+            hi.push(hii);
+        }
+        else{
+            ans+=hii.second+hi_h/(T-lww.first);
+            lww.second-=hi_h/(T-lww.first);
+            low.push(lww);
+        }
+    }
+    cout<<fixed<<setprecision(12)<<ans<<endl;
 }

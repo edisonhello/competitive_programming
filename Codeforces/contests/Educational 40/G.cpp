@@ -70,6 +70,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #define FIN ;
 #define FOUT ;
 #define DEBUG 0
@@ -89,6 +90,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll a[500005];
+ll b[500005];
+
+bool can(int n,int r,ll k,ll tag){
+    PDE(k,tag);
+    for(int i=1;i<=n;++i)b[i]=a[i];
+    ll tot=0;
+    for(int i=1;i<=r && i<=n;++i)tot+=b[i];
+    for(int L=1-r,mid=1,R=r+1;mid<=n;++R,++L,++mid){
+        if(R<=n)tot+=b[R];
+        PDE(tot,R,b[R]);
+        if(tot<tag){
+            b[min(R,n)]+=tag-tot;
+            k-=tag-tot;
+            PDE(mid,k);
+            if(k<0)return 0;
+            tot=tag;
+        }
+        if(L>=1)tot-=b[L];
+    }
+    return 1;
+}
+
 int main(){
     CPPinput;
+    ll n,r,k; cin>>n>>r>>k;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    ll L=0,R=2000000000000000000ll;
+    while(R>L){
+        ll mid=(L+R+1)>>1;
+        if(can(n,r,k,mid))L=mid;
+        else R=mid-1;
+    }
+    cout<<L<<endl;
 }

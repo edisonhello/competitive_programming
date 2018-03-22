@@ -91,4 +91,16 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    string s,ns; cin>>s;
+    int cnt=0;
+    for(int i=0;i<n;++i){
+        
+        if(i<n-1 && s[i]!=s[i+1]){
+            ++i;
+            ++cnt;
+        }
+        else ++cnt;
+    }
+    cout<<cnt<<endl;
 }

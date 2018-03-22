@@ -70,6 +70,7 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
+#define getchar gtx
 #define FIN ;
 #define FOUT ;
 #define DEBUG 0
@@ -91,4 +92,16 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; string s; cin>>n>>s;
+    int copy=0;
+    for(int i=1;i<s.size();++i){
+        if(i*2>s.size())break;
+        bool ok=1;
+        for(int z=0,x=i,c=0;c<i;++z,++x,++c){
+            if(s[z]!=s[x])ok=0;
+        }
+        if(ok)copy=i;
+    }
+    PDE(copy);
+    cout<<min(n,n-copy+1)<<endl;
 }
