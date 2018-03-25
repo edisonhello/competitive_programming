@@ -9,29 +9,11 @@
 #include <cmath>
 #include <iostream>
 
-#define t                  TIOJ_2056_varible_t_FaBcemwhV98OHG3sJAPC
-#define n                  TIOJ_2056_varible_n_dqfpkwbgDWTTKjqGXU8Q
-#define p                  TIOJ_2056_varible_p_1PDfbLsRLcvhUBzHNBhF
-#define q                  TIOJ_2056_varible_q_xwFGL757CUC6tu7tIaTk
-#define r                  TIOJ_2056_varible_r_ZuGWHvKaWXABnj0Gs5mN
-#define qc                 TIOJ_2056_varible_qc_2U7IYEowCk5QI8PG0Oig
-#define qnow               TIOJ_2056_varible_qnow_uDSqCVPkaGAXjVTDZXbX
-#define qlimit             TIOJ_2056_varible_qlimit_twHumqIBGBtYola0De1G
-#define win                TIOJ_2056_varible_win_Q5aKFEr8tMRG9jH6CjHd
-#define lost               TIOJ_2056_varible_list_rcuUErStZe7zxRyEP6rO
-#define qt                 TIOJ_2056_varible_qt_NQAVaSkHTAE0RGrwBCRD
-#define rat                TIOJ_2056_varible_rat_X1Ct8aYzAs1QntrI3DYM
-#define winning_percentage TIOJ_2056_varible_winning_percentage_F7J0uPMwBTnWl11b05FR
-#define v                  TIOJ_2056_varible_v_XTWTyNNYolLjtutzXx71
-#define correct            TIOJ_2056_varible_correct_A1hxhz5eNAXSZDuq5rya
-#define AC                 TIOJ_2056_function_AC_apcIEP76sp2d2BZEsOfM
-#define Win                TIOJ_2056_function_Win_EoQJRxUqBmjWWXG6xBsI
-
 int t, n, *p, *q, *r, qc, qnow, limit, win, lose, qt;
 double rat, winning_percentage;
 bool *v, correct;
 
-void AC() { puts("Yeah you got an 6MQ91zu46JGgSz9vhoKY"); }
+void AC() { puts("Yeah you got an AC"); }
 void WA() { puts("No you got a WA"); }
 void Win() { ++win; }
 void Lose() { ++lose; }
@@ -107,23 +89,7 @@ void Answer(int pos) {
     delete r; 
 }
 
-#undef t
-#undef n
-#undef p
-#undef q
-#undef r
-#undef qc
-#undef qnow
-#undef qlimit
-#undef win
-#undef lost
-#undef qt
-#undef rat
-#undef winning_percentage
-#undef v
-#undef correct
-#undef AC
-#undef Win
-
 #endif
+
+
 
