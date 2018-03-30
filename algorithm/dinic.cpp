@@ -1,51 +1,63 @@
+#include<bits/stdc++.h>
+using namespace std;
 
-struct Dinic {
-    int n, s, t;
-    vector<int> level;
-    struct Edge {
-        int to, rev, cap;
-        Edge() {}
-        Edge(int a, int b, int c): to(a), cap(b), rev(c) {}
-    };
-    vector<Edge> G[maxn];
-    bool bfs() {
-        level.assign(n, -1);
-        level[s] = 0; 
-        queue<int> que; que.push(s);
-        while (que.size()) {
-            int tmp = que.front(); que.pop();
-            for (auto e : G[tmp]) {
-                if (e.cap > 0 && level[e.to] == -1) {
-                    level[e.to] = level[tmp] + 1;
-                    que.push(e.to);
-                }
-            }
-        }
-        return level[t] != -1;
-    }
-    int flow(int now, int low) {
-        if (now == t) return low;
-        int ret = 0;
-        for (auto &e : G[now]) {
-            if (e.cap > 0 && level[e.to] == level[now] + 1) {
-                int tmp = flow(e.to, min(e.cap, low - ret));
-                e.cap -= tmp; G[e.to][e.rev].cap += tmp;
-                ret += tmp;
-            }
-        }
-        if (ret == 0) level[now] = -1;
-        return ret;
-    }
-    Dinic(int _n, int _s, int _t): n(_n), s(_s), t(_t) {
-        fill(G, G + maxn, vector<Edge>());
-    }
-    void add_edge(int a, int b, int c) {
-        G[a].push_back(Edge(b, c, G[b].size()));
-        G[b].push_back(Edge(a, 0, G[a].size() - 1));
-    }
-    int maxflow() {
-        int ret = 0;
-        while (bfs()) ret += flow(s, inf);
-        return ret;
-    }
+struct edge{
+    int u,v,f;
 };
+
+vector<edge> edg;
+vector<int> G[84504];
+
+void ae(int u,int v,int f){
+    G[u].push_back(edg.size());
+    edg.push_back({u,v,f});
+    G[v].push_back(edg.size());
+    edg.push_back({v,u,0});
+}
+
+
+int dep[84504],vv[84504];
+bool bfs(int s,int t,int c){
+    queue<int> q; q.push(s);
+    dep[s]=0; vv[s]=c;
+    while(q.size()){
+        int now=q.front(); q.pop();
+        for(int eid:G[now]){
+            edge &e=edg[eid];
+            if(e.f>0 && vv[e.v]!=c){
+                vv[e.v]=c;
+                q.push(e.v);
+                dep[e.v]=dep[now]+1;
+            }
+        }
+    }
+    return vv[t]==c;
+}
+
+int cur[84503];
+int dfs(int now,int t,int fl){
+    if(fl==0)return 0;
+    if(t==now)return fl;
+    int f=0,df;
+    for(int &i=cur[now];i<G[now].size();++i){
+        edge &e=edg[G[now][i]];
+        while(e.f && dep[e.v]==dep[now]+1 && (df=dfs(e.v,t,min(fl,e.f)))){
+            f+=df;
+            fl-=df;
+            e.f-=df;
+            edg[G[now][i]^1].f+=df;
+            if(!fl)break;
+        }
+    }
+    return f;
+}
+
+
+int flow(int s,int t){
+    int f=0,c=0;
+    while(bfs(s,t,++c)){
+        memset(cur,0,sizeof(cur));
+        f+=dfs(s,t,0x3f3f3f3f);
+    }
+    return f;
+}
