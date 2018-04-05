@@ -33,15 +33,15 @@ using namespace std;
 #define pb push_back
 #define eb emplace_back
 #define pii pair<int,int>
-#define pll pair<ll,ll>
 #define vint vector<int>
-#define vll vector<ll>
 #define SS stringstream
 #define PQ priority_queue
 #define MS(x,v) memset((x),(v),sizeof(x))
 #define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
 #define FLH fflush(stdout)
 #define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
+#define FIN(fname) freopen(fname,"r",stdin)
+#define FOUT(fname) freopen(fname,"w",stdout)
 
 #define tm Ovuvuevuevue
 #define y1 Enyetuenwuevue
@@ -61,8 +61,6 @@ using namespace std;
 #define DEB(...) printf(__VA_ARGS__),fflush(stdout)
 #define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
 #define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
-#define FIN freopen("in","r",stdin)
-#define FOUT freopen("out","w",stdout)
 #define DEBUG 1
 #define exit(x) cout<<"exit code "<<x<<endl, exit(0)
 #else
@@ -70,8 +68,6 @@ using namespace std;
 #define DEB(...) ;
 #define WHR() ;
 #define LOG(...) ;
-#define FIN ;
-#define FOUT ;
 #define DEBUG 0
 #endif
 
@@ -83,7 +79,7 @@ using namespace std;
 #include<tuple>
 #endif
 
-void JIZZ(){cout<<"";exit(0);}
+void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
