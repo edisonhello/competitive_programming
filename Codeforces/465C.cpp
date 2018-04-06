@@ -12,7 +12,7 @@ inline int next(string &s,int p){
             }
             else break;
         }
-        cout<<s<<endl;
+        // cout<<s<<endl;
         if(s[i]==s[i-1] || (i>1&&s[i]==s[i-2])){++s[i]; continue;}
         if(s[0]>p)return 0;
         else break;
