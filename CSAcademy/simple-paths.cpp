@@ -85,30 +85,63 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int a[100005];
-ll fac[100005],ifac[100005];
+vector<int> G[1001],bG[1001];
+int in[1001],low[1001],tm,bel[1001],sz[1001],bccc;
+stack<int> st;
 
-ll pw(ll b,ll n,ll m,ll a=1){
-    while(n){
-        if(n&1)a=a*b%m;
-        b=b*b%m; n>>=1;
-    } return a;
+void dfs(int now,int pa){
+    PDE(now,pa);
+    in[now]=low[now]=++tm;
+    st.push(now);
+    for(int i:G[now]){
+        if(pa==i)continue;
+        if(in[i]){
+            low[now]=min(low[now],in[i]);
+        }
+        else{
+            dfs(i,now);
+            low[now]=min(low[now],low[i]);
+        }
+    }
+    if(low[now]==in[now]){
+        ++bccc;
+        int top;
+        do{
+            top=st.top(); st.pop();
+            bel[top]=bccc;
+            ++sz[bccc];
+        }while(top!=now);
+    }
+}
+
+bool dfs(int now,int pa,int dis){
+    if(now==dis)return 1;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        if(bel[now]==bel[i])continue;
+        if(dfs(i,now,dis))return 1;
+    }
+    return 0;
 }
 
 int main(){
     CPPinput;
-    fac[0]=1; for(int i=1;i<100005;++i)fac[i]=fac[i-1]*i%mod;
-    ifac[100004]=pw(fac[100004],mod-2,mod); for(int i=100003;i>=0;--i)ifac[i]=ifac[i+1]*(i+1)%mod;
-    int n; cin>>n;
-    for(int i=1;i<=n;++i)cin>>a[i];
-    int q; cin>>q; while(q--){
-        int x,k; cin>>x>>k;
-        ll ans=0;
-        for(int i=x;i>=1;--i){
-            if(x-i>k)break;
-            ll c=fac[k]*ifac[x-i]%mod*ifac[k-(x-i)]%mod;
-            ans+=c*a[i]%mod;
+    int n,m,q; cin>>n>>m>>q;
+    while(m--){
+        int u,v; cin>>u>>v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    for(int i=1;i<=n;++i)if(!in[i])dfs(i,i);
+    for(int i=1;i<=n;++i)PDE(i,bel[i]);
+    /* for(int i=1;i<=n;++i){
+        for(int j:G[i]){
+            if(bel[i]==bel[j])continue;
+            bG[bel[i]].push_back(bel[j]);
         }
-        cout<<ans%mod<<endl;
+    } */
+    while(q--){
+        int u,v; cin>>u>>v;
+        cout<<(dfs(u,u,v)?1:0)<<endl;
     }
 }

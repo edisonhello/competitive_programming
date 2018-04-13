@@ -85,30 +85,51 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int a[100005];
-ll fac[100005],ifac[100005];
-
-ll pw(ll b,ll n,ll m,ll a=1){
-    while(n){
-        if(n&1)a=a*b%m;
-        b=b*b%m; n>>=1;
-    } return a;
-}
+ll a[55];
+vector<pair<int,int>> ans;
 
 int main(){
     CPPinput;
-    fac[0]=1; for(int i=1;i<100005;++i)fac[i]=fac[i-1]*i%mod;
-    ifac[100004]=pw(fac[100004],mod-2,mod); for(int i=100003;i>=0;--i)ifac[i]=ifac[i+1]*(i+1)%mod;
-    int n; cin>>n;
+    int n,ex; cin>>n;
     for(int i=1;i<=n;++i)cin>>a[i];
-    int q; cin>>q; while(q--){
-        int x,k; cin>>x>>k;
-        ll ans=0;
-        for(int i=x;i>=1;--i){
-            if(x-i>k)break;
-            ll c=fac[k]*ifac[x-i]%mod*ifac[k-(x-i)]%mod;
-            ans+=c*a[i]%mod;
+    auto pos=[&](){
+        for(int i=1;i<=n;++i){
+            int mx=*max_element(a+1,a+1+n);
+            for(int j=1;j<=n;++j){
+                if(a[j]==mx){
+                    a[i]+=a[j];
+                    ans.emplace_back(j,i);
+                    break;
+                }
+            }
         }
-        cout<<ans%mod<<endl;
+    };
+    auto neg=[&](){
+        for(int i=n;i>=1;--i){
+            int mn=*min_element(a+1,a+1+n);
+            for(int j=1;j<=n;++j){
+                if(a[j]==mn){
+                    a[i]+=a[j];
+                    ans.emplace_back(j,i);
+                    break;
+                }
+            }
+        }
+    };
+    if([&](){for(int i=1;i<=n;++i)if(a[i]<0)return 0;return 1;}())pos();
+    else if([&](){for(int i=1;i<=n;++i)if(a[i]>0)return 0;return 1;}())neg();
+    else if((ex=[&](){ll pos=0,neg=0;for(int i=1;i<=n;++i)pos=max(pos,a[i]),neg=min(neg,a[i]);return pos>=-neg?pos:neg;}())>=0){
+        int x=0;
+        for(int i=1;i<=n;++i)if(a[i]==ex){x=i;break;}
+        for(int i=1;i<=n;++i)if(a[i]<0)ans.emplace_back(x,i),a[i]+=ex;
+        pos();
     }
+    else{
+        int x=0;
+        for(int i=1;i<=n;++i)if(a[i]==ex){x=i;break;}
+        for(int i=1;i<=n;++i)if(a[i]>0)ans.emplace_back(x,i),a[i]+=ex;
+        neg();
+    }
+    cout<<ans.size()<<endl;
+    for(auto p:ans)cout<<p.first<<" "<<p.second<<endl;
 }

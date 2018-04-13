@@ -85,30 +85,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int a[100005];
-ll fac[100005],ifac[100005];
-
-ll pw(ll b,ll n,ll m,ll a=1){
-    while(n){
-        if(n&1)a=a*b%m;
-        b=b*b%m; n>>=1;
-    } return a;
-}
-
 int main(){
     CPPinput;
-    fac[0]=1; for(int i=1;i<100005;++i)fac[i]=fac[i-1]*i%mod;
-    ifac[100004]=pw(fac[100004],mod-2,mod); for(int i=100003;i>=0;--i)ifac[i]=ifac[i+1]*(i+1)%mod;
-    int n; cin>>n;
-    for(int i=1;i<=n;++i)cin>>a[i];
-    int q; cin>>q; while(q--){
-        int x,k; cin>>x>>k;
-        ll ans=0;
-        for(int i=x;i>=1;--i){
-            if(x-i>k)break;
-            ll c=fac[k]*ifac[x-i]%mod*ifac[k-(x-i)]%mod;
-            ans+=c*a[i]%mod;
+    char now='a';
+    string s; cin>>s;
+    for(char c:s){
+        if(c==now);
+        else if(c!=now){
+            ++now;
+            if(c!=now || now>'c')JIZZ("NO");
         }
-        cout<<ans%mod<<endl;
     }
+    int cnt[333]={0};
+    for(char c:s){
+        ++cnt[c];
+    }
+    if(cnt['a']==0 || cnt['b']==0 || cnt['c']==0)JIZZ("NO");
+    if(cnt['c']==cnt['a'] || cnt['c']==cnt['b'])JIZZ("YES");
+    NO;
 }
