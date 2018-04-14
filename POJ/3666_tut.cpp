@@ -1,0 +1,119 @@
+#include<vector>
+#include<iostream>
+#include<deque>
+#include<algorithm>
+using namespace std;
+
+int n,a[2222];
+int ans=1<<30;
+
+struct node{
+    vector<node*> ch;
+    int val,sz;
+    node(int v=0):val(v),sz(1){}
+};
+
+struct heap{
+    vector<node*> root;
+    int sz,mx;
+    node *merge(node *a,node *b){
+        if(a->val>b->val){
+            a->ch.push_back(b);
+            return a;
+        }
+        else{
+            b->ch.push_back(a);
+            return b;
+        }
+    }
+    vector<node*> merge(vector<node*> &a,vector<node*> &b){
+        node *tmp=0;
+        vector<node*> rt;
+        for(int i=0;i<15;++i)rt.push_back(0);
+        for(int i=0;i<15;++i){
+            if(tmp && a[i] && b[i])rt[i]=tmp,tmp=merge(a[i],b[i]);
+            else if(a[i] && b[i])rt[i]=merge(a[i],b[i]);
+            else if(a[i] && tmp)rt[i]=merge(a[i],tmp);
+            else if(b[i] && tmp)rt[i]=merge(b[i],tmp);
+            else if(a[i])rt[i]=a[i];
+            else if(b[i])rt[i]=b[i];
+            else if(tmp)rt[i]=tmp;
+        }
+        return rt;
+    }
+    void pop(){
+        --sz;
+        int idx=0;
+        for(int i=0;i<15;++i)if(root[i] && root[i]->val==mx){idx=i; break;}
+        vector<node*> son=root[idx]->ch;
+        while(son.size()<15)son.push_back(0);
+        root[idx]=0;
+        root=merge(root,son);
+        mx=0;
+        for(int i=0;i<15;++i)if(root[i])mx=max(mx,root[i]->val);
+    }
+    void merge(heap &ano){
+        sz+=ano.sz;
+        mx=max(mx,ano.mx);
+        root=merge(root,ano.root);
+    }
+    int get_sz(){
+        return sz;
+    }
+    int get_val(){
+        return mx;
+    }
+    heap(int val):sz(1){
+        root.resize(15);
+        root[0]=new node(val);
+        mx=val;
+    }
+};
+
+struct info{
+    int l,r;
+    heap hp;
+    info(int l,int r,int val):l(l),r(r),hp(val){}
+    int val(){
+        return hp.get_val();
+    }
+    void merge(info &ano){
+        hp.merge(ano.hp);
+        l=min(l,ano.l);
+        r=max(r,ano.r);
+        while(hp.get_sz()>(r-l+2)/2)hp.pop();
+    }
+};
+
+void meow(){
+    deque<info> dq;
+    for(int i=1;i<=n;++i){
+        info now(i,i,a[i]);
+        // cout<<"i: "<<i<<" , a[i]: "<<a[i]<<endl;
+        while(dq.size() && now.val()<dq.back().val()){
+            // cout<<"merge! "<<now.val()<<" "<<dq.back().val()<<endl;
+            now.merge(dq.back());
+            dq.pop_back();
+        }
+        dq.push_back(now);
+    }
+    // cout<<"finale dq size: "<<dq.size()<<endl;
+    int cost=0;
+    for(int i=0;i<dq.size();++i){
+        // cout<<"l,r is "<<dq[i].l<<" "<<dq[i].r<<" with val "<<dq[i].val()<<endl;
+        for(int j=dq[i].l;j<=dq[i].r;++j){
+            cost+=abs(a[j]-dq[i].val());
+        }
+    }
+    ans=min(ans,cost);
+    // cout<<"got cost "<<cost<<endl;
+}
+
+int main(){
+    cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    meow();
+    // reverse(a+1,a+1+n);
+    // meow();
+    cout<<ans<<endl;
+}
