@@ -27,10 +27,10 @@ def login():
     TIOJpassword = getpass('Password: ')
     print('logging in...')
     global session
-    rel = session.get('http://tioj.ck.tp.edu.tw/users/sign_in')
+    rel = session.get('https://tioj.ck.tp.edu.tw/users/sign_in')
     soup = BeautifulSoup(rel.text, "html.parser")
     inputs = soup.find('form').find_all('input')
-    rel = session.post('http://tioj.ck.tp.edu.tw/users/sign_in', data = {
+    rel = session.post('https://tioj.ck.tp.edu.tw/users/sign_in', data = {
         inputs[0].attrs['name']: inputs[0].attrs['value'],
         inputs[1].attrs['name']: inputs[1].attrs['value'],
         'user[username]': TIOJusername,
@@ -47,8 +47,8 @@ num_end = int(input('Testdata end number: '))
 time_limit = int(input('Time limit: '))
 memory_limit = int(input('Memory limit: '))
 
-sign_up_get_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
-sign_up_post_url = 'http://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
+sign_up_get_url = 'https://tioj.ck.tp.edu.tw/problems/%s/testdata/new' % problem_id
+sign_up_post_url = 'https://tioj.ck.tp.edu.tw/problems/%s/testdata' % problem_id
 
 for i in range(num_start, num_end + 1):
     print('processing %d...' % i)
