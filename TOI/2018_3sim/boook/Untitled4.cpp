@@ -56,6 +56,7 @@ int32_t main(){
 		if(i == j) continue;
 		if(same(i , 1) == 0 && same(i , 2) == 0) continue;
 		if(same(j , 3) == 0 && same(j , 4) == 0) continue;
+        cout<<i<<" "<<j<<endl;
 		
 		int ok = 0 , c = 0 , d = 0;
 		for(auto k : sol){

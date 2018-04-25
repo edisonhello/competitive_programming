@@ -10,13 +10,15 @@ long long get(long long a,long long k){
     return q*(k-1)+r;
 }
 
-long long find(long long a,long long dis,long long k){
+long long Find(long long a,long long dis,long long k){
     // cout<<"find "<<a<<" to "<<dis<<" in "<<k<<endl;
-    long long grp=(dis-1)/k;
+    long long grp=(dis-1)/(k-1);
     long long rem=dis%(k-1); if(!rem)rem=k-1;
     long long pos=grp*k+rem+1;
-    long long l=(a-1)/k,r=a-1;
+    if(grp*k/k!=grp)return -1;
+    long long l=(a-1)/k+1,r=a-1;
     // cout<<"pos , l , r = "<<pos<<" , "<<l<<" , "<<r<<endl;
+    if(dis==0)pos=1;
     bool no=0;
     while(pos<l){
         long long prvpos=pos;
@@ -26,12 +28,15 @@ long long find(long long a,long long dis,long long k){
             break;
         }
     }
-    return pos<=r && !no?pos:-1;
+    return (pos<=r && !no)?pos:-1;
 }
 
 long long a[100005],rsg[100005];
 
 int main(){
+    /* for(int i=0;i<=100;++i){
+        cout<<"find "<<i<<" "<<Find(99,i,3)<<endl;
+    } */
     // int K=10,N=100;
     /* for(int k=2;k<=K;++k){
         memset(sg,0,sizeof(sg));
@@ -59,7 +64,7 @@ int main(){
     if(!sg)exit((cout<<"Bob"<<endl,0));
     cout<<"Alice ";
     for(int i=1;i<=n;++i){
-        long long pos=find(a[i],rsg[i]^sg,k);
+        long long pos=Find(a[i],rsg[i]^sg,k);
         if(pos<0)continue;
         cout<<i<<" "<<pos<<endl;
         exit(0);
