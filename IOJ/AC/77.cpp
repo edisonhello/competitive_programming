@@ -1,65 +1,82 @@
-#include<bits/stdc++.h>
+#pragma GCC optimize("no-stack-protector,O2")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#include<cstdio>
+#include<cstdlib>
+#include<algorithm>
 using namespace std;
 
-struct node{
-    node *l,*r;
-    int val,pri,sz;
-    int lz(){return l?l->sz:0;}
-    int rz(){return r?r->sz:0;}
-    void psz(){sz=lz()+rz()+1;}
-    node(int v=0):l(0),r(0),val(v),pri(rand()),sz(1){}
-} *xt,*yt;
-
-void split(node *now,int va,node *&a,node *&b){
-    if(!now){a=b=0; return;}
-    if(now->val>va){
-        b=now;
-        split(now->l,va,a,b->l);
-        b->psz();
-    }
-    else{
-        a=now;
-        split(now->r,va,a->r,b);
-        a->psz();
-    }
+#define getchar gtx
+#define fread fread_unlocked
+#define fwrite fwrite_unlocked
+inline char gtx(){
+    const int N=1048576;
+    static char __buffer[N];
+    static char *__p=__buffer,*__end=__buffer;
+    if(__p==__end){
+        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
+        __p=__buffer;
+    } return *__p++;
 }
 
-node *merge(node *a,node *b){
-    if(!(a&&b))return a?:b;
-    if(a->pri>b->pri){
-        a->r=merge(a->r,b);
-        a->psz();
-        return a;
-    }
-    else{
-        b->l=merge(a,b->l);
-        b->psz();
-        return b;
-    }
+template<typename T>
+inline bool rit(T &x){
+    char c=0; bool fg=0;
+    while(c=getchar(), (c<'0' && c!='-') || c>'9')if(c==EOF)return false;
+    c=='-' ? (fg=1,x=0) : (x=c&15);
+    while(c=getchar(), c>='0' && c<='9')x=x*10+(c&15);
+    if(fg)x=-x; return true;
 }
+template<typename T,typename ...Args>
+inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
+
+struct outputter{
+    char _buffer[1048576],*_ptr=_buffer,*_end=_buffer+1048576;
+    template<typename T>
+    inline void write(T x){
+        if(x<0)*_ptr='-',++_ptr,x=-x; if(!x)*_ptr='0',++_ptr;
+        char *s=_ptr,c; int t;
+        while(x){t=x/10; c=x-10*t+'0'; *_ptr=c,++_ptr,x=t;}
+        char *f=_ptr-1; while(s<f)swap(*s,*f),++s,--f;
+        // if(_ptr>_end)fwrite(_buffer,sizeof(char),_ptr-_buffer,stdout),_ptr=_buffer;
+        *_ptr='\n',++_ptr;
+    }
+    template<typename T>
+    inline void output(T x){ write(x);}
+
+    template<typename ...Args> inline void operator()(Args ...args){ output(args...); }
+    outputter(){}
+    ~outputter(){ fwrite(_buffer,sizeof(char),_ptr-_buffer,stdout); }
+} pit;
+
+struct Q{
+    int a,b,c;
+} qs[300005];
+pair<int,int> xs[300005],ys[300005];
+int xb[300005],yb[300005];
 
 int main(){
-    ios_base::sync_with_stdio(0); cin.tie(0);
-    int n; cin>>n;
-    for(int i=1;i<=n;++i){
-        int a,b,c; cin>>a>>b>>c;
-        if(a==2){
-            int ans=0;
-            node *zz,*xx;
-            split(xt,b,zz,xx);
-            if(zz)ans-=zz->sz;
-            xt=merge(zz,xx);
-            split(yt,c,zz,xx);
-            if(xx)ans+=xx->sz;
-            yt=merge(zz,xx);
-            cout<<ans<<'\n';
+    int n,a,b,c; rit(n);
+    for(int i=0;i<n;++i){
+        rit(a,b,c);
+        qs[i].a=a;
+        xs[i].first=b; xs[i].second=i;
+        ys[i].first=c; ys[i].second=i;
+    }
+    sort(xs,xs+n); sort(ys,ys+n);
+    for(int i=0;i<n;++i){
+        qs[xs[i].second].b=i+1;
+        qs[ys[i].second].c=i+1;
+    }
+    for(int i=0;i<n;++i){
+        if(qs[i].a&1){
+            for(int x=qs[i].b;x<=n;x+=x&-x)--xb[x];
+            for(int y=qs[i].c;y;y^=y&-y)++yb[y];
         }
         else{
-            node *zz,*xx;
-            split(xt,b,zz,xx);
-            xt=merge(zz,merge(new node(b),xx));
-            split(yt,c,zz,xx);
-            yt=merge(zz,merge(new node(c),xx));
+            int ans=0;
+            for(int x=qs[i].b;x;x^=x&-x)ans+=xb[x];
+            for(int y=qs[i].c;y<=n;y+=y&-y)ans+=yb[y];
+            pit(ans);
         }
     }
 }

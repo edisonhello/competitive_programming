@@ -1,66 +1,197 @@
 #include<bits/stdc++.h>
-#include"lib1885.h"
-
 using namespace std;
 
-int main(){
-    int t=Init();
-    while(t--){
-        void orderCoins();
-        int _[6]={0,0,0,0,0,0};
+#ifndef WEAK
+#include"lib1885.h"
+#else
 
-        int a1 = getHeaviest(1,2,3);
-        int a2 = getMedian(1,2,3);
-        int a3;for(int i=1;i<=3;i++){if(a1!=i && a2!=i){a3=i;break;}}
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
+int coins[6],pos[6],qtime;
+int Init(){ return 1; }
+void orderCoins(){
+    cout<<"orderCoins: "<<endl;
+    for(int i=0;i<6;++i)cin>>coins[i],pos[coins[i]]=i;
+}
+void answer(int *a){
+    cout<<"answer: ";
+    for(int i=0;i<6;++i)cout<<a[i]<<" "; cout<<endl;
+    cout<<"Query "<<qtime<<" times"<<endl;
+}
+int getHeaviest(int i,int j,int k){
+    ++qtime;
+    if(pos[i]>pos[j] && pos[i]>pos[k])return i;
+    if(pos[j]>pos[i] && pos[j]>pos[k])return j;
+    if(pos[k]>pos[i] && pos[k]>pos[j])return k;
+}
+int getLightest(int i,int j,int k){
+    ++qtime;
+    if(pos[i]<pos[j] && pos[i]<pos[k])return i;
+    if(pos[j]<pos[i] && pos[j]<pos[k])return j;
+    if(pos[k]<pos[i] && pos[k]<pos[j])return k;
+}
+int getMedian(int i,int j,int k){
+    ++qtime;
+    if((pos[i]>pos[j])^(pos[i]>pos[k]))return i;
+    if((pos[j]>pos[i])^(pos[j]>pos[k]))return j;
+    if((pos[k]>pos[i])^(pos[k]>pos[j]))return k;
+}
+int getNextLightest(int i,int j,int k,int l){
+    ++qtime;
+    pair<int,int> pp[4]={{pos[i],i},{pos[j],j},{pos[k],k},{pos[l],l}};
+    sort(pp,pp+4);
+    if(pp[3].second==l)return pp[0].second;
+    for(int i=0;i<3;++i)if(pp[i].second==l)return pp[i+1].second;
+}
+#pragma GCC diagnostic pop
+#endif
 
-        int b3 = getLightest(4,5,6);
-        int b2;for(int i=4;i<=6;i++){if(b3!=i){b2=i;break;}}
-        int b1;for(int i=4;i<=6;i++){if(b1!=i && b2!=i){b3=i;break;}}
 
-        int __ = getHeaviest(a1,b1,b2);
-        if(__==a1){
-            _[0]=a1;
-            int ___ = getHeaviest(a2,b1,b2);
-            if(___==a2){
-                _[1]=a2;
-                int ____ = getHeaviest(a3,b1,b2);
-                if(____==a3){
-                    _[2]=a3;
-                    int n_b2 = getMedian(b1,b2,b3);
-                    int n_b1;for(int i=4;i<=6;i++){if(b3!=i&&n_b2!=i)n_b1=i;break;}
-                    _[3]=n_b1;
-                    _[4]=n_b2;
-                    _[5]=b3;
-                }
-                else if(____==b1){
-                    _[2]=b1;
-                    int _____ = getMedian(a3,b2,b3);
-                    int o0o0;for(int i=1;i<=6;i++){if(a1!=i&&a2!=i&&b1!=i&&b3!=i&&_____!=i){o0o0=i;break;}}
-                    _[3]=o0o0;
-                    _[4]=_____;
-                    _[5]=b3;
-                }
-                else if(____==b2){
-                    _[2]=b2;
-                    int _____ = getMedian(a3,b1,b3);
-                    int o0o0;for(int i=1;i<=6;i++){if(a1!=i&&a2!=i&&b2!=i&&b3!=i&&_____!=i){o0o0=i;break;}}
-                    _[3]=o0o0;
-                    _[4]=_____;
-                    _[5]=b3;
-                }
-            }
-            else if(___==b1){
-
-            }
-            else if(___==b2){
-
-            }
+void go(vector<vector<int>> &now){
+    auto pnow=[&](){
+        cout<<"now: "<<endl;
+        for(auto &v:now){
+            for(int i:v)cout<<i<<" ";
+            cout<<endl;
         }
-        else if(__==b1){
+    };
+    int pos[8];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
+    auto _sim_getHeaviest=[&](const int i,const int j,const int k){
+        if(pos[i]>pos[j] && pos[i]>pos[k])return i;
+        if(pos[j]>pos[i] && pos[j]>pos[k])return j;
+        if(pos[k]>pos[i] && pos[k]>pos[j])return k;
+    };
+    auto _sim_getLightest=[&](const int i,const int j,const int k){
+        if(pos[i]<pos[j] && pos[i]<pos[k])return i;
+        if(pos[j]<pos[i] && pos[j]<pos[k])return j;
+        if(pos[k]<pos[i] && pos[k]<pos[j])return k;
+    };
+    auto _sim_getMedian=[&](const int i,const int j,const int k){
+        if((pos[i]>pos[j])^(pos[i]>pos[k]))return i;
+        if((pos[j]>pos[i])^(pos[j]>pos[k]))return j;
+        if((pos[k]>pos[i])^(pos[k]>pos[j]))return k;
+    };
+    auto _sim_getNextLightest=[&](const int i,const int j,const int k,const int l){
+        pair<int,int> pp[4]={{pos[i],i},{pos[j],j},{pos[k],k},{pos[l],l}};
+        sort(pp,pp+4);
+        if(pp[3].second==l)return pp[0].second;
+        for(int i=0;i<3;++i)if(pp[i].second==l)return pp[i+1].second;
+    };
+#pragma GCC diagnostic pop
 
-        }
-        else if(__==b2){
+    while(now.size()>1u){
+        for(int i=1;i<=4;++i){
+            for(int j=i+1;j<=5;++j){
+                for(int k=j+1;k<=6;++k){
+                    int r1=0,r2=0,r3=0,lim=(now.size()+2)/3;
+                    for(auto &v:now){
+                        for(int i=0;i<6;++i)pos[v[i]]=i;
+                        int r=_sim_getHeaviest(i,j,k);
+                        if(r==i)++r1;
+                        if(r==j)++r2;
+                        if(r==k)++r3;
+                    }
+                    cout<<"rrrl: "<<r1<<" "<<r2<<" "<<r3<<" "<<lim<<endl;
+                    if(r1<=lim && r2<=lim && r3<=lim){
+                        int rt=getHeaviest(i,j,k);
+                        vector<vector<int>> tmp;
+                        for(auto &v:now){
+                            for(int i=0;i<6;++i)pos[v[i]]=i;
+                            if(_sim_getHeaviest(i,j,k)==rt)tmp.push_back(v);
+                        }
+                        now.swap(tmp);
+                        pnow();
+                        if(now.size()==1u)break;
+                    }
 
+                    r1=r2=r3=0; lim=(now.size()+2)/3;
+                    for(auto &v:now){
+                        for(int i=0;i<6;++i)pos[v[i]]=i;
+                        int r=_sim_getLightest(i,j,k);
+                        if(r==i)++r1;
+                        if(r==j)++r2;
+                        if(r==k)++r3;
+                    }
+                    cout<<"rrrl: "<<r1<<" "<<r2<<" "<<r3<<" "<<lim<<endl;
+                    if(r1<=lim && r2<=lim && r3<=lim){
+                        int rt=getLightest(i,j,k);
+                        vector<vector<int>> tmp;
+                        for(auto &v:now){
+                            for(int i=0;i<6;++i)pos[v[i]]=i;
+                            if(_sim_getLightest(i,j,k)==rt)tmp.push_back(v);
+                        }
+                        now.swap(tmp);
+                        pnow();
+                        if(now.size()==1u)break;
+                    }
+
+                    r1=r2=r3=0; lim=(now.size()+2)/3;
+                    for(auto &v:now){
+                        for(int i=0;i<6;++i)pos[v[i]]=i;
+                        int r=_sim_getMedian(i,j,k);
+                        if(r==i)++r1;
+                        if(r==j)++r2;
+                        if(r==k)++r3;
+                    }
+                    cout<<"rrrl: "<<r1<<" "<<r2<<" "<<r3<<" "<<lim<<endl;
+                    if(r1<=lim && r2<=lim && r3<=lim){
+                        int rt=getMedian(i,j,k);
+                        vector<vector<int>> tmp;
+                        for(auto &v:now){
+                            for(int i=0;i<6;++i)pos[v[i]]=i;
+                            if(_sim_getMedian(i,j,k)==rt)tmp.push_back(v);
+                        }
+                        now.swap(tmp);
+                        pnow();
+                        if(now.size()==1u)break;
+                    }
+
+                    for(int l=1;l<=6;++l){
+                        if(l==i || l==j || l==k)continue;
+                        r1=r2=r3=0; lim=(now.size()+2)/3;
+                        for(auto &v:now){
+                            for(int i=0;i<6;++i)pos[v[i]]=i;
+                            int r=_sim_getNextLightest(i,j,k,l);
+                            if(r==i)++r1;
+                            if(r==j)++r2;
+                            if(r==k)++r3;
+                        }
+                    cout<<"rrrl: "<<r1<<" "<<r2<<" "<<r3<<" "<<lim<<endl;
+                        if(r1<=lim && r2<=lim && r3<=lim){
+                            int rt=getNextLightest(i,j,k,l);
+                            vector<vector<int>> tmp;
+                            for(auto &v:now){
+                                for(int i=0;i<6;++i)pos[v[i]]=i;
+                                if(_sim_getNextLightest(i,j,k,l)==rt)tmp.push_back(v);
+                            }
+                            now.swap(tmp);
+                            pnow();
+                            if(now.size()==1u)break;
+                        }
+                    }
+                    if(now.size()==1u)break;
+                }
+                if(now.size()==1u)break;
+            }
+            if(now.size()==1u)break;
         }
     }
 }
+
+int main(){
+    int t=Init(); while(t--){
+        orderCoins();
+        int a[6]={1,2,3,4,5,6};
+        vector<vector<int>> now;
+        vector<int> tmp(a,a+6);
+        do{
+            now.push_back(tmp);
+        }while(next_permutation(tmp.begin(),tmp.end()));
+        go(now);
+        for(int i=0;i<6;++i)a[i]=now[0][i];
+        answer(a);
+    }
+}
+// 4 2 5 3 6 1 
