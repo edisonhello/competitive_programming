@@ -1,3 +1,5 @@
+#include<bits/stdc++.h>
+using namespace std;
 
 // #define fread fread_unlocked
 // #define fwrite fwrite_unlocked
@@ -34,7 +36,7 @@ struct outputter{
     }
 
     template<typename T>
-    inline void output(T x){ write(x,'\n'); }
+    inline void output(T x){ write(x,'\n');}
     template<typename T,typename ...Args>
     inline void output(T x,Args ...args){ write(x,' '); output(args...); }
 
@@ -42,3 +44,42 @@ struct outputter{
     outputter(){}
     ~outputter(){ fwrite(_buffer,sizeof(char),_ptr-_buffer,stdout); }
 } pit;
+
+set<int> xs[100005],ys[100005];
+
+int main(){
+    int n; rit(n);
+    for(int i=0,x,y;i<n;++i){
+        rit(x,y);
+        xs[y].insert(x);
+        ys[x].insert(y);
+    }
+    int ans=0;
+    for(int x=0;x<=100000;++x){
+        auto it=ys[x].begin();
+        while(it!=ys[x].end()){
+            int y=*it;
+            int count_up=ys[x].size();
+            int count_rg=xs[y].size();
+            if(count_up<count_rg){
+                for(auto iit=next(it);iit!=ys[x].end();++iit){
+                    int dis=*iit-y;
+                    if(ys[x+dis].find(y)!=ys[x+dis].end() && ys[x+dis].find(y+dis)!=ys[x+dis].end()){
+                        ++ans;
+                    }
+                }
+            }
+            else{
+                for(auto iit=next(xs[y].begin());iit!=xs[y].end();++iit){
+                    int dis=*iit-x;
+                    if(xs[y+dis].find(x)!=xs[y+dis].end() && xs[y+dis].find(x+dis)!=xs[y+dis].end()){
+                        ++ans;
+                    }
+                }
+            }
+            it=ys[x].erase(it);
+            xs[y].erase(xs[y].begin());
+        }
+    }
+    pit(ans);
+}

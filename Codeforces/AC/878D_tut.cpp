@@ -3,10 +3,8 @@ using namespace std;
 
 int crea[15][100005];
 bitset<12> chai[15][100005];
-bitset<100005> meow[1<<12];
-// bitset<12> meow[100444][1<<12]; // i-th creature, type (1<<12) 
-// int smp[15][1<<12]; // i-th bit, pattern z map to index ?
-// int idx[15][100005]; // i-th bit, j-th charac's sample
+// bitset<100005> meow[1<<12];
+bitset<(1<<12)> meow[100005];
 int type[15][100005];
 vector<int> num[100005];
 
@@ -34,10 +32,16 @@ int main(){
             // if(smp[z][v])smp[z][v]=j;
             // idx[z][j]=prv[z][v];
             type[z][j]=v;
+            // cout<<"type of bit "<<z<<" of cha "<<j<<" type "<<v<<endl;
         }
     }
     for(int z=0;z<(1<<k);++z){
-        for(int i=0;i<k;++i)meow[z][i+1]=!!(z&(1<<i));
+        for(int i=0;i<k;++i){
+            // meow[z][i+1]=!!(z&(1<<i));
+            meow[i+1][z]=!!(z&(1<<i));
+            // cout<<"meow["<<z<<"]["<<i+1<<"]="<<meow[z][i+1]<<endl;
+        }
+        // cout<<"meow["<<z<<"]="<<meow[z]<<endl;
     }
     int ptr=k;
 
@@ -45,12 +49,11 @@ int main(){
         int t,x,y; cin>>t>>x>>y;
         if(t==1){
             ++ptr;
-            for(int i=0;i<(1<<k);++i)meow[i][ptr]=meow[i][x]|meow[i][y];
+            meow[ptr]=meow[x]|meow[y];
         }
         else if(t==2){
             ++ptr;
-            for(int i=0;i<(1<<k);++i)meow[i][ptr]=meow[i][x]&meow[i][y];
-            
+            meow[ptr]=meow[x]&meow[y];
         }
         else{
             int ans=0;
