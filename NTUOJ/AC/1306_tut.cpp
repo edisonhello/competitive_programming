@@ -40,7 +40,6 @@ bool inside(pt l,pt r,pt p){
     return 0;
 }
 
-
 struct seg{
     pt a,b;
     seg(pt a=pt(),pt b=pt()):a(a),b(b){}
@@ -60,18 +59,26 @@ bool banana(seg &a,seg &b){
     return dfs(a,b.a,b.b) && dfs(b,a.a,a.b);
 }
 
-pt p[100005];
-int id[100005];
+pt po[100005];
 
 int32_t main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
-    int n; cin>>n;
-    for(int i=1;i<=n;++i)cin>>p[i].x>>p[i].y; p[n+1]=p[1];
-    for(int i=1;i<=n;++i)id[i]=i;
-    sort(id+1,id+1+n,[&](const int &a,const int &b){return tie(p[a].x,p[a].y)<tie(p[b].x,p[b].y);});
-    int prvx=-1000000000,msum=0;
-    double ans=0;
-    for(int i=0;i<n;++i){
-        if(i<n-1 && i+
+    int n; while(cin>>n){
+        for(int i=0;i<n;++i)cin>>po[i].x>>po[i].y;
+        po[n]=po[0];
+        int tot=0;
+        for(int i=0;i<n;++i)tot+=po[i+1]^po[i];
+        tot=abs(tot);
+        tot<<=1;
+        for(int i=0;i<n;++i){
+            if(po[i].x==po[i+1].x){
+                tot-=abs(po[i].y-po[i+1].y);
+            }
+            else if(po[i].y==po[i+1].y){
+                tot-=abs(po[i].x-po[i+1].x);
+            }
+        }
+        cout<<(tot>>1)<<"."<<(tot&1?"5":"0")<<'\n';
     }
+    
 }

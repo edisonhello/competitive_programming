@@ -6,21 +6,6 @@ vector<pair<int,int>> crs;
 int pcnt[200005],scnt[200005];
 long long pre[200005],suf[200005],ans=1ll<<60;
 
-void meow(int l,int r,int tl,int tr){
-    if(r<l)return;
-    // cout<<l<<" "<<r<<" "<<tl<<" "<<tr<<endl;
-    int m=(l+r)>>1,tt=-1;
-    long long mn=1ll<<60,val;
-    for(int i=max(m,tl);i<=tr;++i){
-        val=pre[m]+suf[i];
-        if(val<mn)mn=val,tt=i;
-    }
-    // assert(tt!=-1);
-    ans=min(ans,mn);
-    meow(l,m-1,tl,tt);
-    meow(m+1,r,tt,tr);
-}
-
 int main(){
     ios_base::sync_with_stdio(0); cin.tie(0);
     int n,k; cin>>k>>n;
@@ -58,7 +43,11 @@ int main(){
         cout<<ans+delta<<endl;
     }
     else{
-        meow(0,pos.size()-1,0,pos.size()-1);
+        for(int i=0;i<pos.size();++i){
+            for(int j=i;j<pos.size();++j){
+                ans=min(ans,pre[i]+suf[j]);
+            }
+        }
         cout<<ans+delta<<endl;
     }
 }

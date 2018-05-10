@@ -2,7 +2,7 @@
 // #define fread fread_unlocked
 // #define fwrite fwrite_unlocked
 inline char gtx(){
-    const int N=1048576;
+    const int N=4096;
     static char __buffer[N];
     static char *__p=__buffer,*__end=__buffer;
     if(__p==__end){
@@ -23,7 +23,7 @@ template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
 struct outputter{
-    char _buffer[1048608],*_ptr=_buffer,*_end=_buffer+1048576;
+    char _buffer[4112],*_ptr=_buffer,*_end=_buffer+4096;
     template<typename T>inline void write(T x,char endc='\n'){
         if(x<0)*_ptr='-',++_ptr,x=-x; if(!x)*_ptr='0',++_ptr;
         char *s=_ptr,c; int t;
