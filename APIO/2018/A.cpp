@@ -1,0 +1,260 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define time iooiioioioio
+#define MAX 100000000
+#define DEBUG 1
+
+struct func{
+    int a,b;
+    func(int a=0,int b=0):a(a),b(b){}
+    int get(int x)const{return a*x+b;}
+};
+
+int now_ref_point;
+bool comp(const func &a,const func &b){
+    return make_tuple(a.get(now_ref_point),a.a,a.b)>make_tuple(b.get(now_ref_point),b.a,b.b);
+}
+
+struct node{
+    node *l,*r;
+    int ref_point;
+    multiset<func,decltype(&comp)> funcs{comp};
+    node():l(0),r(0),ref_point(0){}
+} *root;
+node *getnode(){
+    return new node();
+}
+
+#define mid ((l+r)>>1)
+void add_func(node *&now,int l,int r,int ml,int mr,func &ref_func){
+    if(r<ml || mr<l)return;
+    if(!now)now=getnode();
+    if(l==r){
+        now_ref_point=l;
+        now->funcs.insert(ref_func);
+        return;
+    }
+    if(l<=ml&&mr<=r){
+        // multiset<func,decltype(&comp)>::iterator it1,it2;
+        now_ref_point=l;
+        now->funcs.insert(ref_func);
+        it1=now->funcs.upper_bound(ref_func);
+        now->funcs.erase(ref_func);
+        now_ref_point=r;
+        now->funcs.insert(ref_func);
+        it2=now->funcs.upper_bound(ref_func);
+        if(it1!=it2){
+            now->funcs.erase(ref_func);
+            add_func(now->l,l,mid,ml,mr,ref_func);
+            add_func(now->r,mid+1,r,ml,mr,ref_func);
+        }
+        else;
+        return;
+    }
+    add_func(now->l,l,mid,ml,mr,ref_func);
+    add_func(now->r,mid+1,r,ml,mr,ref_func);
+}
+void remove_func(node *&now,int l,int r,int ml,int mr,func &ref_func){
+    if(r<ml || mr<l)return;
+    assert(now);
+    if(l<=ml&&mr<=r){
+        now_ref_point=l;
+        auto it=now->funcs.find(ref_func);
+        if(it!=now->funcs.end()){
+            now->funcs.erase(it);
+        }
+        else{
+            remove_func(now->l,l,mid,ml,mr,ref_func);
+            remove_func(now->r,mid+1,r,ml,mr,ref_func);
+        }
+    }
+    remove_func(now->l,l,mid,ml,mr,ref_func);
+    remove_func(now->r,mid+1,r,ml,mr,ref_func);
+}
+int query(node *now,int l,int r,int x){
+    if(!now)return 0;
+    if(x<l || r<x)return 0;
+    int rt=0;
+    if(x<=mid)rt=max(rt,query(now->l,l,mid,x));
+    else rt=max(rt,query(now->r,mid+1,r,x));
+    if(now->funcs.size())rt=max(rt,now->funcs.begin()->get(x));
+    return rt;
+}
+#undef mid
+
+multiset<int> pos[300005];
+
+struct E{
+    int time,pos,type,oc;
+};
+vector<E> es;
+struct Q{
+    int pos,time,id;
+};
+vector<Q> qs;
+
+int ans[300005],cnt_type;
+
+void do_event(E e){
+    if(DEBUG)cout<<"processing event: "<<e.time<<" "<<e.pos<<" "<<e.type<<" "<<e.oc<<endl;
+    if(e.oc==1){
+        if(pos[e.type].empty())++cnt_type;
+        auto it=pos[e.type].lower_bound(e.pos);
+        if(it!=pos[e.type].begin()){
+            if(it!=pos[e.type].end()){
+                int nxpos=*it; --it;
+                int pvpos=*it; ++it;
+                int mid=(nxpos+pvpos)>>1;
+                func ref_func(1,-pvpos);
+                remove_func(root,1,MAX,pvpos,mid,ref_func);
+            }
+            else{
+                --it;
+                int pvpos=*it; ++it;
+                func ref_func(1,-pvpos);
+                cout<<"call remove func "<<pvpos<<" to "<<MAX<<endl;
+                remove_func(root,1,MAX,pvpos,MAX,ref_func);
+            }
+        }
+        if(it!=pos[e.type].end()){
+            if(it!=pos[e.type].begin()){
+                int nxpos=*it; --it;
+                int pvpos=*it; ++it;
+                int mid=(nxpos+pvpos)>>1;
+                func ref_func(-1,nxpos);
+                remove_func(root,1,MAX,mid+1,nxpos,ref_func);
+            }
+            else{
+                int nxpos=*it;
+                func ref_func(-1,nxpos);
+                remove_func(root,1,MAX,1,nxpos,ref_func);
+            }
+        }
+        cout<<"removed old segments"<<endl;
+        pos[e.type].insert(e.pos);
+        it=pos[e.type].find(e.pos);
+        if(it!=pos[e.type].begin()){
+            --it;
+            int pvpos=*it; ++it;
+            int mid=(pvpos+e.pos)>>1;
+            func ref_func(1,-pvpos);
+            add_func(root,1,MAX,pvpos,mid,ref_func);
+            ref_func=func(-1,e.pos);
+            add_func(root,1,MAX,mid+1,e.pos,ref_func);
+        }
+        else{
+            func ref_func(-1,e.pos);
+            cout<<"call add func "<<1<<" to "<<e.pos<<endl;
+            add_func(root,1,MAX,1,e.pos,ref_func);
+            cout<<"called finished"<<endl;
+        }
+        if(it!=--pos[e.type].end()){
+            ++it;
+            int nxpos=*it; --it;
+            int mid=(e.pos+nxpos)>>1;
+            func ref_func(1,-e.pos);
+            add_func(root,1,MAX,e.pos,mid,ref_func);
+            ref_func=func(-1,nxpos);
+            add_func(root,1,MAX,mid+1,nxpos,ref_func);
+        }
+        else{
+            func ref_func(1,-e.pos);
+            cout<<"call add func "<<e.pos<<" to "<<MAX<<endl;
+            add_func(root,1,MAX,e.pos,MAX,ref_func);
+            cout<<"called finished"<<endl;
+        }
+    }
+    else{
+        auto it=pos[e.type].find(e.pos);
+        if(it!=pos[e.type].begin()){
+            --it;
+            int pvpos=*it; ++it;
+            int mid=(pvpos+e.pos)>>1;
+            func ref_func(1,-pvpos);
+            remove_func(root,1,MAX,pvpos,mid,ref_func);
+            ref_func=func(-1,e.pos);
+            remove_func(root,1,MAX,mid+1,e.pos,ref_func);
+        }
+        else{
+            func ref_func(-1,e.pos);
+            remove_func(root,1,MAX,1,e.pos,ref_func);
+        }
+        if(it!=--pos[e.type].end()){
+            ++it;
+            int nxpos=*it; --it;
+            int mid=(e.pos+nxpos)>>1;
+            func ref_func(1,-e.pos);
+            remove_func(root,1,MAX,e.pos,mid,ref_func);
+            ref_func=func(-1,nxpos);
+            remove_func(root,1,MAX,mid+1,nxpos,ref_func);
+        }
+        else{
+            func ref_func(1,-e.pos);
+            remove_func(root,1,MAX,e.pos,MAX,ref_func);
+        }
+        pos[e.type].erase(e.pos);
+        it=pos[e.type].lower_bound(e.pos);
+        if(it!=pos[e.type].begin()){
+            if(it!=pos[e.type].end()){
+                int nxpos=*it; --it;
+                int pvpos=*it; ++it;
+                int mid=(nxpos+pvpos)>>1;
+                func ref_func(1,-pvpos);
+                add_func(root,1,MAX,pvpos,mid,ref_func);
+            }
+            else{
+                --it;
+                int pvpos=*it; ++it;
+                func ref_func(1,-pvpos);
+                add_func(root,1,MAX,pvpos,MAX,ref_func);
+            }
+        }
+        if(it!=pos[e.type].end()){
+            if(it!=pos[e.type].begin()){
+                int nxpos=*it; --it;
+                int pvpos=*it; ++it;
+                int mid=(nxpos+pvpos)>>1;
+                func ref_func(-1,nxpos);
+                add_func(root,1,MAX,mid+1,nxpos,ref_func);
+            }
+            else{
+                int nxpos=*it;
+                func ref_func(-1,nxpos);
+                add_func(root,1,MAX,1,nxpos,ref_func);
+            }
+        }
+        if(pos[e.type].empty())--cnt_type;
+    }
+}
+int getans(int pos){
+    return query(root,1,MAX,pos);
+}
+
+int main(){
+    ios_base::sync_with_stdio(0); cin.tie(0);
+    int n,k,qc; cin>>n>>k>>qc;
+    E e;
+    for(int i=0;i<n;++i){
+        int x,t,a,b; cin>>x>>t>>a>>b;
+        e.time=a; e.pos=x; e.type=t; e.oc=1;
+        es.push_back(e);
+        e.time=b+1; e.pos=x; e.type=t; e.oc=-1;
+        es.push_back(e);
+    }
+    Q q;
+    for(int i=0;i<qc;++i){
+        int l,y; cin>>l>>y;
+        q.pos=l; q.time=y; q.id=i;
+        qs.push_back(q);
+    }
+    sort(es.begin(),es.end(),[&](const E &a,const E &b){return a.time<b.time;});
+    sort(qs.begin(),qs.end(),[&](const Q &a,const Q &b){return a.time<b.time;});
+    vector<E>::iterator it=es.begin();
+    for(Q &q:qs){
+        while(it!=es.end() && it->time<=q.time)do_event(*it),++it;
+        if(cnt_type<k)ans[q.id]=-1;
+        else ans[q.id]=getans(q.pos);
+    }
+    for(int i=0;i<qc;++i)cout<<ans[i]<<'\n';
+}
+
