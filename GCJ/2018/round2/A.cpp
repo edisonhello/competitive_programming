@@ -22,8 +22,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<functional>
-#include<complex>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -90,6 +88,58 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[111];
+int to[111];
+char mp[111][111];
+
 int main(){
     CPPinput;
+    int ts,ks=0; cin>>ts; while(ts--){
+        cout<<"Case #"<<(++ks)<<": ";
+        int c; cin>>c;
+        for(int i=1;i<=c;++i)cin>>a[i];
+        if(a[1]==0 || a[c]==0){
+            cout<<"IMPOSSIBLE"<<endl;
+            continue;
+        }
+        to[1]=1; to[c]=c;
+        --a[1]; --a[c];
+        int ptr=1;
+        for(int i=2;i<c;++i){
+            while(a[ptr]==0)++ptr;
+            to[i]=ptr;
+            --a[ptr];
+        }
+        if(DEBUG && 0){
+            cout<<"to: ";
+            for(int i=1;i<=c;++i)cout<<to[i]<<" ";
+            cout<<endl;
+        }
+        memset(mp,0,sizeof(mp));
+        int dis=0;
+        for(int i=1;i<=c;++i)dis=max(dis,abs(to[i]-i));
+        cout<<dis+1<<endl;
+        int r=dis+1;
+        for(int i=1;i<=c;++i){
+            if(to[i]==i)continue;
+            if(to[i]<i){
+                for(int j=i;j>to[i];--j){
+                    mp[1+i-j][j]='/';
+                }
+            }
+            else{
+                for(int j=i;j<to[i];++j){
+                    mp[1+j-i][j]='\\';
+                }
+            }
+        }
+        for(int i=1;i<=r;++i){
+            for(int j=1;j<=c;++j){
+                if(!mp[i][j])cout<<".";
+                else cout<<mp[i][j];
+            }
+            cout<<endl;
+        }
+    }
+
 }

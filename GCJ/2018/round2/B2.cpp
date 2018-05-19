@@ -22,8 +22,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<functional>
-#include<complex>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -90,6 +88,53 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct status{
+    int r,b;
+    pair<int,int> last;
+};
+bool operator<(const status &a,const status &b){
+    return tie(a.r,a.b,a.last)<tie(b.r,b.b,b.last);
+}
+
+map<status,int> ans;
+int CNT;
+int go(int r,int b,pair<int,int> last){
+    status now{r,b,last};
+    auto it=ans.find(now);
+    if(it!=ans.end())return it->second;
+    ++CNT;
+    int &rt=ans[now]; rt=0;
+    auto move=[&](pair<int,int> &last)->void{
+        if(last.second==0){ last.second=last.first+1; last.first=0; }
+        else --last.second,++last.first;
+    };
+    move(last);
+    int most=last.first+last.second+1;
+    while(last.first+last.second<=r+b && most--){
+        if(r>=last.first && b>=last.second){
+            rt=max(rt,go(r-last.first,b-last.second,last)+1);
+        }
+        move(last);
+    }
+    return rt;
+}
+
+int dp[505][505];
+
 int main(){
     CPPinput;
+    for(int di=0;di<=35;++di)for(int dj=0;dj<=35;++dj){
+        if(!di && !dj)continue;
+        for(int i=500;i>=di;--i){
+            for(int j=500;j>=dj;--j){
+                dp[i][j]=max(dp[i][j],dp[i-di][j-dj]+1);
+            }
+        }
+    }
+    int ts,ks=0; cin>>ts; while(ts--){
+        cout<<"Case #"<<(++ks)<<": ";
+        int r,b; cin>>r>>b;
+        cout<<dp[r][b]<<endl;
+        // cout<<ans[status{r,b,pair<int,int>(0,0)}]<<endl;
+    }
 }

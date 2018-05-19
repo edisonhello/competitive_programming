@@ -22,8 +22,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<functional>
-#include<complex>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -86,10 +84,24 @@ using namespace std;
 
 void JIZZ(string output=""){cout<<output; exit(0);}
 
-const ld PI=3.14159265358979323846264338327950288;
+const ld PI=3.14159265358979323846264338327950289;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; cin>>n; string s; cin>>s;
+    for(int i=1;i<n;++i){
+        if(s[i]=='1' && s[i-1]=='1'){
+            cout<<"No"<<endl;
+            exit(0);
+        }
+    }
+    for(int i=0;i<n;++i){
+        if(s[i]=='0' && (i==0 || s[i-1]=='0') && (i==n-1 || s[i+1]=='0')){
+            cout<<"No"<<endl;
+            exit(0);
+        }
+    }
+    cout<<"Yes"<<endl;
 }

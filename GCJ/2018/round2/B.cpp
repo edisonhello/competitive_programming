@@ -22,8 +22,6 @@
 #include<bitset>
 #include<vector>
 #include<utility>
-#include<functional>
-#include<complex>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -90,6 +88,61 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct status{
+    int r,b;
+    pair<int,int> last;
+};
+bool operator<(const status &a,const status &b){
+    return tie(a.r,a.b,a.last)<tie(b.r,b.b,b.last);
+}
+
+map<status,int> ans;
+int CNT;
+int go(int r,int b,pair<int,int> last){
+    status now{r,b,last};
+    auto it=ans.find(now);
+    if(it!=ans.end())return it->second;
+    ++CNT;
+    int &rt=ans[now]; rt=0;
+    auto move=[&](pair<int,int> &last)->void{
+        if(last.second==0){ last.second=last.first+1; last.first=0; }
+        else --last.second,++last.first;
+    };
+    move(last);
+    int most=last.first+last.second+1;
+    while(last.first+last.second<=r+b && most--){
+        if(r>=last.first && b>=last.second){
+            rt=max(rt,go(r-last.first,b-last.second,last)+1);
+        }
+        move(last);
+    }
+    return rt;
+}
+
+int dp[500][500];
+
 int main(){
     CPPinput;
+    // printf("int ans[505][505] = {\n");
+    /* for(int i=0;i<=50;++i){
+        // printf("    { ");
+        for(int j=0;j<=i;++j){
+            int rt=go(i,j,pair<int,int>(0,0));
+            // printf("ans[%d][%d]=%d;\n",i,j,ans[{i,j,pair<int,int>(0,0)}]);
+            printf("%2d ",rt);
+            // cout<<rt<<" ";
+        }
+        printf("\n");
+        // printf(" }\n");
+    }
+    // printf("};\n");
+    return 0;
+    cout<<go(100,100,pair<int,int>(0,0))<<endl;
+    return 0; */
+    int ts,ks=0; cin>>ts; while(ts--){
+        cout<<"Case #"<<(++ks)<<": ";
+        int r,b; cin>>r>>b;
+        cout<<go(r,b,pair<int,int>(0,0))<<endl;
+        // cout<<ans[status{r,b,pair<int,int>(0,0)}]<<endl;
+    }
 }

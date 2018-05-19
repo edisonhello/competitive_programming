@@ -90,6 +90,62 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[10][10],aa[100][100];
+int dx[4]={0,1,0,-1};
+int dy[4]={1,0,-1,0};
+bitset<4> v[4];
+
 int main(){
     CPPinput;
+    int ts,ks=0; cin>>ts; while(ts--){
+        int n,m; cin>>n>>m;
+        for(int i=0;i<n;++i)for(int j=0;j<m;++j){
+            char c; cin>>c;
+            a[i][j]=c;
+            for(int ii=i*8;ii<(i+1)*8;++ii)for(int jj=j*8;jj<=(j+1)*8;++jj)aa[ii][jj]=a[i][j];
+        }
+        int tot=n*m,ans=1;
+        for(int i=1;i<(1<<tot);++i){
+            PDE(i);
+            queue<pair<int,int>> q;
+            for(int z=0;z<4;++z)v[z].reset();
+            for(int j=0;j<tot && q.empty();++j)if(i&(1<<j))q.emplace(j/m,j%m),v[j/m][j%m]=1;
+            while(q.size()){
+                auto p=q.front(); q.pop();
+                PDE(p);
+                for(int d=0;d<4;++d){
+                    int nx=p.first+dx[d],ny=p.second+dy[d];
+                    if(nx>=0 && nx<n && ny>=0 && ny<m); else continue;
+                    if(!(i&(1<<(nx*m+ny))))continue;
+                    if(v[nx][ny])continue;
+                    v[nx][ny]=1;
+                    q.emplace(nx,ny);
+                }
+            }
+            int vc=0,bc=0;
+            for(int i=0;i<n;++i)for(int j=0;j<m;++j)if(v[i][j])++vc;
+            for(int j=0;j<tot;++j)if((1<<j)&i)++bc;
+            PDE(vc,bc);
+            if(vc!=bc)continue;
+            int z=i;
+            bool ok=0;
+            for(int i=0;i<n*8-4;++i){
+                for(int j=0;j<m*8-4;++j){
+                    bool err=0;
+                    for(int ii=0;ii<n;++ii){
+                        for(int jj=0;jj<m;++jj){
+                            if(!(z&(1<<(ii*m+jj))))continue;
+                            if(aa[i+ii][j+jj]!=a[ii][jj])err=1;
+                        }
+                    }
+                    if(!err){
+                        ok=1;
+                        PDE(i,j);
+                    }
+                }
+            }
+            if(ok)ans=max(ans,bc);
+        }
+        cout<<"Case #"<<(++ks)<<": "<<ans<<endl;
+    }
 }

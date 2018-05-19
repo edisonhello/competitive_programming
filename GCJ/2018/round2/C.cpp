@@ -23,7 +23,6 @@
 #include<vector>
 #include<utility>
 #include<functional>
-#include<complex>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -90,6 +89,47 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int mp[104][104],match[104];
+vector<int> G[104];
+bitset<104> v;
+
 int main(){
     CPPinput;
+    int ts,ks=0; cin>>ts; while(ts--){
+        int n; cin>>n;
+        for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)cin>>mp[i][j];
+        int ans=0;
+        for(int z=-n;z<=n;++z){
+            for(int i=1;i<=n;++i)G[i].clear();
+            memset(match,-1,sizeof(match));
+            int tot=0;
+            for(int i=1;i<=n;++i)for(int j=1;j<=n;++j){
+                if(mp[i][j]==z){
+                    G[i].push_back(j);
+                    ++tot;
+                }
+            }
+            ans+=tot-[&]()->int{
+                int ans=0;
+                function<int(int)> dfs=[&](int now)->int{
+                    for(int i:G[now]){
+                        if(v[i])continue;
+                        v[i]=1;
+                        if(match[i]==-1 || dfs(match[i])){
+                            match[i]=now;
+                            return 1;
+                        }
+                    }
+                    return 0;
+                };
+                for(int i=1;i<=n;++i){
+                    v.reset();
+                    if(dfs(i))++ans;
+                }
+                PDE(z,ans,tot);
+                return ans;
+            }();
+        }
+        cout<<"Case #"<<(++ks)<<": "<<ans<<endl;
+    }
 }
