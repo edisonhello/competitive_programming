@@ -1,14 +1,16 @@
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmisleading-indentation"
 // #define fread fread_unlocked
 // #define fwrite fwrite_unlocked
 inline char gtx(){
     const int N=4096;
-    static char __buffer[N];
-    static char *__p=__buffer,*__end=__buffer;
-    if(__p==__end){
-        if((__end=__buffer+fread(__buffer,1,N,stdin))==__buffer)return EOF;
-        __p=__buffer;
-    } return *__p++;
+    static char buffer[N];
+    static char *p=buffer,*end=buffer;
+    if(p==end){
+        if((end=buffer+fread(buffer,1,N,stdin))==buffer)return EOF;
+        p=buffer;
+    } return *p++;
 }
 
 template<typename T>
@@ -23,14 +25,14 @@ template<typename T,typename ...Args>
 inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
 struct outputter{
-    char _buffer[4112],*_ptr=_buffer,*_end=_buffer+4096;
+    char buffer[4112],*ptr=buffer,*end=buffer+4096;
     template<typename T>inline void write(T x,char endc='\n'){
-        if(x<0)*_ptr='-',++_ptr,x=-x; if(!x)*_ptr='0',++_ptr;
-        char *s=_ptr,c; int t;
-        while(x){t=x/10; c=x-10*t+'0'; *_ptr=c,++_ptr,x=t;}
-        char *f=_ptr-1; while(s<f)swap(*s,*f),++s,--f;
-        if(_ptr>_end)fwrite(_buffer,sizeof(char),_ptr-_buffer,stdout),_ptr=_buffer;
-        *_ptr=endc,++_ptr;
+        if(x<0)*ptr='-',++ptr,x=-x; if(!x)*ptr='0',++ptr;
+        char *s=ptr,c; int t;
+        while(x){t=x/10; c=x-10*t+'0'; *ptr=c,++ptr,x=t;}
+        char *f=ptr-1; while(s<f)swap(*s,*f),++s,--f;
+        if(ptr>end)fwrite(buffer,sizeof(char),ptr-buffer,stdout),ptr=buffer;
+        *ptr=endc,++ptr;
     }
 
     template<typename T>
@@ -40,5 +42,6 @@ struct outputter{
 
     template<typename ...Args> inline void operator()(Args ...args){ output(args...); }
     outputter(){}
-    ~outputter(){ fwrite(_buffer,sizeof(char),_ptr-_buffer,stdout); }
+    ~outputter(){ fwrite(buffer,sizeof(char),ptr-buffer,stdout); }
 } pit;
+#pragma GCC diagnostic pop
