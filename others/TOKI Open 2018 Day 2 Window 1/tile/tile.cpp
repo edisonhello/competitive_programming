@@ -91,6 +91,53 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
-    CPPinput;
+#ifndef WEAK
+#include "tile.h"
+#endif
+
+int n,k,q,m,a[300005];
+int st[20][300005];
+
+void init(){
+    sort(a,a+m);
+    
+    a[m]=1e9+7122;
+    for(int i=0;i<m;++i){
+        st[0][i]=lower_bound(a,a+m,a[i]+k)-a;
+        PDE(i,st[0][i]);
+    }
+    for(int i=1;i<20;++i){
+        for(int j=0;j<m;++j){
+            st[i][j]=st[i-1][st[i-1][j]];
+            if(st[i-1][j]==m)st[i][j]=m;
+        }
+    }
 }
+int getans(int L,int R){
+    int now=lower_bound(a,a+m,L)-a;
+    int ans=0;
+    for(int i=19;i>=0;--i){
+        if(now==m)break;
+        if(a[st[i][now]]>R)continue;
+        PDE(L,R,st[i][now]);
+        now=st[i][now];
+        ans+=1<<i;
+    }
+    return ans+int(a[now]<=R);
+}
+
+void init(int N,int K,int Q,int M,vector<int> A){ tie(n,k,q,m)=tie(N,K,Q,M); copy(A.begin(),A.end(),a); init(); }
+int getNumberOfSpecialTiles(int L,int R){ return getans(L,R); }
+
+#ifdef WEAK
+int main(){
+    int n,k,q,m; cin>>n>>k>>q>>m;
+    vector<int> a(m);
+    for(int &i:a)cin>>i;
+    init(n,k,q,m,a);
+    while(q--){
+        int l,r; cin>>l>>r;
+        cout<<"Answer: "<<getans(l,r)<<endl;
+    }
+}
+#endif

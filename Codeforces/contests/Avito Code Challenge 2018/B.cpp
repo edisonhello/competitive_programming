@@ -93,4 +93,18 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    ll ans=0;
+    map<int,int> rec;
+    int n; cin>>n; while(n--){
+        int a,b; cin>>a>>b;
+        rec[a]=b;
+        ans+=b;
+    }
+    cin>>n; while(n--){
+        int a,b; cin>>a>>b;
+        if(rec[a]>b)continue;
+        ans-=rec[a];
+        ans+=b;
+    }
+    cout<<ans<<endl;
 }

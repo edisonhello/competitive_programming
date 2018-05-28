@@ -91,6 +91,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<int> G[104];
+int match[104];
+bitset<104> v;
+
+bool dfs(int now){
+    for(int i:G[now]){
+        if(v[i])continue;
+        v[i]=1;
+        if(match[i]==-1 || dfs(match[i])){
+            match[i]=now;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int main(){
     CPPinput;
+    int n,m,k; while(cin>>n,n){
+        cin>>m>>k;
+        for(int i=0;i<104;++i)G[i].clear();
+        while(k--){
+            int u,v; 
+            cin>>u>>u>>v;
+            G[u].pb(v);
+        }
+        int ans=0;
+        MS(match,-1);
+        for(int i=1;i<=n;++i){
+            v.reset();
+            if(dfs(i))++ans;
+        }
+        cout<<ans<<endl;
+    }
 }

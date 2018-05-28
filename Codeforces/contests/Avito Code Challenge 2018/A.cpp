@@ -93,4 +93,19 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    string s; cin>>s;
+    bool ispp=1;
+    for(int i=0;i<s.size();++i){
+        if(s[i]!=s[s.size()-1-i])ispp=0;
+    }
+    if(!ispp){
+        cout<<s.size()<<endl;
+        exit(0);
+    }
+    bool same=1;
+    for(int i=1;i<s.size();++i){
+        if(s[i]!=s[i-1])same=0;
+    }
+    if(same)cout<<0<<endl;
+    else cout<<s.size()-1<<endl;
 }

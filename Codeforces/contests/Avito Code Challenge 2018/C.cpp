@@ -91,6 +91,32 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+vector<int> G[100005];
+int cnt[100005];
+
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    for(int i=1;i<=n;++i)++cnt[G[i].size()];
+    for(int i=1;i<=n;++i){
+        --cnt[G[i].size()];
+        if(cnt[1]+cnt[2]==n-1){
+            Yes;
+            cout<<cnt[1]<<'\n';
+            for(int j=1;j<=n;++j){
+                if(j==i)continue;
+                if(G[j].size()==1u){
+                    cout<<i<<" "<<j<<'\n';
+                }
+            }
+            exit(0);
+        }
+        ++cnt[G[i].size()];
+    }
+    No;
 }

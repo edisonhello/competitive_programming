@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -91,6 +90,22 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+bitset<10005> bl;
+
 int main(){
     CPPinput;
+    int n; cin>>n;
+    while(n--){
+        int s,e; cin>>s>>e;
+        for(int i=s;i<=e;++i)bl[i]=1;
+    }
+    int pos,dir; cin>>pos>>dir;
+    if(dir==1)pos-=425;
+    else pos+=425;
+    if(pos<0)pos=0;
+    if(pos>10000)pos=10000;
+    for(int d=0;;++d){
+        if(pos+d<=10000 && !bl[pos+d])exit((cout<<pos+d<<endl,0));
+        if(pos-d>=0 && !bl[pos-d])exit((cout<<pos-d<<endl,0));
+    }
 }

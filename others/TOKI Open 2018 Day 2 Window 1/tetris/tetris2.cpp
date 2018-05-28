@@ -91,6 +91,64 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
-    CPPinput;
+#include "tetris.h"
+
+vint realgo(int n,string s){
+    for(int i=0;(1<<n);++i){
+        vint rt,state;
+        for(int j=0;j<n;++j){
+            int o=(!!(i&(1<<j)))*2+1;
+            rt.pb(o);
+            if(s[j]=='T'){
+                if(o==1){
+                    if(state.size() && state.back()==2)state.back()=1;
+                    else state.pb(1),state.pb(1);
+                }
+                else{
+                    if(state.size() && state.back()==1)state.back()=2;
+                    else state.pb(2),state.pb(2);
+                }
+            }
+            if(s[j]=='J'){
+                if(o==1){
+                    int del=0;
+                    for(int i=0;i<2;++i){
+                        if(state.size() && state.back()==2)state.pop_back(),++del;
+                        else break;
+                    }
+                    for(;del<2;++del){
+                        state.pb(1);
+                    }
+                }
+                else state.pb(2),state.pb(2);
+            }
+            if(s[j]=='L'){
+                if(o==3){
+                    int del=0;
+                    for(int i=0;i<2;++i){
+                        if(state.size() && state.back()==1)state.pop_back(),++del;
+                        else break;
+                    }
+                    for(;del<2;++del){
+                        state.pb(2);
+                    }
+                }
+                else state.pb(1),state.pb(1);
+            }
+            if(s[j]=='S'){
+                if(state.size() && state.back()==1);
+                else state.pb(2),state.pb(1);
+            }
+            if(s[j]=='Z'){
+                if(state.size() && state.back()==2);
+                else state.pb(1),state.pb(2);
+            }
+        }
+        if(state.empty())return rt;
+    }
+    return vint();
+}
+
+vint arrangeTetrominoes(int n, string s, int q) {
+    return realgo(n,s);
 }

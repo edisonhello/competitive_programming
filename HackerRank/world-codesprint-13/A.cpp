@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -91,6 +90,16 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+bitset<111> u;
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i){
+        int t; cin>>t;
+        u[t]=1;
+    }
+    for(int i=1;i<=n;++i){
+        if(!u[i])cout<<i<<" ";
+    }
+    cout<<endl;
 }

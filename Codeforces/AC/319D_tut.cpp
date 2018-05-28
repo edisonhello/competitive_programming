@@ -1,4 +1,4 @@
-// #pragma GCC optimize("no-stack-protector")
+#pragma GCC optimize("O3")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 // #pragma vector temporal
 // #pragma simd
@@ -90,7 +90,80 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
+const ll p=47017;
+
+ll hsh[50005],ppp[50005];
+
+inline ll ghh(int L,int R){
+    return (hsh[R]-(L?hsh[L-1]:0)+mod)*ppp[50004-R]%mod;
+}
 
 int main(){
     CPPinput;
+    string s; cin>>s;
+    int n=s.size();
+    ppp[0]=1; for(int i=1;i<50005;++i)ppp[i]=ppp[i-1]*p%mod;
+    hsh[0]=s[0];
+    for(int i=1;i<n;++i)hsh[i]=(hsh[i-1]+s[i]*ppp[i])%mod;
+    auto chk1=[&]()->void{
+        string ss;
+        for(char c:s){
+            if(ss.size() && c==ss.back());
+            else ss+=c;
+        }
+        s=ss;
+        n=s.size();
+        hsh[0]=s[0];
+        for(int i=1;i<n;++i)hsh[i]=(hsh[i-1]+s[i]*ppp[i])%mod;
+        return;
+    };
+    auto chk2=[&]()->void{
+        bool rt=0;
+        string ss;
+        for(char c:s){
+            if(ss.size()>1 && c==ss[ss.size()-2] && ss.back()==ss[ss.size()-3])ss.pop_back();
+            else ss+=c;
+        }
+        s=ss;
+        n=s.size();
+        hsh[0]=s[0];
+        for(int i=1;i<n;++i)hsh[i]=(hsh[i-1]+s[i]*ppp[i])%mod;
+        return;
+    };
+    int len,spos;
+    auto chk=[&]()->int{
+        for(int j=spos+len-1,L,R,fr,bk,mid,jj;j+len<n;j+=len){
+            if(s[j]!=s[j+len])continue;
+            L=0,R=len;
+            jj=j+len;
+            while(R>L){
+                mid=(L+R+1)>>1;
+                if(ghh(j-mid+1,j)==ghh(jj-mid+1,jj))L=mid;
+                else R=mid-1;
+            }
+            fr=L;
+            L=0,R=min(len,n-jj);
+            while(R>L){
+                mid=(L+R+1)>>1;
+                if(ghh(j,j+mid-1)==ghh(jj,jj+mid-1))L=mid;
+                else R=mid-1;
+            }
+            bk=L-1;
+            if(fr+bk>=len){
+                s.erase(j,len);
+                n=s.size();
+                hsh[0]=s[0];
+                for(int i=1;i<n;++i)hsh[i]=(hsh[i-1]+s[i]*ppp[i])%mod;
+                return j-len+1;
+            }
+        }
+        return -1;
+    };
+    chk1();
+    chk2();
+    for(len=3;len<=s.size()>>1;++len){
+        spos=0;
+        while((spos=chk())!=-1);
+    }
+    cout<<s<<endl;
 }

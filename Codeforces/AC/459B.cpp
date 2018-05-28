@@ -93,4 +93,11 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    vector<int> a(n);
+    for(int &i:a)cin>>i;
+    cout<<*max_element(a.begin(),a.end())-*min_element(a.begin(),a.end())<<" "
+        <<(*max_element(a.begin(),a.end())==*min_element(a.begin(),a.end())?
+        (1ll*count(a.begin(),a.end(),*max_element(a.begin(),a.end()))*(count(a.begin(),a.end(),*max_element(a.begin(),a.end()))-1)/2)
+        :(1ll*count(a.begin(),a.end(),*max_element(a.begin(),a.end()))*count(a.begin(),a.end(),*min_element(a.begin(),a.end()))))<<endl;
 }

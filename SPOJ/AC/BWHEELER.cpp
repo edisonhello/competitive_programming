@@ -1,4 +1,4 @@
-// #pragma GCC optimize("no-stack-protector")
+#pragma GCC optimize("Ofast")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 // #pragma vector temporal
 // #pragma simd
@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -89,8 +88,37 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
-const ll mod=1e9+7;
+const ll mod=4000037;
+const ll p=643;
+
+#define next sfjeoi
+int cnt[333],next[1003],prv[1003];
 
 int main(){
     CPPinput;
+    int r; while(cin>>r,r){
+        string s; cin>>s;
+        int n=s.size();
+        if(n==1){
+            cout<<s<<endl;
+            continue;
+        }
+        vector<pair<char,int>> in,head;
+        MS(cnt,0);
+        for(char c:s){
+            in.emplace_back(c,++cnt[c]);
+        }
+        head=in;
+        sort(head.begin(),head.end());
+        for(int i=0;i<n;++i){
+            next[i]=lower_bound(head.begin(),head.end(),in[i])-head.begin();
+        }
+        for(int i=0;i<n;++i)prv[next[i]]=i;
+        int now=r-1;
+        for(int i=0;i<n;++i){
+            cout<<head[now].first;
+            now=prv[now];
+        }
+        cout<<endl;
+    }
 }

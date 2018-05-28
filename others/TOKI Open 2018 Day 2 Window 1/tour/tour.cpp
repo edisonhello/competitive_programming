@@ -91,6 +91,44 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int main(){
-    CPPinput;
+#ifndef WEAK
+#include "tour.h"
+#endif
+
+vector<int> G[305];
+int match[305];
+bitset<305> v;
+
+bool dfs(int now){
+    PDE(now);
+    for(int i:G[now]){
+        if(v[i])continue;
+        v[i]=1;
+        if(match[i]==-1 || dfs(match[i])){
+            match[i]=now;
+            return 1;
+        }
+    }
+    return 0;
 }
+
+int getShortestTour(int n,vector<string> mp){
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            if(mp[i][j]=='.'){
+                G[i].pb(j);
+            }
+        }
+    }
+    memset(match,-1,sizeof(match));
+    int cnt=0;
+    for(int i=0;i<n;++i){
+        v.reset();
+        if(dfs(i))++cnt;
+    }
+    cnt=min(cnt,n-1);
+    return 2*(n-1)-cnt;
+}
+
+#ifdef WEAK
+#endif

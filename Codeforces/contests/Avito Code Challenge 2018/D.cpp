@@ -91,6 +91,32 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+ll dp[55][55];
+ll a[55],pre[55];
+
 int main(){
     CPPinput;
+    int k,n; cin>>n>>k;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=n;++i)pre[i]=pre[i-1]+a[i];
+    ll pat=0;
+    for(int i=55;i>=0;--i){
+        pat^=1ll<<i;
+        memset(dp,0,sizeof(dp));
+        for(int i=1;i<=n;++i)dp[i][1]=pre[i];
+        for(int i=2;i<=k;++i){
+            for(int j=i;j<=n;++j){
+                for(int k=i;k<=j;++k){
+                    ll val=dp[k-1][i-1]&(pre[j]-pre[k-1]);
+                    if((val&pat)<pat)continue;
+                    dp[j][i]=max(dp[j][i],val);
+                    // if(i==4)PDE(j,i,k,dp[j][i],dp[k-1][i-1],pre[j]-pre[k-1]);
+                }
+            }
+        }
+        if(dp[n][k]&(1ll<<i));
+        else pat^=1ll<<i;
+    }
+    PDE(pat,dp[n][k]);
+    cout<<pat<<endl;
 }

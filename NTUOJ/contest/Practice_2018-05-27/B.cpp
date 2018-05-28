@@ -91,6 +91,34 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int a[1004][1004],pre[1004][1004];
+
 int main(){
     CPPinput;
+    int ts; cin>>ts; while(ts--){
+        int n,m; cin>>n>>m;
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=m;++j){
+                cin>>a[i][j];
+                pre[i][j]=a[i][j]+pre[i-1][j]+pre[i][j-1]-pre[i-1][j-1];
+            }
+        }
+        int mx=INT_MIN;
+        int j=1;
+        for(int i=n;i>=1;--i){
+#define get() (pre[n][m]-pre[i-1][m]-pre[n][j-1]+pre[i-1][j-1])
+            int tmp=get();
+            mx=max(mx,tmp);
+            while(j<m){
+                ++j;
+                int nw=get();
+                mx=max(mx,nw);
+                if(nw>=tmp)tmp=nw;
+                else{
+                    --j; break;
+                }
+            }
+        }
+        cout<<mx<<endl;
+    }
 }

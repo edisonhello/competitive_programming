@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -91,6 +90,19 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int pre[100095];
 int main(){
     CPPinput;
+    string s; cin>>s;
+    int n=s.size();
+    s="z"+s;
+    for(int i=1;i<n;++i){
+        if(s[i]==s[i+1])++pre[i];
+    }
+    for(int i=2;i<=n;++i)pre[i]+=pre[i-1];
+    int q; cin>>q; while(q--){
+        int l,r; cin>>l>>r;
+        --r;
+        cout<<pre[r]-pre[l-1]<<'\n';
+    }
 }

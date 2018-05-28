@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -93,4 +92,14 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n,d; cin>>n>>d;
+    int ans=0;
+    int nt=0;
+    for(int i=0;i<n;++i){
+        int t; cin>>t;
+        if(i)nt+=10,ans+=2;
+        nt+=t;
+    }
+    if(nt>d)exit((cout<<-1<<endl,0));
+    cout<<ans+(d-nt)/5<<endl;
 }

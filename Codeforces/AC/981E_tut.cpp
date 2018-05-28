@@ -91,6 +91,50 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+struct node{
+    node *l,*r;
+    vector<int> val;
+} *root;
+
+#define mid ((l+r)>>1)
+void build(node *now,int l,int r){
+    if(l==r)return;
+    build(now->l=new node(),l,mid);
+    build(now->r=new node(),mid+1,r);
+}
+void ins(node *now,int l,int r,int ml,int mr,int x){
+    if(r<ml || mr<l)return;
+    if(ml<=l&&r<=mr){
+        now->val.pb(x);
+        return;
+    }
+    ins(now->l,l,mid,ml,mr,x);
+    ins(now->r,mid+1,r,ml,mr,x);
+}
+bitset<10005> ans;
+void go(node *now,int l,int r,bitset<10005> val){
+    for(int i:now->val){
+        val|=val<<i;
+    }
+    if(l==r){
+        ans|=val;
+        return;
+    }
+    go(now->l,l,mid,val);
+    go(now->r,mid+1,r,val);
+}
+
 int main(){
     CPPinput;
+    int n,q; cin>>n>>q;
+    build(root=new node(),1,n);
+    while(q--){
+        int l,r,x; cin>>l>>r>>x;
+        ins(root,1,n,l,r,x);
+    }
+    go(root,1,n,bitset<10005>(1));
+    ans[0]=0;
+    for(int i=n+1;i<10005;++i)ans[i]=0;
+    cout<<ans.count()<<endl;
+    for(int i=1;i<=n;++i)if(ans[i])cout<<i<<" ";
 }

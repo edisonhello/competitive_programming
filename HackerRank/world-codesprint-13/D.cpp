@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -93,4 +92,37 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    string s; cin>>s;
+    int lef=0;
+    bool ok=1;
+    for(char c:s){
+        if(c=='(')++lef;
+        else{
+            if(!lef)ok=0;
+            --lef;
+        }
+    }
+    if(!ok){
+        if(lef>=0)cout<<2<<endl;
+        else{
+            reverse(s.begin(),s.end());
+            for(char &c:s)if(c=='(')c=')'; else c='(';
+            lef=0;
+            for(char c:s){
+                if(c=='(')++lef;
+                else{
+                    if(!lef)ok=0;
+                    --lef;
+                }
+            }
+            PDE(lef);
+            if(lef>=0)cout<<2<<endl;
+            else cout<<1<<endl;
+        }
+    }
+    else{
+        if(lef)cout<<1<<endl;
+        else cout<<0<<endl;
+    }
 }

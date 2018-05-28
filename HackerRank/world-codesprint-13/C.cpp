@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -91,6 +90,54 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int pw(int b,int n,int m,int a=1){
+    while(n){
+        if(n&1)a=1ll*a*b%m;
+        b=1ll*b*b%m; n>>=1;
+    } return a;
+}
+
+int inv(int x,int m){
+    return pw(x,m-2,m);
+}
+
+int a[100005];
+
 int main(){
     CPPinput;
+    int t; cin>>t; while(t--){
+        int n,m,k; cin>>n>>m>>k;
+        for(int i=1;i<=n;++i)cin>>a[i],a[i]%=m;
+        long long ans=0;
+        if(k==0){
+            ans=1ll*n*(n+1)/2;
+            for(int i=1,j;i<=n;i=j){
+                if(!a[i]){j=i+1; continue;}
+                for(j=i;j<=n;++j){
+                    if(!a[j])break;
+                }
+                int len=j-i;
+                ans-=1ll*len*(len+1)/2;
+            }
+        }
+        else{
+            for(int i=1,j;i<=n;i=j){
+                if(!a[i]){j=i+1; continue;}
+                for(j=i;j<=n;++j){
+                    if(!a[j])break;
+                }
+                map<int,int> cnt;
+                cnt[1]=1;
+                int npre=1;
+                for(int z=i;z<j;++z){
+                    npre=npre*1ll*a[z]%m;
+                    int req=inv(k,m)*1ll*npre%m;
+                    PDE(i,z,j,npre,req,cnt[req]);
+                    ans+=cnt[req];
+                    ++cnt[npre];
+                }
+            }
+        }
+        cout<<ans<<endl;
+    }
 }

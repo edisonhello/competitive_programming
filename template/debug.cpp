@@ -2,9 +2,9 @@
 #define WEAK_DEBUG
 #ifdef WEAK
 
-#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL_((0,__VA_ARGS__,5,4,3,2,1))
+#define VA_NUM_ARGS(...) VA_NUM_ARGS_IMPL_((0,__VA_ARGS__,9,8,7,6,5,4,3,2,1))
 #define VA_NUM_ARGS_IMPL_(tuple) VA_NUM_ARGS_IMPL tuple
-#define VA_NUM_ARGS_IMPL(_0,_1,_2,_3,_4,_5,N,...) N
+#define VA_NUM_ARGS_IMPL(_0,_1,_2,_3,_4,_5,_6,_7,_8,_9,N,...) N
 #define macro_dispatcher(macro, ...) macro_dispatcher_(macro, VA_NUM_ARGS(__VA_ARGS__))
 #define macro_dispatcher_(macro, nargs) macro_dispatcher__(macro, nargs)
 #define macro_dispatcher__(macro, nargs) macro_dispatcher___(macro, nargs)
@@ -14,6 +14,10 @@
 #define PDE3(a,b,c) cout<<#a<<" = "<<(a)<<" , ", PDE2(b,c)
 #define PDE4(a,b,c,d) cout<<#a<<" = "<<(a)<<" , ", PDE3(b,c,d)
 #define PDE5(a,b,c,d,e) cout<<#a<<" = "<<(a)<<" , ", PDE4(b,c,d,e)
+#define PDE6(a,b,c,d,e,f) cout<<#a<<" = "<<(a)<<" , ", PDE5(b,c,d,e,f)
+#define PDE7(a,b,c,d,e,f,g) cout<<#a<<" = "<<(a)<<" , ", PDE6(b,c,d,e,f,g)
+#define PDE8(a,b,c,d,e,f,g,h) cout<<#a<<" = "<<(a)<<" , ", PDE7(b,c,d,e,f,g,h)
+#define PDE9(a,b,c,d,e,f,g,h,i) cout<<#a<<" = "<<(a)<<" , ", PDE8(b,c,d,e,f,g,h,i)
 #define PDE(...) macro_dispatcher(PDE, __VA_ARGS__)(__VA_ARGS__)
 
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.first<<","<<p.second<<")";return ostm;}

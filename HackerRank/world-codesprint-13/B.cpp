@@ -24,7 +24,6 @@
 #include<utility>
 #include<functional>
 #include<complex>
-#include<climits>
 
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
@@ -91,6 +90,49 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+map<string,int> mp;
+string rname[100005];
+int sz[5][100005],djs[100005];
+
+int F(int x){return x==djs[x]?x:djs[x]=F(djs[x]);}
+
 int main(){
     CPPinput;
+    int n,m,mn,mx,m1,m2,m3;
+    cin>>n>>m>>mn>>mx>>m1>>m2>>m3;
+    for(int i=1;i<=n;++i){
+        string s; cin>>s;
+        mp[s]=i;
+        rname[i]=s;
+        int gr; cin>>gr;
+        djs[i]=i;
+        sz[gr][i]=1;
+        sz[0][i]=1;
+    }
+    while(m--){
+        string s1,s2; cin>>s1>>s2;
+        int u=mp[s1],v=mp[s2];
+        u=F(u); v=F(v);
+        if(u==v)continue;
+        if(sz[0][u]+sz[0][v]>mx)continue;
+        if(sz[1][u]+sz[1][v]>m1)continue;
+        if(sz[2][u]+sz[2][v]>m2)continue;
+        if(sz[3][u]+sz[3][v]>m3)continue;
+        PDE(u,v);
+        djs[v]=u;
+        sz[0][u]+=sz[0][v];
+        sz[1][u]+=sz[1][v];
+        sz[2][u]+=sz[2][v];
+        sz[3][u]+=sz[3][v];
+    }
+    int bigg=0;
+    for(int i=1;i<=n;++i){
+    }
+    for(int i=1;i<=n;++i)bigg=max(bigg,sz[0][i]);
+    if(bigg<mn)return cout<<"no groups"<<endl,0;
+    set<string> ok;
+    for(int i=1;i<=n;++i){
+        if(sz[0][F(i)]==bigg)ok.insert(rname[i]);
+    }
+    for(auto &s:ok)cout<<s<<'\n';
 }

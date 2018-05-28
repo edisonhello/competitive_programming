@@ -91,6 +91,18 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
+int mr(int l,int r){
+    return (double)rand()/RAND_MAX*(r-l+1);
+}
+
 int main(){
     CPPinput;
+    srand(clock());
+    int N=200,Q=1;
+    cout<<N<<" "<<Q<<endl;
+    vector<char> cho({'O','T','L','J','S','Z'});
+    for(int i=0;i<N;++i){
+        cout<<"SZ"[i&1];
+    }
+    cout<<endl;
 }
