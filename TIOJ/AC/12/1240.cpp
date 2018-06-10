@@ -14,8 +14,8 @@ int main(){
     reverse(a,a+n);
     lis.push_back(a[0]);
     for(int i=1;i<n;++i){
-        if(a[i]>lis.back())lis.push_back(a[i]);
-        else *lower_bound(lis.begin(),lis.end(),a[i])=a[i];
+        if(a[i]>=lis.back())lis.push_back(a[i]);
+        else *upper_bound(lis.begin(),lis.end(),a[i])=a[i];
     }
     cout<<lis.size()<<endl;
 }

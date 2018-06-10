@@ -9,23 +9,22 @@ using namespace std;
 
 #define saveGet(v,i) ((i)>=int(v.size())?0:v[i])
 #define SG saveGet
-bool smaller(int a, int b, vector<int> &ref){
+inline bool smaller(int a, int b, vector<int> &ref){
     // PDE(a,b,SG(ref,a),SG(ref,b),ref);
     if(SG(ref,a+0) != SG(ref,b+0)) return SG(ref,a+0)<SG(ref,b+0);
     if(SG(ref,a+1) != SG(ref,b+1)) return SG(ref,a+1)<SG(ref,b+1);
     return SG(ref,a+2)<SG(ref,b+2);
 }
 
-int charCount[100005];
-vector<int> radixSort(vector<int> &ref, int offset, vector<int> &index, int sigma){
-    vector<int> ret(index.size());
+int charCount[100005], tmp[100005];
+void radixSort(vector<int> &ref, int offset, vector<int> &index, int sigma){
     for(int z=0;z<offset;++z) ref.push_back(0);
     for(int i=0;i<=sigma;++i) charCount[i] = 0;
     for(int i=0;i<index.size();++i) ++charCount[ref[index[i]+offset]];
     for(int i=0;i<=sigma;++i) charCount[i+1] += charCount[i];
-    for(int i=index.size()-1;i>=0;--i) ret[--charCount[ref[index[i]+offset]]] = index[i];
+    for(int i=index.size()-1;i>=0;--i) tmp[--charCount[ref[index[i]+offset]]] = index[i];
+    for(int i=0;i<index.size();++i) index[i] = tmp[i];
     for(int z=0;z<offset;++z) ref.pop_back();
-    return ret;
 }
 
 vector<int> dc3(vector<int> &value, int n, int sigma){
@@ -36,9 +35,9 @@ vector<int> dc3(vector<int> &value, int n, int sigma){
         if(i%3==0)continue;
         working12.push_back(i);
     }
-    working12 = radixSort(value, 2, working12, sigma);
-    working12 = radixSort(value, 1, working12, sigma);
-    working12 = radixSort(value, 0, working12, sigma);
+    radixSort(value, 2, working12, sigma);
+    radixSort(value, 1, working12, sigma);
+    radixSort(value, 0, working12, sigma);
 
     int nowRank = 1;
     vector<int> rank12(working12.size());
@@ -71,7 +70,7 @@ vector<int> dc3(vector<int> &value, int n, int sigma){
     vector<int> working0;
     if(n%3==1) working0.push_back(n-1);
     for(int i=0;i<working12.size();++i) if(working12[i]%3 == 1) working0.push_back(working12[i]-1);
-    working0 = radixSort(value, 0, working0, sigma);
+    radixSort(value, 0, working0, sigma);
     PDE(working0);
 
     vector<int> ret(value.size());
