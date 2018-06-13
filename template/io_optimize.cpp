@@ -28,7 +28,7 @@ struct outputter{
     char buffer[4112],*ptr=buffer,*end=buffer+4096;
     template<typename T>inline void write(T x,char endc='\n'){
         if(x<0)*ptr='-',++ptr,x=-x; if(!x)*ptr='0',++ptr;
-        char *s=ptr,c; int t;
+        char *s=ptr,c; T t;
         while(x){t=x/10; c=x-10*t+'0'; *ptr=c,++ptr,x=t;}
         char *f=ptr-1; while(s<f)swap(*s,*f),++s,--f;
         if(ptr>end)fwrite(buffer,sizeof(char),ptr-buffer,stdout),ptr=buffer;
