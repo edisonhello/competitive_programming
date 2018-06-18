@@ -1,129 +1,100 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-struct paved{
-    int u,v,c,vside,uside,dpdelta;
-};
-vector<paved> edg[1005];
+vector<int> Q;
+vector<int> idx[1005];
 vector<int> G[1005];
-int p[12][1005],d[1005],dp[1005][1<<11],apx[1005],mxmsk[1005];
+int p[1005],d[1005],dp[1005][1<<11],apx[1005],mx[1005];
 
-void dfs(int now,int pa,int dep){
-    mxmsk[now]=(1<<G[now].size())-1;
+void dfs1(int now,int pa,int dep){
+    p[now]=pa;
     d[now]=dep;
-    p[0][now]=pa;
+    mx[now]=(1<<G[now].size())-1;
     for(int i=0;i<G[now].size();++i){
         if(G[now][i]==pa)continue;
         apx[G[now][i]]=i;
-    }
-    for(int i:G[now]){
-        if(i==pa)continue;
-        dfs(i,now,dep+1);
+        dfs1(G[now][i],now,dep+1);
     }
 }
 
-int glca(int pa,int pb){
-    if(d[pa]>d[pb])swap(pa,pb);
-    for(int i=0;i<12;++i)if((d[pb]-d[pa])&(1<<i)){
-        pb=p[i][pb];
+void dfs2(int now,int pa){
+    for(int i=0;i<G[now].size();++i){
+        if(G[now][i]==pa)continue;
+        dfs2(G[now][i],now);
     }
-    if(pa==pb)return pa;
-    for(int i=11;i>=0;--i)if(p[i][pa]!=p[i][pb]){
-        pa=p[i][pa];
-        pb=p[i][pb];
-    }
-    return p[0][pa];
-}
-
-void dfs(int now,int pa){
-    for(int i:G[now]){
-        if(i==pa)continue;
-        dfs(i,now);
-    }
-    for(int z=0;z<=mxmsk[now];++z){
+    for(int z=0;z<=mx[now];++z){
         for(int i=0;i<G[now].size();++i){
             if(G[now][i]==pa)continue;
-            if(z&(1<<i)); else break;
-            dp[now][z]+=dp[G[now][i]][mxmsk[G[now][i]]];
+            if(z&(1<<i))dp[now][z]+=dp[G[now][i]][mx[G[now][i]]];
         }
     }
-    for(paved &e:edg[now]){
-        if(now==e.u || now==e.v){
-            if(now==e.v)swap(e.u,e.v);
-            int vside=e.v,dpdelta=e.c+dp[e.v][mxmsk[e.v]];
-            while(p[0][vside]!=now){
-                dpdelta+=dp[p[0][vside]][mxmsk[p[0][vside]]^(1<<apx[vside])];
-                vside=p[0][vside];
+    for(int i:idx[now]){
+        int u=Q[i],v=Q[i+1],c=Q[i+2];
+        if(v==now)swap(u,v);
+        if(u==now){
+            c+=dp[v][mx[v]];
+            while(p[v]!=now){
+                c+=dp[p[v]][mx[p[v]]^(1<<apx[v])];
+                v=p[v];
             }
-            e.vside=vside;
-            e.dpdelta=dpdelta;
+            Q[i]=u; Q[i+1]=v; Q[i+2]=c;
         }
         else{
-            int vside=e.v,uside=e.u,dpdelta=e.c+dp[e.v][mxmsk[e.v]]+dp[e.u][mxmsk[e.u]];
-            while(p[0][vside]!=now){
-                dpdelta+=dp[p[0][vside]][mxmsk[p[0][vside]]^(1<<apx[vside])];
-                vside=p[0][vside];
+            c+=dp[v][mx[v]]+dp[u][mx[u]];
+            while(p[v]!=now){
+                c+=dp[p[v]][mx[p[v]]^(1<<apx[v])];
+                v=p[v];
             }
-            while(p[0][uside]!=now){
-                dpdelta+=dp[p[0][uside]][mxmsk[p[0][uside]]^(1<<apx[uside])];
-                uside=p[0][uside];
+            while(p[u]!=now){
+                c+=dp[p[u]][mx[p[u]]^(1<<apx[u])];
+                u=p[u];
             }
-            e.uside=uside;
-            e.vside=vside;
-            e.dpdelta=dpdelta;
+            Q[i]=u; Q[i+1]=v; Q[i+2]=c;
         }
     }
-    for(int z=0;z<=mxmsk[now];++z){
-        for(paved e:edg[now]){
-            if(now==e.u || now==e.v){
-                if(z&(1<<apx[e.vside])); else continue;
-                dp[now][z]=max(dp[now][z],dp[now][z^(1<<apx[e.vside])]+e.dpdelta);
+    for(int z=0;z<=mx[now];++z){
+        for(int i:idx[now]){
+            int u=Q[i],v=Q[i+1],c=Q[i+2];
+            // cout<<"(u,v,c): "<<u<<" "<<v<<" "<<c<<endl;
+            if(u==now){
+                if(z&(1<<apx[v]))dp[now][z]=max(dp[now][z],dp[now][z^(1<<apx[v])]+c);
             }
             else{
-                if(z&(1<<apx[e.vside])); else continue;
-                if(z&(1<<apx[e.uside])); else continue;
-                dp[now][z]=max(dp[now][z],dp[now][z^(1<<apx[e.vside])^(1<<apx[e.uside])]+e.dpdelta);
+                if((z&(1<<apx[v]))&&(z&(1<<apx[u])))dp[now][z]=max(dp[now][z],dp[now][z^(1<<apx[v])^(1<<apx[u])]+c);
             }
         }
+        // cout<<"dp["<<now<<"]["<<z<<"]: "<<dp[now][z]<<endl;
     }
-    /* for(int z=0;z<=mxmsk[now];++z){
-        cout<<"dp "<<now<<" "<<z<<" "<<dp[now][z]<<endl;
-    } */
 }
 
 int main(){
     int n,m; cin>>n>>m;
-    queue<int> tmp;
-    int totc=0;
+    int tot=0;
     while(m--){
         int u,v,c; cin>>u>>v>>c;
+        tot+=c;
         if(!c){
             G[u].push_back(v);
             G[v].push_back(u);
         }
         else{
-            tmp.push(u);
-            tmp.push(v);
-            tmp.push(c);
-            totc+=c;
+            Q.push_back(u);
+            Q.push_back(v);
+            Q.push_back(c);
         }
     }
-    dfs(1,1,1);
-    // cout<<"after first dfs"<<endl;
-    for(int i=1;i<12;++i)for(int j=1;j<=n;++j)p[i][j]=p[i-1][p[i-1][j]];
-    // cout<<"after doubling"<<endl;
-    while(tmp.size()){
-        int u,v,c;
-        u=tmp.front(); tmp.pop();
-        v=tmp.front(); tmp.pop();
-        c=tmp.front(); tmp.pop();
-        // cout<<u<<" "<<v<<" "<<c<<endl;
-        int lca=glca(u,v);
-        if((d[u]+d[v]-d[lca]*2)&1)continue;
-        edg[glca(u,v)].push_back({u,v,c,v,u,-7122});
+    dfs1(1,0,1);
+    for(int i=0;i<Q.size();i+=3){
+        int u=Q[i],v=Q[i+1];
+        while(d[u]>d[v])u=p[u];
+        while(d[u]<d[v])v=p[v];
+        while(u!=v)u=p[u],v=p[v];
+        if((d[Q[i]]+d[Q[i+1]]-2*d[u])&1)continue;
+        idx[u].push_back(i);
     }
-    dfs(1,1);
-    cout<<totc-dp[1][mxmsk[1]]<<endl;
+    dfs2(1,0);
+    cout<<tot-dp[1][mx[1]]<<endl;
 }
 
 // tutorial 30
+// rewrite tutorial AC
