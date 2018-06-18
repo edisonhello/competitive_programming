@@ -7,14 +7,15 @@ int mr(int l,int r){
 
 int main(){
     srand(time(0));
-    freopen("in.txt","w",stdout);
-    int n=10,k=4,q=10;
-    cout<<n<<" "<<k<<" "<<q<<endl;
+    int n=10;
+    cout<<n<<endl;
     for(int i=1;i<=n;++i){
-        int L=mr(1,6),R=mr(L,10);
-        cout<<mr(1,11)<<" "<<mr(1,k)<<" "<<L<<" "<<R<<endl;
-    }
-    for(int i=1;i<=q;++i){
-        cout<<mr(1,11)<<" "<<mr(1,11)<<endl;
+        cout<<mr(-10000000,100000000)<<" "<<mr(-100000000,100000000)<<" ";
+        if(mr(0,1)){
+            cout<<mr(1,300)<<endl;
+        }
+        else{
+            cout<<mr(100000,100000000)<<endl;
+        }
     }
 }
