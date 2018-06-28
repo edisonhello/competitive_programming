@@ -3,84 +3,30 @@ using namespace std;
 #define lock _my_lock
 
 int n,m;
-int _dp[1000006][4][5][2]; // [ unlock, lock to up, lock to down ] [ -2, -1, 0, 1, 2 ][ L, P ]
-
-enum Status{ unlock ,lock, lockup, lockdown };
-enum Flower{ L, P };
-
-int &dp(int pos,Status s,int prefix,Flower f){
-    return _dp[pos][s][prefix + 2][f];
-} 
+int p2[1000006];
 
 int main(){
     cin>>n>>m;
     string s; cin>>s;
-    dp(n,unlock, 1,L)=dp(n,unlock,-1,P)=1;
-    for(int i=n-1;i>=1;--i){
-        dp(i,unlock,-1,L) = 0;
-        dp(i,unlock,-1,P) = dp(i+1,unlock, 0,L);
-        dp(i,unlock, 0,L) = dp(i+1,unlock, 1,L);
-        dp(i,unlock, 0,P) = dp(i+1,unlock,-1,P);
-        dp(i,unlock, 1,L) = dp(i+1,unlock, 0,P);
-        dp(i,unlock, 1,P) = 0;
-
-        dp(i,lock,-1,L) = 0;
-        dp(i,lock,-1,P) = dp(i+1,lock, 0,L) + dp(i+1,lock, 0,P)
-                        + dp(i+1,unlock, 0,P);
-        dp(i,lock, 0,L) = dp(i+1,lock,-1,P);
-        dp(i,lock, 0,P) = dp(i+1,lock, 1,L);
-        dp(i,lock, 1,L) = dp(i+1,lock, 0,L) + dp(i+1,lock, 0,P)
-                        + dp(i+1,unlock, 0,L);
-        dp(i,lock, 1,P) = 0;
-
-        dp(i,lockup, 0,L) = 0;
-        dp(i,lockup, 0,P) = dp(i+1,lockup, 1,L) + dp(i+1,lockup, 1,P);
-        dp(i,lockup, 1,L) = dp(i+1,lockup, 0,P);
-        dp(i,lockup, 1,P) = dp(i+1,lockup, 2,L);
-        dp(i,lockup, 2,L) = dp(i+1,lockup, 1,L) + dp(i+1,lockup, 1,P)
-                          + dp(i+1,unlock, 1,L);
-        dp(i,lockup, 2,P) = 0;
-
-        dp(i,lockdown, 0,L) = dp(i+1,lockdown,-1,L) + dp(i+1,lockdown,-1,P);
-        dp(i,lockdown, 0,P) = 0;
-        dp(i,lockdown,-1,L) = dp(i+1,lockdown,-2,P);
-        dp(i,lockdown,-1,P) = dp(i+1,lockdown, 0,L);
-        dp(i,lockdown,-2,L) = 0;
-        dp(i,lockdown,-2,P) = dp(i+1,lockdown,-1,L) + dp(i+1,lockdown,-1,P)
-                            + dp(i+1,  unlock,-1,P);
-        for(int j=0;j<4;++j)for(int k=0;k<5;++k)for(int z=0;z<2;++z)while(_dp[i][j][k][z]>=m)_dp[i][j][k][z]-=m;
-        for(int j=0;j<4;++j)for(int k=0;k<5;++k)for(int z=0;z<2;++z){
-            printf("dp[%d][%d][%d][%d]=%d\n",i,j,k,z,_dp[i][j][k][z]);
-        }
-    }
-    // int npre=0,premn=0,premx=0
-    Status locked=unlock;
-    int nowpre=0,ans=0;
-#define add(x) ((ans=(ans+(x)>=m?ans+(x)-m:ans+(x))))
+    p2[0]=1; for(int i=1;i<=n;++i)p2[i]=(p2[i-1]<<1)%m;
+    int ans=0,pre=0,mx=0,mn=0;
     for(int i=1;i<=n;++i){
-        char c=s[i-1];
-        if(c=='L')++nowpre;
-        else --nowpre;
-        if(nowpre==2)locked=lockup;
-        else if(nowpre==-2)locked=lockdown;
+        if(s[i-1]=='P'){
+            int tpre=pre+1,tmx=max(mx,tpre),tmn=min(mn,tpre);
+#define get(a,b) (p2[(((a)+((b)==1))>>1)])
+            if(tmn>=0 && tmx<=2)(ans+=get(n-i,tpre))%=m;
+            if(tmn>=-1&& tmx<=1)(ans+=get(n-i,tpre+1))%=m;
+            if(tmn>=-2&& tmx<=0)(ans+=get(n-i,tpre+2))%=m;
+            if(tmn>=0 && tmx<=1)--ans;
+            if(tmn>=-1&& tmx<=0)--ans;
 
-        if(c=='L');
-        else{
-            if(locked==unlock){
-                for(int z=-2;z<=2;++z){
-                    add(dp(i,unlock,z,L));
-                    add(dp(i,lock,z,L));
-                    add(dp(i,lockup,z,L));
-                    add(dp(i,lockdown,z,L));
-                }
-            }
-            else{
-                for(int z=-2;z<=2;++z){
-                    add(dp(i,locked,z,L));
-                }
-            }
-            cout<<"when i = "<<i<<" , ans inc to "<<ans<<endl;
+            // cout<<"in "<<i<<" add to "<<ans<<endl;
         }
+        if(s[i-1]=='L')++pre; else --pre;
+        mx=max(mx,pre); mn=min(mn,pre);
     }
-    cout<<ans<<endl;
+    cout<<(ans+1+m)%m<<endl;
 }
+// in virtual 20
+// after AC
+// simplified
