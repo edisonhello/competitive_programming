@@ -1,7 +1,9 @@
+
 template <typename T> class minCostMaxFlow{
 private:
     struct edge{
-        int u,v,cap,cst;
+        int u,v;
+        T cap,cst;
         edge(int u=0,int v=0,T cap=0,T cst=0):u(u),v(v),cap(cap),cst(cst){};
     };
     int n;

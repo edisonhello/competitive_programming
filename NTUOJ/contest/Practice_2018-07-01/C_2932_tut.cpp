@@ -1,0 +1,183 @@
+// #pragma GCC optimize("no-stack-protector")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma vector temporal
+// #pragma simd
+// #pragma GCC diagnostic ignored "-W"
+
+#include<cassert>
+#include<cstdio>
+#include<cstdlib>
+#include<cstring>
+#include<cmath>
+#include<ctime>
+#include<algorithm>
+#include<iostream>
+#include<iomanip>
+#include<sstream>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<map>
+#include<set>
+#include<bitset>
+#include<vector>
+#include<utility>
+#include<functional>
+#include<complex>
+#include<climits>
+
+// #include<ext/pb_ds/assoc_container.hpp>
+// #include<ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
+// using namespace __gnu_pbds;
+
+#define ll long long
+#define ld long double
+#define X first
+#define Y second
+#define pb push_back
+#define eb emplace_back
+#define pii pair<int,int>
+#define vint vector<int>
+#define SS stringstream
+#define PQ priority_queue
+#define MS(x,v) memset((x),(v),sizeof(x))
+#define RZUNI(x) sort(x.begin(),x.end()), x.resize(unique(x.begin(),x.end())-x.begin())
+#define FLH fflush(stdout)
+#define CPPinput ios_base::sync_with_stdio(0); cin.tie(0)
+#define FIN(fname) freopen(fname,"r",stdin)
+#define FOUT(fname) freopen(fname,"w",stdout)
+
+#define tm Ovuvuevuevue
+#define y1 Enyetuenwuevue
+#define left Ugbemugbem
+#define ws Osas
+#define dec tetteterette
+#define exp expexpexpexp
+#define expl explexplexpl
+
+#define YES cout<<"YES"<<endl
+#define NO cout<<"NO"<<endl
+#define Yes cout<<"Yes"<<endl
+#define No cout<<"No"<<endl
+
+#ifdef WEAK
+#include"/home/edison/Coding/cpp/template/debug.cpp"
+#define DEB(...) printf(__VA_ARGS__),fflush(stdout)
+#define WHR() printf("%s: Line %d",__PRETTY_FUNCTION__,__LINE__),fflush(stdout)
+#define LOG(...) printf("%s: Line %d ",__PRETTY_FUNCTION__,__LINE__),printf(__VA_ARGS__),fflush(stdout)
+#define DEBUG 1
+#define exit(x) cout<<"exit code "<<x<<endl, exit(0)
+#else
+#define PDE(...) ;
+#define DEB(...) ;
+#define WHR() ;
+#define LOG(...) ;
+#define DEBUG 0
+#endif
+
+#define lowbit(x) ((x)&(-(x)))
+
+#if __cplusplus >= 201103L
+#include<unordered_map>
+#include<unordered_set>
+#include<tuple>
+#endif
+
+void JIZZ(string output=""){cout<<output; exit(0);}
+
+const ld PI=3.14159265358979323846264338327950288;
+const ld eps=1e-13;
+const ll mod=1e9+7;
+
+template <typename T> class minCostMaxFlow{
+private:
+    struct edge{
+        int u,v,cap,cst;
+        edge(int u=0,int v=0,T cap=0,T cst=0):u(u),v(v),cap(cap),cst(cst){};
+    };
+    int n;
+    vector<bool> inq;
+    vector<int> source;
+    vector<T> bottle,cost;
+    vector<vector<int>> G;
+    vector<edge> edg;
+    T INF;
+    bool wolf(int s,int t,T &_flow,T &_cost){
+        fill(inq.begin(),inq.end(),0);
+        fill(cost.begin(),cost.end(),INF);
+        bottle[s]=INF; cost[s]=0;
+        queue<int> q; q.push(s);
+        while(q.size()){
+            for(int &eid:G[q.front()])if(edg[eid].cap>0 && cost[edg[eid].v]>cost[edg[eid].u]+edg[eid].cst){
+                if(!inq[edg[eid].v])inq[edg[eid].v]=1,q.push(edg[eid].v);
+                bottle[edg[eid].v]=min(bottle[edg[eid].u],edg[eid].cap);
+                cost[edg[eid].v]=cost[edg[eid].u]+edg[eid].cst;
+                source[edg[eid].v]=eid;
+            }
+            inq[q.front()]=0; q.pop();
+        }
+        if(cost[t]==INF)return 0;
+        for(int u=t;u!=s;u=edg[source[u]].u){
+            edg[source[u]].cap-=bottle[t];
+            edg[source[u]^1].cap+=bottle[t];
+        }
+        _flow+=bottle[t]; _cost+=bottle[t]*cost[t];
+        return 1;
+    }
+public:
+    minCostMaxFlow(int n=0,T inf=1073741824){setN(n); INF=inf;}
+    int setN(int N){
+        inq.resize(N);
+        source.resize(N);
+        bottle.resize(N);
+        cost.resize(N);
+        G.clear(); G.resize(N);
+        edg.clear();
+        return n=N;
+    }
+    void addEdge(int u,int v,T cap,T cst){
+        if(!cap)return;
+        PDE("addEdge",u,v,cap,cst);
+        G[u].push_back(edg.size());
+        edg.emplace_back(u,v,cap,cst);
+        G[v].push_back(edg.size());
+        edg.emplace_back(v,u,0,-cst);
+    }
+    pair<T,T> flow(int s,int t){
+        T flow=0,cost=0;
+        while(wolf(s,t,flow,cost));
+        return pair<T,T>(flow,cost);
+    }
+} ;
+
+int cnts[26],cntt[26];
+int tr[26][26];
+
+int main(){
+    CPPinput;
+    string s1,t1,s2,t2; while(cin>>s1>>t1>>s2>>t2){
+        minCostMaxFlow<int> solver(100);
+
+        MS(cnts,0);
+        MS(cntt,0);
+        MS(tr,0);
+        
+        for(char c:s1)++cnts[c-'a'];
+        for(char c:t1)++cntt[c-'a'];
+#define ae solver.addEdge
+#define flow solver.flow
+        for(int i=0;i<26;++i)ae(53,i,cnts[i],0),ae(i+26,52,cntt[i],0),ae(i,i+26,200000,0),ae(i+26,i,200000,0);
+
+        for(int i=0;i<t2.size();++i){
+            ++tr[t2[i]-'a'][s2[i]-'a'];
+        }
+        for(int i=0;i<26;++i)for(int j=0;j<26;++j)ae(i,j+26,tr[i][j],1);
+        auto rt=flow(53,52);
+        PDE(rt);
+        if(rt.first==s1.size())cout<<rt.second<<endl;
+        else cout<<-1<<endl;
+    }
+    
+}
