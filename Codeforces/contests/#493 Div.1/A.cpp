@@ -91,50 +91,24 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-ld density[10000007];
-void test(){
-    for(int i=1;i<10000007;++i){
-        int x=i;
-        int sum=0;
-        while(x)sum+=x%10,x/=10;
-        density[i]=(ld)i/sum;
-        if(i<100)PDE(i,density[i]);
-        // PDE(i,(ld)i/sum);
-    }
-    for(int i=1;i<10000007;++i){
-        bool ok=1;
-        for(int j=i+1;j<10000007;++j){
-            if(density[j]<density[i]){ ok=0; break; }
-        }
-        if(ok)PDE(i);
-    }
-    exit(0);
-}
-
 int main(){
     CPPinput;
-    // test();
-    string s;
-    vector<pair<ll,ld>> ans;
-    while(s.size()<15){
-        for(int i=1;i<=999;++i){
-            string pre;
-            int x=i;
-            while(x)pre=""+string(1,char(x%10+'0'))+pre,x/=10;
-            string ns=pre+s;
-            if(ns.size()>15u)continue;
-            PDE(ns);
-            SS ss(ns);
-            ll val;
-            ss>>val;
-            int sum=0;
-            for(char c:ns)sum+=c-'0';
-            ans.eb(val,(ld)val/sum);
-        }
-        s+='9';
+    int n; ll x,y; cin>>n>>x>>y;
+    string s; cin>>s;
+    vector<int> block(1,0);
+    for(char c:s){
+        if(c=='1')block.push_back(0);
+        else ++block.back();
     }
-    sort(ans.begin(),ans.end());
-    PDE(ans,ans.size());
-    int k; cin>>k;
-    for(int i=0;i<k;++i)cout<<ans[i]<<'\n';
+    sort(block.begin(),block.end(),greater<int>());
+    while(block.size() && block.back()==0)block.pop_back();
+    if(block.empty()){
+        cout<<0<<endl;
+        exit(0);
+    }
+    ll ans=LLONG_MAX;
+    for(int i=1;i<=block.size();++i){
+        ans=min(ans,y*i+x*(ll)(block.size()-i));
+    }
+    cout<<ans<<endl;
 }

@@ -1,4 +1,3 @@
-// = Codeforces 884F
 // #pragma GCC optimize("no-stack-protector")
 #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
 // #pragma vector temporal
@@ -151,9 +150,14 @@ public:
         while(wolf(s,t,flow,cost));
         return pair<T,T>(flow,cost);
     }
+    void printEdge(){
+        for(edge &e:edg){
+            PDE(e.u,e.v,e.cap,e.cst);
+        }
+    }
 } ;
 
-minCostMaxFlow<int> solver(222);
+minCostMaxFlow<int> solver(2005);
 
 int b[111];
 
@@ -164,18 +168,26 @@ int main(){
     for(int i=0;i<n;++i)cin>>b[i];
     int ans=0;
     for(int i=0;i<n;++i)ans+=b[i];
-    for(int i=0;i<n;++i){
-        int op=n-1-i;
-        if(s[i]==s[op] && make_pair(b[op],op)>make_pair(b[i],i));
-        else solver.addEdge(i,i+n,1,0);
-        for(int j=0;j<n;++j){
-            if(s[i]!=s[j])solver.addEdge(i,j+n,1,b[i]);
+    int state_pointer=n+1;
+    map<pair<int,char>,int> mp;
+    for(int i=0;i<n;++i)solver.addEdge(0,i+1,1,0);
+    for(int i=0;i<n;++i)solver.addEdge(1999-s[i]+'a',2000,1,0);
+    for(int i=0;i<n/2;++i){
+        for(int j='a';j<='z';++j){
+            mp[make_pair(i,j)]=state_pointer;
+            // solver.addEdge(state_pointer,2000,1,0);
+            solver.addEdge(state_pointer,1999-j+'a',1,0);
+            ++state_pointer;
         }
-        solver.addEdge(n*2,i,1,0);
-        solver.addEdge(i+n,n*2+1,1,0);
     }
-    auto rt=solver.flow(n*2,n*2+1);
+    for(int i=0;i<n;++i){
+        int to=min(i,n-1-i);
+        for(int j='a';j<='z';++j){
+            solver.addEdge(i+1,mp[make_pair(to,j)],1,j==s[i]?0:b[i]);
+        }
+    }
+    auto rt=solver.flow(0,2000);
+    solver.printEdge();
     PDE(rt);
     cout<<ans-rt.second<<endl;
 }
-// WA
