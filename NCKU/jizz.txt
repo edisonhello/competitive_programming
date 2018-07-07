@@ -1,0 +1,2 @@
+The mistake in the problem statement let us pended 4 "Wrong Answer" submissions that contributed 80 minutes of penalty and take us at least 60 minutes trying to find bugs that doesn't exist from our first submission.
+We think we have the chance to win if the problem statement was correct.
