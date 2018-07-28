@@ -91,54 +91,40 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int h[200005];
-int tnu[200005],tnd[200005];
+int c[15];
+ll dp[20][15];
+bitset<15> v[20];
+
+ll go(int n,int cho){
+    if(cho==10)return !n;
+    if(v[n][cho])return dp[n][cho];
+    v[n][cho]=1;
+    for(int i=0;i<=c[cho];++i){
+        if(i>n)break;
+        dp[n][cho]+=go(n-i,cho+1);
+    }
+    return dp[n][cho];
+}
+
 
 int main(){
     CPPinput;
-    int ts,ks=0; cin>>ts; while(ts--){
-        cout<<"Case #"<<(++ks)<<": "<<fixed<<setprecision(10);
-        int n,m; cin>>n>>m;
-        if(DEBUG){ cout<<endl; }
-        { int w,x,y,z; cin>>h[1]>>h[2]>>w>>x>>y>>z;
-        for(int i=3;i<=n;++i)h[i]=(1ll*w*h[i-2]+1ll*x*h[i-1]+y)%z; }
-        if(DEBUG && n<=10){ cout<<"h: "; for(int i=1;i<=n;++i)cout<<h[i]<<" "; cout<<endl; }
-        for(int i=1;i<n;++i)tnu[i]=tnd[i]=1000000;
-        for(int i=1;i<=m;++i){
-            int a,b,u,d; cin>>a>>b>>u>>d;
-            if(a<b){
-                for(int i=a;i<b;++i){
-                    tnu[i]=min(tnu[i],u);
-                    tnd[i]=min(tnd[i],d);
-                }
+    string s; cin>>s;
+    for(char z:s)++c[z-'0'];
+    ll n,k; cin>>n>>k;
+    ll tot=go(n,0);
+    cout<<tot<<endl;
+    k=tot+1-k;
+    for(int i=0;i<10;++i){
+        for(int z=0;;++z){
+            // PDE(i,z,go(n-z,i+1),k);
+            if(go(n-z,i+1)>=k){
+                for(int u=0;u<z;++u)cout<<i;
+                n-=z;
+                break;
             }
-            else{
-                for(int i=a-1;i>=b;--i){
-                    tnu[i]=min(tnu[i],d);
-                    tnd[i]=min(tnd[i],u);
-                }
-            }
+            k-=go(n-z,i+1);
         }
-        if(DEBUG && n<=10){ cout<<"tnu: "; for(int i=1;i<n;++i)cout<<tnu[i]<<" "; cout<<endl; }
-        if(DEBUG && n<=10){ cout<<"tnd: "; for(int i=1;i<n;++i)cout<<tnd[i]<<" "; cout<<endl; }
-        double L=0,R=1000000;
-        while(R-L>1e-10){
-            if([&](double t)->bool{
-                double ub=h[1]+t,lb=h[1]-t;
-                for(int i=1;i<n;++i){
-                    ub=min(ub+tnu[i],h[i+1]+t);
-                    lb=max(lb-tnd[i],h[i+1]-t);
-                    if(ub<lb)return 0;
-                }
-                for(int i=n-1;i>=1;--i){
-                    ub=min(ub+tnd[i],h[i]+t);
-                    lb=max(lb-tnu[i],h[i]-t);
-                    if(ub<lb)return 0;
-                }
-                return 1;
-            }((L+R)/2))R=(L+R)/2;
-            else L=(L+R)/2;
-        }
-        cout<<L<<endl;
     }
+    cout<<endl;
 }

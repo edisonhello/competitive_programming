@@ -89,56 +89,35 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
-const ll mod=1e9+7;
+const ll mod=998244353;
 
-int h[200005];
-int tnu[200005],tnd[200005];
+long long fac[300005],ifac[300005];
+
+long long pw(long long b,long long n,long long m,long long a=1){
+    while(n){
+        if(n&1)a=a*b%m;
+        b=b*b%m; n>>=1;
+    } return a;
+}
+long long C(int n,int i){
+    return ifac[i]*ifac[n-i]%mod*fac[n]%mod;
+}
 
 int main(){
     CPPinput;
-    int ts,ks=0; cin>>ts; while(ts--){
-        cout<<"Case #"<<(++ks)<<": "<<fixed<<setprecision(10);
-        int n,m; cin>>n>>m;
-        if(DEBUG){ cout<<endl; }
-        { int w,x,y,z; cin>>h[1]>>h[2]>>w>>x>>y>>z;
-        for(int i=3;i<=n;++i)h[i]=(1ll*w*h[i-2]+1ll*x*h[i-1]+y)%z; }
-        if(DEBUG && n<=10){ cout<<"h: "; for(int i=1;i<=n;++i)cout<<h[i]<<" "; cout<<endl; }
-        for(int i=1;i<n;++i)tnu[i]=tnd[i]=1000000;
-        for(int i=1;i<=m;++i){
-            int a,b,u,d; cin>>a>>b>>u>>d;
-            if(a<b){
-                for(int i=a;i<b;++i){
-                    tnu[i]=min(tnu[i],u);
-                    tnd[i]=min(tnd[i],d);
-                }
-            }
-            else{
-                for(int i=a-1;i>=b;--i){
-                    tnu[i]=min(tnu[i],d);
-                    tnd[i]=min(tnd[i],u);
-                }
-            }
-        }
-        if(DEBUG && n<=10){ cout<<"tnu: "; for(int i=1;i<n;++i)cout<<tnu[i]<<" "; cout<<endl; }
-        if(DEBUG && n<=10){ cout<<"tnd: "; for(int i=1;i<n;++i)cout<<tnd[i]<<" "; cout<<endl; }
-        double L=0,R=1000000;
-        while(R-L>1e-10){
-            if([&](double t)->bool{
-                double ub=h[1]+t,lb=h[1]-t;
-                for(int i=1;i<n;++i){
-                    ub=min(ub+tnu[i],h[i+1]+t);
-                    lb=max(lb-tnd[i],h[i+1]-t);
-                    if(ub<lb)return 0;
-                }
-                for(int i=n-1;i>=1;--i){
-                    ub=min(ub+tnd[i],h[i]+t);
-                    lb=max(lb-tnu[i],h[i]-t);
-                    if(ub<lb)return 0;
-                }
-                return 1;
-            }((L+R)/2))R=(L+R)/2;
-            else L=(L+R)/2;
-        }
-        cout<<L<<endl;
+    long long n,a,b,k; cin>>n>>a>>b>>k;
+    fac[0]=1;
+    for(int i=1;i<=n;++i)fac[i]=fac[i-1]*i%mod;
+    ifac[n]=pw(fac[n],mod-2,mod);
+    for(int i=n-1;i>=0;--i)ifac[i]=ifac[i+1]*(i+1)%mod;
+    long long ans=0;
+    for(int i=0;i<=n;++i){
+        long long ua=i*a;
+        if(ua>k || (k-ua)%b)continue;
+        long long ub=k-ua;
+        int j=ub/b;
+        if(j>n)continue;
+        ans+=C(n,i)*C(n,j)%mod;
     }
+    cout<<ans%mod<<endl;
 }
