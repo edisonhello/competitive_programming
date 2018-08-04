@@ -91,22 +91,29 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-int meow(int n){
-    int t=0;
-    while(n)t+=n%10,n/=10;
-    return t;
-}
+bitset<100005> v;
+int d[100005];
 
 int main(){
     CPPinput;
     int n; cin>>n;
-    int mn=1e9,at=-1;
-    for(int i=1;i<=10000;++i){
-        cout<<n*i<<" "<<meow(n*i)<<endl;
-        if(meow(n*i)<mn){
-            mn=meow(n*i);
-            at=i;
+    memset(d,0x3f,sizeof(d));
+    deque<int> dq; 
+    dq.push_back(1); d[1]=1;
+    while(dq.size()){
+        while(dq.size() && v[dq.front()])dq.pop_front();
+        if(dq.empty())break;
+        int now=dq.front(); dq.pop_front();
+        v[now]=1;
+        if(d[now*10%n]>d[now]){
+            d[now*10%n]=d[now];
+            dq.push_front(now*10%n);
         }
+        if(now<n && d[(now+1)%n]>d[now]+1){
+            d[(now+1)%n]=d[now]+1;
+            dq.push_back((now+1)%n);
+        }
+        PDE(now,dq);
     }
-    cout<<"min at "<<at<<" , val: "<<mn<<endl;
+    cout<<d[0]<<endl;
 }
