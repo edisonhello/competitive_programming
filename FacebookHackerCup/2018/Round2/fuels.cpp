@@ -91,50 +91,67 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-struct edge{
-    int u,v,w; char c;
-};
-vector<edge> RG,BG;
+int djs[1000006],mx[1000006],le[1000006];
 
-vector<int> djs;
-void I(int n){ for(int i=1;i<=n;++i)djs[i]=i; }
 int F(int x){ return x==djs[x]?x:djs[x]=F(djs[x]); }
-void U(int x,int y){ djs[F(x)]=F(y); }
-bool C(int x,int y){ return F(x)==F(y); }
 
-int ans[1111];
+void sol(){
+    int n,s,m,k; cin>>n>>s>>m>>k; m<<=1;
+    vector<int> p(1,0),d(1,0);
+    vector<ll> dp(n+1,0);
+    for(int i=0;i<k;++i){
+        int l,a,x,y,z; cin>>l>>a>>x>>y>>z;
+        p.push_back(a); --l;
+        while(l--){ a=(1ll*a*x+y)%z+1; p.push_back(a); }
+    }
+    for(int i=0;i<k;++i){
+        int l,a,x,y,z; cin>>l>>a>>x>>y>>z;
+        d.push_back(a); --l;
+        while(l--){ a=(1ll*a*x+y)%z+1; d.push_back(a); }
+    }
+    PDE(p,d);
+    vector<pair<int,int>> foss;
+    for(int i=0;i<=n;++i)foss.emplace_back(p[i],d[i]+s);
+    sort(foss.begin(),foss.end());
+    PDE(foss);
+    for(int i=1;i<=n;++i)djs[i]=i,mx[i]=foss[i].second,le[i]=i;
+    deque<int> dq;
+    multiset<ll> dpv;
+    for(int i=1;i<=n;++i){
+        PDE(i,F(i),mx[F(i)]);
+        while(dq.size()){
+            int fi=dq.front();
+            if(foss[i].first-foss[fi].first<=m)break;
+            dq.pop_front();
+            dpv.erase(dpv.find(dp[fi-1]+mx[F(fi)]));
+            if(F(fi+1)==F(fi)){
+                dpv.insert(dp[fi]+mx[F(fi)]);
+                le[F(fi+1)]=fi+1;
+            }
+        }
+        PDE(dq,dpv);
+        for(int u=i-1;dq.size() && u>=dq.front();){
+            if(mx[F(u)]>mx[F(i)])break;
+            u=le[F(u)];
+            dpv.erase(dpv.find(dp[u-1]+mx[F(u)]));
+            mx[F(u)]=max(mx[F(i)],mx[F(u)]);
+            djs[F(i)]=F(u);
+            PDE(F(i),mx[F(i)]);
+            --u;
+        }
+        dq.push_back(i);
+        dpv.insert(dp[le[F(i)]-1]+mx[F(le[F(i)])]);
+        PDE(dq,dpv);
+        dp[i]=*dpv.begin();
+        PDE(i,dp[i]);
+    }
+    cout<<dp[n]<<endl;
+}
 
 int main(){
     CPPinput;
-    djs.resize(1111,0);
     int t,k=0; cin>>t; while(t--){
-        cout<<"Case #"<<(++k)<<":\n";
-        memset(ans,0x3f,sizeof(ans));
-        RG.clear(), BG.clear();
-        int n,m; cin>>n>>m;
-        for(int i=1;i<=m;++i){
-            int u,v,w; char c; cin>>u>>v>>w>>c;
-            if(c=='R')RG.push_back({u,v,w,c});
-            if(c=='B')BG.push_back({u,v,w,c});
-            if(c=='G')RG.push_back({u,v,w,c});
-            if(c=='G')BG.push_back({u,v,w,c});
-        }
-        sort(RG.begin(),RG.end(),[](const edge &a,const edge &b){ return a.w<b.w; });
-        sort(BG.begin(),BG.end(),[](const edge &a,const edge &b){ return a.w<b.w; });
-        
-        { I(n); vector<int> trash; int co=0;
-        for(edge &e:RG)if(!C(e.u,e.v))U(e.u,e.v),co+=e.w; else trash.push_back(e.w);
-        for(edge &e:BG)if(e.c=='B')trash.push_back(e.w); sort(trash.begin(),trash.end());
-        PDE(trash);
-        if([&](){ for(int i=2;i<=n;++i)if(!C(i-1,i))return 0; return 1; }()){ ans[n-1]=min(ans[n-1],co);
-            for(int z=0;z<trash.size();++z)co+=trash[z],ans[n+z]=min(ans[n+z],co);
-        } }
-        { I(n); vector<int> trash; int co=0;
-        for(edge &e:BG)if(!C(e.u,e.v))U(e.u,e.v),co+=e.w; else trash.push_back(e.w);
-        for(edge &e:RG)if(e.c=='R')trash.push_back(e.w); sort(trash.begin(),trash.end());
-        if([&](){ for(int i=2;i<=n;++i)if(!C(i-1,i))return 0; return 1; }()){ ans[n-1]=min(ans[n-1],co);
-            for(int z=0;z<trash.size();++z)co+=trash[z],ans[n+z]=min(ans[n+z],co);
-        } }
-        for(int i=1;i<=m;++i)cout<<(ans[i]>1e9?-1:ans[i])<<'\n';
+        cout<<"Case #"<<(++k)<<": ";
+        sol();
     }
 }

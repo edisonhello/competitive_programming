@@ -32,7 +32,7 @@
 using namespace std;
 // using namespace __gnu_pbds;
 
-#define ll long long
+#define ll int_fast64_t
 #define ld long double
 #define X first
 #define Y second
@@ -91,11 +91,29 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-void sol(int a,int b){
-    long long prd=1ll*a*b;
-    if(a>b)swap(a,b); // a < b
-    int ans=a-1;
-    ans+=prd/
+void sol(ll a,ll b){
+    ll pro=a*b;
+    int ans=a+b-2;
+    --pro;
+    ans-=(pro/a-pro/(a+1));
+    ans-=(pro/b-pro/(b+1));
+    int prv=pro/(a+1),nxt,seg;
+    for(ll i=a+1;i*i<=pro;++i){
+        nxt=pro/(i+1);
+        seg=prv-nxt;
+        prv=nxt;
+        if(seg>1)ans-=seg-1;
+        PDE(i,pro/i,pro/(i+1),seg);
+    }
+    prv=pro/(b+1);
+    for(ll i=b+1;i*i<=pro;++i){
+        nxt=pro/(i+1);
+        seg=prv-nxt;
+        prv=nxt;
+        if(seg>1)ans-=seg-1;
+        PDE(i,pro/i,pro/(i+1),seg);
+    }
+    cout<<ans<<endl;
 }
 
 int main(){
