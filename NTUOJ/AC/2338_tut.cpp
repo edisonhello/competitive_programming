@@ -1,11 +1,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 #define pii pair<int,int>
+#define prev dgji
 
 pii ch[1<<21];
 int tree[1<<21];
-
-
 
 int main(){
     int root=2;
@@ -18,6 +17,17 @@ int main(){
     ch[5]=pii(8,14);
     ch[7]=pii(10,12);
 
+    for(int i=8;i<(1<<20);++i){
+        if(i&1){
+            int t=(i>>1)&1;
+            if(t==0)ch[i]=make_pair(i*2-2,i*2+4);
+            else ch[i]=make_pair(i*2-2,i*2-4);
+        }
+        else{
+            if((i&-i)==i)ch[i]=make_pair(i*2+1,i*4-1);
+            else ch[i]=make_pair(i*2-1,i*2+1);
+        }
+    }
 
     tree[1]=2;
     tree[2]=1;
@@ -27,10 +37,11 @@ int main(){
         tree[i*2+1]=ch[tree[i]].second;
     }
 
-    cout<<"builded ok"<<endl;
+    // cout<<"builded ok"<<endl;
 
     int t; cin>>t; while(t--){
         int n; cin>>n; 
-        for(int i=1;i<(1<<n);++i)cout<<tree[i]<<" "; cout<<endl;
+        if(n==1){ cout<<"1"<<endl; }
+        else for(int i=1;i<(1<<n);++i)cout<<tree[i]<<" "; cout<<endl;
     }
 }

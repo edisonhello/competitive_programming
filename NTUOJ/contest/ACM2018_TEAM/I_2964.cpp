@@ -38,7 +38,7 @@ using namespace std;
 #define Y second
 #define pb push_back
 #define eb emplace_back
-#define pii pair<int,int>
+#define pii pair<long long,long long>
 #define vint vector<int>
 #define SS stringstream
 #define PQ priority_queue
@@ -91,60 +91,32 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-13;
 const ll mod=1e9+7;
 
-string s[2005];
-map<int,int> rec[505][2005];
-pii st[13][2005];
-
-pii Q(int l,int r){
-    PDE(l,r);
-    if(l==r){ PDE(st[0][l]); return st[0][l]; }
-    int dd=r-l+1;
-    PDE(dd);
-    int z=0; while(dd)dd>>=1,++z; --z;
-    PDE(z);
-    PDE(min(st[z][l],st[z][r-(1<<z)+1]));
-    return min(st[z][l],st[z][r-(1<<z)+1]);
-}
-
-int go(int i,int l,int r){
-    if(l>r)return 0;
-    if(l==r && i)return 0;
-    PDE("go",i,l,r);
-    if(i==0)return 0;
-    if(r==l+1 && i>=2)return Q(l+1,r).first;
-    if(r==l+1)return 0;
-    auto it=rec[i][l].find(r);
-    if(it!=rec[i][l].end())return it->second;
-    auto p=Q(l,r);
-    int mx=max(go(i,l+1,r),go(i,l,r-1));
-    PDE(i,l,r,mx);
-    --i;
-    for(int lz=0;lz<=i;++lz){
-        mx=max(mx,((lz+1)*(i-lz+1)-1)*p.first+go(lz,l,p.second-1)+go(i-lz,p.second+1,r));
-        PDE(i+1,l,r,lz,mx);
+void sol(){
+    int n; cin>>n;
+    vector<pii> pt(n);
+    for(auto &p:pt)cin>>p.first>>p.second;
+    ll area=0;
+    for(int i=0;i<n;++i){
+        pii p1=pt[i],p2=pt[(i+1)%n];
+        area+=p1.first*p2.second-p1.second*p2.first;
     }
-    PDE("og",i+1,l,r,mx);
-    return rec[i+1][l][r]=mx;
-}
-
-int meow(string a,string b){
-    int z=min(a.size(),b.size());
-    for(int i=0;i<z;++i)if(a[i]!=b[i])return i;
-    return z;
+    // 2A = 2i+b-2
+    // 2i = 2A-b+2
+    area=abs(area);
+    ll onedge=0;
+    for(int i=0;i<n;++i){
+        pii p1=pt[i],p2=pt[(i+1)%n];
+        ll dx=p2.first-p1.first,dy=p2.second-p1.second;
+        ll g=__gcd(abs(dx),abs(dy));
+        PDE(g);
+        onedge+=g;
+    }
+    ll inside=(area+2-onedge)/2;
+    PDE(area,onedge,inside);
+    cout<<inside+onedge<<endl;
 }
 
 int main(){
     CPPinput;
-    int n,k; cin>>n>>k;
-    for(int i=0;i<n;++i)cin>>s[i];
-    sort(s,s+n);
-    for(int i=1;i<n;++i)st[0][i]=pii(meow(s[i-1],s[i]),i);
-    for(int z=1;z<12;++z){
-        for(int j=1;j<n;++j){
-            st[z][j]=min(st[z-1][j],st[z-1][j+(1<<(z-1))]);
-        }
-    }
-    for(int i=1;i<n;++i)PDE(st[0][i]);
-    PDE(st[1][2]);
-    cout<<go(k,0,n-1)<<endl;
+    int t; cin>>t; while(t--){ sol(); }
 }
