@@ -90,19 +90,19 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 
-struct sADD{ int *ptr,mod; sADD(int mod):ptr(0),mod(mod){} } ADD(mod);
-sADD& operator<(const int &x,sADD &op){ op.ptr=&x; return op; }
-int operator>(const sADD &op,const int y){ *op.ptr+=y; if(*op.ptr>=op.mod)*op.ptr-=op.mod; return *op.ptr; }
+struct sADD{ int x,mod; sADD(int mod):mod(mod){} } ADD(mod);
+sADD& operator<(int x,sADD &op){ op.x=x; return op; }
+int operator>(const sADD &op,const int y){ int v=op.x+y; if(v>=op.mod)v-=op.mod; return v; }
 
-struct sMNS{ int *ptr,mod; sMNS(int mod):ptr(0),mod(mod){} } MNS(mod);
-sMNS& operator<(const int &x,sMNS &op){ op.ptr=&x; return op; }
-int operator>(const sMNS &op,const int y){ *op.ptr-=y; if(*op.ptr<0)*op.ptr+=op.mod; return *op.ptr; }
+struct sSUB{ int x,mod; sSUB(int mod):mod(mod){} } SUB(mod);
+sSUB& operator<(int x,sSUB &op){ op.x=x; return op; }
+int operator>(const sSUB &op,const int y){ int v=op.x-y; if(v<0)v+=op.mod; return v; }
 
-struct sTMS{ int *ptr,mod; sTMS(int mod):ptr(0),mod(mod){} } TMS(mod);
-sTMS& operator<(const int &x,sTMS &op){ op.ptr=&x; return op; }
-int operator>(const sTMS &op,const int y){ *op.ptr=1ll*(*op.ptr)*y%op.mod; return *op.ptr; }
+struct sTMS{ int x,mod; sTMS(int mod):mod(mod){} } TMS(mod);
+sTMS& operator<(int x,sTMS &op){ op.x=x; return op; }
+int operator>(const sTMS &op,const int y){ int v=1ll*op.x*y%op.mod; return v; }
 
 int POW(int b,int n,int a=1){
     if(!n)return !b?b:a;
@@ -110,13 +110,45 @@ int POW(int b,int n,int a=1){
     else return POW(b<TMS>b,n>>1,a);
 }
 
-struct sINV{ int mod; sINV(int mod):mod(mod){} } INV(mod);
-int operator()(const sINV &op,const int x){ return POW(x,op.mod-2); }
+struct sINV{ int mod; sINV(int mod):mod(mod){} 
+    int operator()(const int x)const{ return POW(x,mod-2); }
+} INV(mod);
 
-struct sDIV{ int *ptr,mod; sDIV(int mod):ptr(0),mod(mod){} } DIV(mod);
-sDIV& operator<(const int &x,sDIV &op){ op.ptr=&x; return op; }
-int operator>(const sDIV &op,const int y){ *op.ptr=1ll*(*op.ptr)*INV(y)%op.mod; return *op.ptr; }
+struct sDIV{ int x,mod; sDIV(int mod):mod(mod){} } DIV(mod);
+sDIV& operator<(int x,sDIV &op){ op.x=x; return op; }
+int operator>(const sDIV &op,const int y){ int v=op.x<TMS>INV(y); return v; }
+
+int dp[505][505],okcnt[505];
 
 int main(){
     CPPinput;
+    int n,k; cin>>n>>k;
+    int ans=0;
+
+    for(int mx=1;mx<=n;++mx){
+        MS(dp,0);
+        dp[1][1]=1;
+        for(int i=1;i<n;++i){
+            for(int j=1;j<=mx;++j){
+                dp[i+1][j+1]=dp[i+1][j+1]<ADD>dp[i][j];
+                dp[i+1][1]=dp[i+1][1]<ADD>dp[i][j];
+            }
+        }
+        for(int j=1;j<=mx;++j)okcnt[mx]=okcnt[mx]<ADD>dp[n][j];
+        PDE(mx,okcnt[mx]);
+    }
+
+    for(int i=1;i<=n;++i){
+        MS(dp,0);
+        int mx=(k-1)/i;
+        mx=min(mx,n);
+        for(int j=1;j<=mx;++j){
+            ans=ans<ADD>((okcnt[i]<TMS>okcnt[j])<SUB>(okcnt[i]<TMS>okcnt[j-1])<SUB>(okcnt[i-1]<TMS>okcnt[j])<ADD>(okcnt[i-1]<TMS>okcnt[j-1]));
+            // ans+=(okcnt[i]*okcnt[j]%mod-okcnt[i]*okcnt[j-1]%mod-okcnt[i-1]*okcnt[j]%mod+okcnt[i-1]*okcnt[j-1]%mod+3*mod)%mod;
+            // ans%=mod;
+            // PDE(i,j,(okcnt[i]*okcnt[j]-okcnt[i]*okcnt[j-1]-okcnt[i-1]*okcnt[j]+okcnt[i-1]*okcnt[j-1]));
+            // PDE(okcnt[i]*okcnt[j],okcnt[i]*okcnt[j-1],okcnt[i-1]*okcnt[j],okcnt[i-1]*okcnt[j-1]);
+        }
+    }
+    cout<<(ans<TMS>2)<<endl;
 }

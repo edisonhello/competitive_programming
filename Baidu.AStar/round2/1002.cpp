@@ -1,5 +1,7 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma vector temporal
+// #pragma simd
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -26,15 +28,8 @@
 #include<random>
 #include<thread>
 
-#if __cplusplus >= 201103L
-#include<unordered_map>
-#include<unordered_set>
-#include<tuple>
-#endif
-
 // #include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
-// #include<ext/rope>
 
 using namespace std;
 // using namespace __gnu_pbds;
@@ -47,7 +42,6 @@ using namespace std;
 #define eb emplace_back
 #define pii pair<int,int>
 #define vint vector<int>
-#define vpii vector<pair<int,int>>
 #define SS stringstream
 #define PQ priority_queue
 #define MS(x,v) memset((x),(v),sizeof(x))
@@ -62,6 +56,7 @@ using namespace std;
 #define left Ugbemugbem
 #define ws Osas
 #define dec tetteterette
+#define exp expexpexpexp
 #define expl explexplexpl
 
 #define YES cout<<"YES"<<endl
@@ -86,37 +81,63 @@ using namespace std;
 
 #define lowbit(x) ((x)&(-(x)))
 
+#if __cplusplus >= 201103L
+#include<unordered_map>
+#include<unordered_set>
+#include<tuple>
+#endif
+
 void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
-const ld eps=1e-10;
+const ld eps=1e-13;
 const ll mod=1e9+7;
 
-struct sADD{ int *ptr,mod; sADD(int mod):ptr(0),mod(mod){} } ADD(mod);
-sADD& operator<(const int &x,sADD &op){ op.ptr=&x; return op; }
-int operator>(const sADD &op,const int y){ *op.ptr+=y; if(*op.ptr>=op.mod)*op.ptr-=op.mod; return *op.ptr; }
-
-struct sMNS{ int *ptr,mod; sMNS(int mod):ptr(0),mod(mod){} } MNS(mod);
-sMNS& operator<(const int &x,sMNS &op){ op.ptr=&x; return op; }
-int operator>(const sMNS &op,const int y){ *op.ptr-=y; if(*op.ptr<0)*op.ptr+=op.mod; return *op.ptr; }
-
-struct sTMS{ int *ptr,mod; sTMS(int mod):ptr(0),mod(mod){} } TMS(mod);
-sTMS& operator<(const int &x,sTMS &op){ op.ptr=&x; return op; }
-int operator>(const sTMS &op,const int y){ *op.ptr=1ll*(*op.ptr)*y%op.mod; return *op.ptr; }
-
-int POW(int b,int n,int a=1){
-    if(!n)return !b?b:a;
-    if(n&1)return POW(b<TMS>b,n>>1,a<TMS>b);
-    else return POW(b<TMS>b,n>>1,a);
+ll pw(ll b,ll n,ll m,ll a){
+    if(!n)return a;
+    if(n&1)return pw(b*b%m,n>>1,m,a*b%m);
+    else return pw(b*b%m,n>>1,m,a);
 }
+ll inv(ll x){ return pw(x,mod-2,mod,1); }
 
-struct sINV{ int mod; sINV(int mod):mod(mod){} } INV(mod);
-int operator()(const sINV &op,const int x){ return POW(x,op.mod-2); }
+ll l[123],r[123],bases[123];
 
-struct sDIV{ int *ptr,mod; sDIV(int mod):ptr(0),mod(mod){} } DIV(mod);
-sDIV& operator<(const int &x,sDIV &op){ op.ptr=&x; return op; }
-int operator>(const sDIV &op,const int y){ *op.ptr=1ll*(*op.ptr)*INV(y)%op.mod; return *op.ptr; }
+void sol(){
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>l[i]>>r[i];
+    for(int i=1;i<=n;++i)bases[i]=inv(r[i]-l[i]+1);
+    ll mxv=0,mnv=0;
+    for(int i=1;i<=n;++i)mxv=max(mxv,r[i]),mnv=max(mnv,l[i]);
+    ll sum=0;
+    for(ll h=mnv;h<=mxv;++h){
+        ll pro=1;
+        for(int i=1;i<=n;++i){
+            ll base=bases[i];
+            // ll base=1;
+            ll RR=min(r[i],h);
+            ll sec=h*(RR-l[i]+1)%mod-(l[i]-2+RR)*(RR-l[i]+1)/2%mod;
+            PDE(i,RR,base,sec);
+            (pro*=base*sec%mod+mod)%=mod;
+        }
+        ll mina=1;
+        for(int i=1;i<=n;++i){
+            // if(r[i]<h)continue;
+            ll base=bases[i];
+            ll RR=min(r[i],h-1);
+            ll sec=h*(RR-l[i]+1)%mod-(l[i]-2+RR)*(RR-l[i]+1)/2%mod;
+            PDE(i,RR,base,sec);
+            (mina*=base*sec%mod+mod)%=mod;
+        }
+        sum+=pro-mina+mod;
+        // sum%=mod;
+        PDE(h,pro,mina);
+    }
+    // ll tot=1;
+    // for(int i=1;i<=n;++i)(tot*=(r[i]-l[i]+1))%=mod;
+    cout<<sum%mod<<endl;
+}
 
 int main(){
     CPPinput;
+    int t; cin>>t; while(t--)sol();
 }
