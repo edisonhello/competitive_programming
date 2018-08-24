@@ -93,6 +93,64 @@ const ld eps=1e-10;
 const ll mod=1e9+7;
 
 
+
 int main(){
     CPPinput;
+    string s; cin>>s;
+    int n=s.size();
+
+    bool same=0;
+    for(int i=1;i<n;++i)if(s[i]==s[i-1])same=1;
+    if(!same)exit((cout<<n<<endl,0));
+
+
+
+    auto t1=[&]()->int{
+        char want='b';
+        int ptr=0,front=0;
+        for(;ptr<n;++ptr){
+            if(want!=s[ptr])break;
+            ++front;
+            want=want=='b'?'w':'b';
+        }
+        ptr=n-1;
+        int back=0;
+        want='w';
+        for(;ptr>=0;--ptr){
+            if(want!=s[ptr])break;
+            ++back;
+            want=want=='b'?'w':'b';
+        }
+        return front+back;
+    };
+    auto t2=[&]()->int{
+        char want='w';
+        int ptr=0,front=0;
+        for(;ptr<n;++ptr){
+            if(want!=s[ptr])break;
+            ++front;
+            want=want=='b'?'w':'b';
+        }
+        ptr=n-1;
+        int back=0;
+        want='b';
+        for(;ptr>=0;--ptr){
+            if(want!=s[ptr])break;
+            ++back;
+            want=want=='b'?'w':'b';
+        }
+        return front+back;
+    };
+    auto t3=[&]()->int{
+        vector<int> le(n+5,0);
+        le[n-1]=1;
+        for(int i=n-2;i>=0;--i){
+            if(s[i]!=s[i+1])le[i]=le[i+1]+1;
+            else le[i]=1;
+        }
+        PDE(le);
+        return *max_element(le.begin(),le.end());
+    };
+
+    cout<<max(max(t1(),t2()),t3());
 }

@@ -92,7 +92,40 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[707],dpl[707][707],dpr[707][707];
+int G[707][707];
+bitset<707> rec[2][707];
+
+
+int gor(int,int);
+int gol(int l,int r){
+    if(rec[0][l][r])return dpl[l][r];
+    if(l==r)return 1;
+    // if(r<l)return 1;
+    rec[0][l][r]=1;
+    for(int i=l;i<r;++i){
+        if(!G[r][i])continue;
+        if(gol(l,i) && gor(i,r-1))return dpl[l][r]=1;
+    }
+    return 0;
+}
+int gor(int l,int r){
+    if(rec[1][l][r])return dpr[l][r];
+    if(l==r)return 1;
+    rec[1][l][r]=1;
+    for(int i=l+1;i<=r;++i){
+        if(!G[l][i])continue;
+        if(gol(l+1,i) && gor(i,r))return dpr[l][r]=1;
+    }
+    return 0;
+}
+
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)if(__gcd(a[i],a[j])>1)G[i][j]=1;
+    for(int i=1;i<=n;++i)if(gol(1,i) && gor(i,n)){ Yes; exit(0); }
+    No;
 }

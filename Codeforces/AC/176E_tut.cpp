@@ -92,7 +92,80 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+ll w[18][100005],p[18][100005];
+vector<pii> G[100005];
+int in[100005],d[100005],dt;
+
+void dfs(int now,int pa,int dep){
+    in[now]=++dt;
+    d[now]=dep;
+    p[0][now]=pa;
+    for(int i=1;i<18;++i)p[i][now]=p[i-1][p[i-1][now]],w[i][now]=w[i-1][now]+w[i-1][p[i-1][now]];
+    for(auto p:G[now]){
+        if(p.first==pa)continue;
+        w[0][p.first]=p.second;
+        dfs(p.first,now,dep+1);
+    }
+}
+
+bool cmp(const int &a,const int &b){ return in[a]<in[b]; }
+set<int,decltype(&cmp)> st(cmp);
+ll ans;
+
+ll dis(int pa,int pb){
+    // cout<<"call dist "<<pa<<" "<<pb<<endl;
+    if(d[pa]>d[pb])swap(pa,pb);
+    ll rt=0;
+    for(int i=17;i>=0;--i)if((d[pb]-d[pa])&(1<<i)){
+        rt+=w[i][pb];
+        pb=p[i][pb];
+    }
+    if(pa==pb)return rt;
+    for(int i=17;i>=0;--i)if(p[i][pa]!=p[i][pb]){
+        rt+=w[i][pa]+w[i][pb];
+        pa=p[i][pa];
+        pb=p[i][pb];
+    }
+    return rt+w[0][pa]+w[0][pb];
+}
+
+void add(int x){
+    if(st.size()==0u){ st.insert(x); return; }
+    // if(st.size()==1u){ ans+=dis(x,*st.begin())*2; st.insert(x); return; }
+    auto it=st.lower_bound(x);
+    int le=(it==st.begin()?*prev(st.end()):*prev(it));
+    int ri=(it==st.end()?*st.begin():*it);
+    ans-=dis(le,ri);
+    ans+=dis(le,x);
+    ans+=dis(x,ri);
+    st.insert(x);
+}
+void rem(int x){
+    st.erase(x);
+    if(st.size()==0u)return;
+    // if(st.size()==1u){ ans-=dis(x,*st.begin())*2; st.insert(x); return; }
+    auto it=st.lower_bound(x);
+    int le=(it==st.begin()?*prev(st.end()):*prev(it));
+    int ri=(it==st.end()?*st.begin():*it);
+    ans+=dis(le,ri);
+    ans-=dis(le,x);
+    ans-=dis(x,ri);
+}
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<n;++i){
+        int u,v,w; cin>>u>>v>>w;
+        G[u].eb(v,w);
+        G[v].eb(u,w);
+    }
+    dfs(1,0,1);
+    int q; cin>>q; while(q--){
+        char c; cin>>c;
+        int t;
+        if(c=='+')cin>>t,add(t);
+        if(c=='-')cin>>t,rem(t);
+        if(c=='?')cout<<ans/2<<'\n';
+    }
 }

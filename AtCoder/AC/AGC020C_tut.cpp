@@ -93,6 +93,15 @@ const ld eps=1e-10;
 const ll mod=1e9+7;
 
 
+int a[2525];
 int main(){
     CPPinput;
+    int n,sum=0; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i],sum+=a[i];
+    bitset<2000*2000+1> v;
+    v[0]=1;
+    for(int i=1;i<=n;++i)v|=(v<<a[i]);
+    int half=(sum+1)>>1;
+    cout<<v._Find_next(half-1)<<endl;
+
 }

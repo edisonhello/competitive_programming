@@ -92,7 +92,20 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int cnt[2555];
 
 int main(){
     CPPinput;
+    int n; cin>>n; string s; cin>>s;
+    if(s.size()==1u)JIZZ("Yes");
+    bool same=1;
+    for(int i=1;i<n;++i)if(s[i]!=s[i-1])same=0;
+    if(same){ JIZZ("Yes"); }
+
+    for(char c:s)++cnt[c];
+    int big1=0;
+    for(int i=0;i<333;++i)if(cnt[i]>1)++big1;
+
+    if(big1)Yes;
+    else No;
 }

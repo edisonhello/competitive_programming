@@ -92,7 +92,36 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int rec[100005][12];
+vector<int> G[100005];
+
+void dfs(int now,int d,int c){
+    if(d<0)return;
+    if(rec[now][d])return;
+    for(int z=d;z>=0;--z)if(!rec[now][z])rec[now][z]=c;
+    for(int i:G[now])dfs(i,d-1,c);
+}
 
 int main(){
     CPPinput;
+    int n,m,q; cin>>n>>m;
+    while(m--){
+        int u,v; cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    cin>>q;
+    vector<int> o;
+    while(q--){
+        int z,x,c; cin>>z>>x>>c;
+        o.pb(c); o.pb(x); o.pb(z);
+    }
+    while(o.size()){
+        int v,d,c;
+        v=o.back(); o.pop_back();
+        d=o.back(); o.pop_back();
+        c=o.back(); o.pop_back();
+        dfs(v,d,c);
+    }
+    for(int i=1;i<=n;++i)cout<<rec[i][0]<<'\n';
 }

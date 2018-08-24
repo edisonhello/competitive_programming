@@ -92,7 +92,28 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int deg[1000006],djs[1000006],odds[1000006];
+
+int F(int x){ return x==djs[x]?x:djs[x]=F(djs[x]); }
 
 int main(){
     CPPinput;
+    int n,m; cin>>n>>m;
+    for(int i=1;i<=n;++i)djs[i]=i;
+    while(m--){
+        int u,v; cin>>u>>v;
+        ++deg[u]; ++deg[v];
+        djs[F(u)]=F(v);
+    }
+    for(int i=1;i<=n;++i)if(deg[i]&1)++odds[F(i)];
+    vector<int> bls;
+    if(!deg[1])bls.pb(0);
+    for(int i=1;i<=n;++i)if(F(i)==i && deg[i])bls.pb(odds[i]);
+    int ans=0;
+    if(bls.size()>1u)ans+=bls.size();
+    int odd=0;
+    if(bls.size()>1u)for(int i:bls)odd+=max(0,i-2);
+    else odd+=bls[0];
+    ans+=odd/2;
+    cout<<ans<<endl;
 }

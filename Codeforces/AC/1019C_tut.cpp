@@ -92,7 +92,29 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int n;
+vector<int> G[1000005],iG[1000005];
+bitset<1000005> choo,cov;
+
+void go(int now){
+    if(now>n)return;
+    for(;now<=n;++now)if(!cov[now])break;
+    if(now>n)return;
+    choo[now]=cov[now]=1;
+    for(int i:G[now])cov[i]=1;
+    go(now+1);
+    for(int i:iG[now])if(choo[i])choo[now]=0;
+}
 
 int main(){
     CPPinput;
+    int m; cin>>n>>m;
+    while(m--){
+        int u,v; cin>>u>>v;
+        G[u].pb(v);
+        iG[v].pb(u);
+    }
+    go(1);
+    cout<<choo.count()<<endl;
+    for(int i=1;i<=n;++i)if(choo[i])cout<<i<<" ";
 }

@@ -92,7 +92,60 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+struct sADD{ int x,mod; sADD(int mod):mod(mod){} } ADD(mod);
+sADD& operator<(int x,sADD &op){ op.x=x; return op; }
+int operator>(const sADD &op,const int y){ int v=op.x+y; if(v>=op.mod)v-=op.mod; return v; }
+
+struct sSUB{ int x,mod; sSUB(int mod):mod(mod){} } SUB(mod);
+sSUB& operator<(int x,sSUB &op){ op.x=x; return op; }
+int operator>(const sSUB &op,const int y){ int v=op.x-y; if(v<0)v+=op.mod; return v; }
+
+struct sTMS{ int x,mod; sTMS(int mod):mod(mod){} } TMS(mod);
+sTMS& operator<(int x,sTMS &op){ op.x=x; return op; }
+int operator>(const sTMS &op,const int y){ int v=1ll*op.x*y%op.mod; return v; }
+
+int POW(int b,int n,int a=1){
+    if(!n)return !b?b:a;
+    if(n&1)return POW(b<TMS>b,n>>1,a<TMS>b);
+    else return POW(b<TMS>b,n>>1,a);
+}
+
+struct sINV{ int mod; sINV(int mod):mod(mod){} 
+    int operator()(const int x)const{ return POW(x,mod-2); }
+} INV(mod);
+
+struct sDIV{ int x,mod; sDIV(int mod):mod(mod){} } DIV(mod);
+sDIV& operator<(int x,sDIV &op){ op.x=x; return op; }
+int operator>(const sDIV &op,const int y){ int v=op.x<TMS>INV(y); return v; }
+
+bitset<707> ok[707][707];
+// bitset<707> rec[707][707];
+int con[707];
+int pre[707][707];
+
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    // for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)con[i][j]=(__gcd(a[i],a[j])>1);
+    // for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)con[i][j]+=con[i][j-1];
+    for(int len=1;len<=n;++len){
+        if(len==1){
+            for(int i=1;i<=n;++i)ok[i][i][i]=1;
+            continue;
+        }
+        for(int i=1;i+len-1<=n;++i){
+            int l=i,r=i+len-1;
+            
+            for(int j=l;j<=r;++j){
+                int cnt=0;
+
+            }
+        }
+    }
+    bool ok=0;
+    for(int i=1;i<=n;++i)ok|=ok[1][n][i];
+    if(ok)Yes;
+    else No;
 }
