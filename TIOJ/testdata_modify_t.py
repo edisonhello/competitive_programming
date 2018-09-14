@@ -22,7 +22,8 @@ filename_format = '%d%s'
 session = requests.Session()
 
 def login():
-    TIOJusername = input('Username: ')
+    print('Username: edisonhello')
+    TIOJusername = 'edisonhello'
     TIOJpassword = getpass('Password: ')
     print('logging in...')
     global session
