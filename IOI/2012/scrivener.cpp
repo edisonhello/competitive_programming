@@ -1,5 +1,4 @@
 #include<ext/rope>
-#define a auto
 
 __gnu_cxx::crope r[1<<20];
 int x;
