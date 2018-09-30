@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
 // #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>

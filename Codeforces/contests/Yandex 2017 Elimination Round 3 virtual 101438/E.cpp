@@ -95,7 +95,13 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int a,b,c,d; cin>>a>>b>>c>>d;
+    int o=0;
+    int mcha=min(abs(c-a),abs(d-b));
+    o+=mcha*2;
+    int lacha=max(abs(c-a),abs(d-b));
+    int lcha=lacha-mcha;
+    int pir=lcha>>1;
+    o+=pir*4+(lcha!=pir*2);
+    cout<<o;
 }

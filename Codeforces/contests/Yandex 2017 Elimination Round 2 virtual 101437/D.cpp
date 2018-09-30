@@ -92,10 +92,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int mp[555][555],ans;
+
+void add(int x,int y){
+    if(mp[x][y]==0)++ans;
+    if(mp[x][y]==4)--ans;
+    ++mp[x][y];
+    if(mp[x][y]==5){
+        mp[x][y]=0;
+        add(x-1,y);
+        add(x+1,y);
+        add(x,y+1);
+        add(x,y-1);
+    }
+}
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n; cin>>n; while(n--){
+        int x,y; cin>>x>>y; x+=200, y+=200;
+        add(x,y);
+        cout<<ans<<'\n';
+    }
 }

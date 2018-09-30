@@ -32,12 +32,12 @@
 #include<tuple>
 #endif
 
-// #include<ext/pb_ds/assoc_container.hpp>
-// #include<ext/pb_ds/tree_policy.hpp>
+#include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/tree_policy.hpp>
 // #include<ext/rope>
 
 using namespace std;
-// using namespace __gnu_pbds;
+using namespace __gnu_pbds;
 
 #define ll long long
 #define ld long double
@@ -92,10 +92,26 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+ll a[200005],pre[200005];
+int dpct[200005];
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n; ll t; cin>>n>>t;
+    vector<ll> pres;
+    for(int i=1;i<=n;++i)cin>>a[i],pres.push_back(pre[i]=pre[i-1]+a[i]);
+    sort(pres.begin(),pres.end());
+    PDE(pres);
+    ll z=0;
+    for(int i=1;i<=n;++i){
+        int pos=lower_bound(pres.begin(),pres.end(),pre[i-1]+t)-pres.begin();
+        int x=pos,ans=pos;
+        for(;x;x-=lowbit(x))ans-=dpct[x];
+        z+=ans;
+        PDE(z,ans,pos);
+        x=lower_bound(pres.begin(),pres.end(),pre[i])-pres.begin()+1;
+        PDE(x);
+        for(;x<200005;x+=lowbit(x))++dpct[x];
+    }
+    cout<<z<<endl;
 }

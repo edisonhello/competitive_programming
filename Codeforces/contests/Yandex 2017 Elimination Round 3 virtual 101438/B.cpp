@@ -92,10 +92,56 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+stack<int> st;
+
+bool dfs(int now,string &s,int a,int b,bool tie){
+    if(now==int(s.size())){ return 1; }
+    if(!tie){
+        dfs(now+1,s,a,b,0);
+        st.push(max(a,b));
+        return 1;
+    }
+    if(s[now]>max(a,b)){
+        dfs(now+1,s,a,b,0);
+        st.push(max(a,b));
+        return 1;
+    }
+    if(s[now]==max(a,b)){
+        if(dfs(now+1,s,a,b,1)){
+            st.push(max(a,b));
+            return 1;
+        }
+    }
+    if(s[now]>min(a,b)){
+        dfs(now+1,s,a,b,0);
+        st.push(min(a,b));
+        return 1;
+    }
+    if(s[now]==min(a,b)){
+        if(dfs(now+1,s,a,b,1)){
+            st.push(min(a,b));
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    string s; cin>>s;
+    int a,b; cin>>a>>b;
+    for(char &c:s)c-='0';
+    if(s.size()==1u && s[0]<min(a,b))JIZZ("-1\n");
+    if(dfs(0,s,a,b,1));
+    else{
+        for(int i=1;i<int(s.size());++i)cout<<max(a,b);
+        cout<<endl;
+        exit(0);
+    }
+    while(st.size() && st.top()==0)st.pop();
+    if(st.empty())JIZZ("-1\n");
+    while(st.size()){
+        cout<<st.top();
+        st.pop();
+    }
 }

@@ -95,7 +95,22 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n,k; cin>>n>>k;
+    if(k==0){
+        cout<<"Yes\n100000000 100000000\n";
+        exit(0);
+    }
+    if(k==1){
+        cout<<"Yes\n"<<n<<" 100000000\n";
+        exit(0);
+    }
+    if(k==2 && n){
+        cout<<"Yes\n"<<n<<" "<<n<<endl;
+        exit(0);
+    }
+    if(k==3 && n){
+        cout<<"Yes\n"<<n<<" "<<0<<endl;
+        exit(0);
+    }
+    cout<<"No"<<endl;
 }

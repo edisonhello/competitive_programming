@@ -92,10 +92,55 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+/* int pre[548];
+
+void add(int x){
+    for(;x<548;x+=lowbit(x))++pre[x];
+}
+int query(int l,int r,int a=0){
+    for(;r;r-=lowbit(r))a+=pre[r];
+    for(--l;l;l-=lowbit(l))a-=pre[l];
+    return a;
+} */
+
+int bit[505][505];
+void add(int x,int y,int v){
+    for(;x<505;x+=lowbit(x))for(int z=y;z<505;z+=lowbit(z))bit[x][z]+=v;
+}
+int query(int x,int y,int a=0){
+    for(;x;x-=lowbit(x))for(int z=y;z;z-=lowbit(z))a+=bit[x][z];
+    return a;
+}
+
+vector<pair<int,pair<int,int>>> v;
+vector<int> ts;
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n,m,k,q; cin>>n>>m>>k>>q;
+    if(q==0)JIZZ("-1\n");
+    v.resize(q);
+    for(auto &p:v)cin>>p.second.first>>p.second.second>>p.first;
+    sort(v.begin(),v.end());
+    for(auto &p:v)ts.pb(p.first);
+    ts.resize(unique(ts.begin(),ts.end())-ts.begin());
+    auto broke=[&](int T)->bool{
+        memset(bit,0,sizeof(bit));
+        for(auto &p:v){
+            if(p.first>T)break;
+            add(p.second.first,p.second.second,1);
+        }
+        for(int i=1;i<=n-k+1;++i)for(int j=1;j<=m-k+1;++j){
+            if(query(i+k-1,j+k-1)-query(i+k-1,j-1)-query(i-1,j+k-1)+query(i-1,j-1)==k*k)return 1;
+        }
+        return 0;
+    };
+    int L=0,R=ts.size()-1;
+    if(!broke(ts[R]))JIZZ("-1\n");
+    while(R>L){
+        int mid=(L+R)>>1;
+        if(broke(ts[mid]))R=mid;
+        else L=mid+1;
+    }
+    cout<<ts[L]<<endl;
 }

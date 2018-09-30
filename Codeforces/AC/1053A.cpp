@@ -92,10 +92,68 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+bitset<31700> np;
+vector<int> p;
+void init(){
+    for(int i=2;i<31700;++i){
+        if(np[i])continue;
+        p.push_back(i);
+        for(int j=i+i;j<31700;j+=i)np[j]=1;
+    }
+}
+
+map<int,int> decom(int x){
+    map<int,int> rt;
+    for(int pp:p){
+        while(x%pp==0){
+            ++rt[pp];
+            x/=pp;
+        }
+        if(pp*pp>x)break;
+    }
+    if(x>1)++rt[x];
+    return rt;
+}
+
+map<int,int> merge(map<int,int> a,map<int,int> b){
+    if(a.size()>b.size())a.swap(b);
+    for(auto &p:a)b[p.first]+=p.second;
+    return b;
+}
+
+map<int,int> sub(map<int,int> a,map<int,int> b){
+    for(auto &p:b)a[p.first]-=p.second;
+    return a;
+}
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n,m,k; cin>>n>>m>>k;
+    long long area=1ll*n*m;
+    long long g=__gcd((long long)k,area);
+    area/=g; k/=g;
+    if(k>2)exit((No,0));
+    // area/=g; k/=g;
+    // if(k==1)area*=2;
+    init();
+    map<int,int> pfacs=sub(merge(decom(n),decom(m)),decom(g));
+    if(k==1)++pfacs[2],area<<=1;
+    function<void(map<int,int>::iterator,map<int,int>&,long long)> dfs=[&](map<int,int>::iterator it,map<int,int> &mp,long long now)->void{
+        if(it==mp.end()){
+            if(now<=n && area/now<=m){
+                Yes;
+                cout<<"0 0\n";
+                cout<<0<<" "<<area/now<<endl;
+                cout<<now<<" "<<0<<endl;
+                exit(0);
+            }
+            return;
+        }
+        for(int i=0;i<=it->second;++i){
+            dfs(next(it),mp,now);
+            now*=it->first;
+        }
+    };
+    dfs(pfacs.begin(),pfacs,1ll);
+    No;
 }

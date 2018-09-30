@@ -92,10 +92,49 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+#ifdef not_code
+y > y0: (x - x0) * (y - y0)
+        x*y - x0*y - x*y0 + x0y0
+        => n*x*y - y*Ex0 - x*Ey0 + E(x0y0)
+y < y0: (x - x0) * (y0 - y)
+        x*y0 - x0*y0 - x*y + x0y
+        => -n*x*y + x*Ey0 + y*Ex0 - E(x0y0)
+#endif
+
+pair<ll,ll> pt[100005];
+ll pro[10005];
+ll sx[10005],sy[10005];
+int sz[10005];
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>pt[i].first>>pt[i].second,++pt[i].first,++pt[i].second;
+    sort(pt+1,pt+1+n);
+    long long ans=0;
+    for(int i=1;i<=n;++i){
+        {
+            ll Ex0=[&]()->long long{ ll rt=0; for(int y=pt[i].second-1;y;y-=lowbit(y))rt+=sx[y]; return rt; }();
+            ll Ey0=[&]()->long long{ ll rt=0; for(int y=pt[i].second-1;y;y-=lowbit(y))rt+=sy[y]; return rt; }();
+            ll Ex0y0=[&]()->long long{ ll rt=0; for(int y=pt[i].second-1;y;y-=lowbit(y))rt+=pro[y]; return rt; }();
+            int nn=[&]()->int{ int rt=0; for(int y=pt[i].second-1;y;y-=lowbit(y))rt+=sz[y]; return rt; }();
+            ans+=nn*pt[i].first*pt[i].second-pt[i].second*Ex0-pt[i].first*Ey0+Ex0y0;
+        }
+        {
+            ll Ex0=[&]()->long long{ ll rt=0; for(int y=10001;y;y-=lowbit(y))rt+=sx[y]; return rt; }()
+                  -[&]()->long long{ ll rt=0; for(int y=pt[i].second;y;y-=lowbit(y))rt+=sx[y]; return rt; }();
+            ll Ey0=[&]()->long long{ ll rt=0; for(int y=10001;y;y-=lowbit(y))rt+=sy[y]; return rt; }()
+                  -[&]()->long long{ ll rt=0; for(int y=pt[i].second;y;y-=lowbit(y))rt+=sy[y]; return rt; }();
+            ll Ex0y0=[&]()->long long{ ll rt=0; for(int y=10001;y;y-=lowbit(y))rt+=pro[y]; return rt; }()
+                    -[&]()->long long{ ll rt=0; for(int y=pt[i].second;y;y-=lowbit(y))rt+=pro[y]; return rt; }();
+            int nn=[&]()->int{ int rt=0; for(int y=10001;y;y-=lowbit(y))rt+=sz[y]; return rt; }()
+                  -[&]()->int{ int rt=0; for(int y=pt[i].second;y;y-=lowbit(y))rt+=sz[y]; return rt; }();
+            ans+=-nn*pt[i].first*pt[i].second+pt[i].first*Ey0+pt[i].second*Ex0-Ex0y0;
+        }
+        for(int y=pt[i].second;y<10005;y+=lowbit(y))++sz[y];
+        for(int y=pt[i].second;y<10005;y+=lowbit(y))sx[y]+=pt[i].first;
+        for(int y=pt[i].second;y<10005;y+=lowbit(y))sy[y]+=pt[i].second;
+        for(int y=pt[i].second;y<10005;y+=lowbit(y))pro[y]+=pt[i].first*pt[i].second;
+    }
+    cout<<ans<<endl;
 }

@@ -90,12 +90,36 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
-const ll mod=1e9+7;
+const ll mod1=1e9+7,mod2=1e9+123;
 
+pair<ll,ll> hsh[2666],pp[2666];
+ll a[2666];
+
+pair<ll,ll> operator+(const pair<ll,ll> &a,const pair<ll,ll> &b){ return make_pair(a.first+b.first,a.second+b.second); }
+pair<ll,ll> operator-(const pair<ll,ll> &a,const pair<ll,ll> &b){ return make_pair(a.first-b.first,a.second-b.second); }
+pair<ll,ll> operator*(const pair<ll,ll> &a,const pair<ll,ll> &b){ return make_pair(a.first*b.first,a.second*b.second); }
+pair<ll,ll> operator/(const pair<ll,ll> &a,const pair<ll,ll> &b){ return make_pair(a.first/b.first,a.second/b.second); }
+pair<ll,ll> operator%(const pair<ll,ll> &a,const pair<ll,ll> &b){ return make_pair(a.first%b.first,a.second%b.second); }
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    pp[0]=make_pair(1,1);
+    for(int i=1;i<=n;++i)pp[i]=pp[i-1]*make_pair(47017ll,131ll)%make_pair(mod1,mod2);
+    for(int i=1;i<=n;++i)hsh[i]=(hsh[i-1]+make_pair(a[i]+mod1,a[i]+mod2)*pp[i])%make_pair(mod1,mod2);
+    if([&](){ for(int i=2;i<=n;++i)if(a[i]!=a[i-1])return 0; return 1; }())JIZZ("0\n");
+    auto gethh=[&](int l,int r)->pair<ll,ll>{ return (hsh[r]-hsh[l-1]+make_pair(mod1,mod2))*pp[n-r]%make_pair(mod1,mod2); };
+    for(int k=1;k<=n;++k){
+        map<pair<ll,ll>,int> mp;
+        bool ok=1;
+        for(int i=k+1;i<=n;++i){
+            auto hh=gethh(i-k,i-1);
+            PDE(i,hh,a[i]);
+            auto it=mp.find(hh);
+            if(it==mp.end())mp[hh]=a[i];
+            else if(it->second!=a[i]){ ok=0; break; }
+        }
+        if(ok){ cout<<k<<endl; exit(0); }
+    }
 }

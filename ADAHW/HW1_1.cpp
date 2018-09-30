@@ -92,10 +92,17 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+long long a[200005];
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    long long mx=a[1],now=0;
+    for(int i=1;i<=n;++i){
+        if(now<0)now=0;
+        now+=a[i];
+        mx=max(mx,now);
+    }
+    cout<<mx<<endl;
 }
