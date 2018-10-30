@@ -7,52 +7,22 @@ using namespace std;
 const int MAXN=1050;
 const double eps=1e-8;
 
-struct Point
-{
+struct Point{
     double x,y,z;
     Point(){}
 
     Point(double xx,double yy,double zz):x(xx),y(yy),z(zz){}
 
-    //两向量之差
-    Point operator -(const Point p1)
-    {
-        return Point(x-p1.x,y-p1.y,z-p1.z);
-    }
-
-    //两向量之和
-    Point operator +(const Point p1)
-    {
-        return Point(x+p1.x,y+p1.y,z+p1.z);
-    }
-
-    //叉乘
-    Point operator *(const Point p)
-    {
-        return Point(y*p.z-z*p.y,z*p.x-x*p.z,x*p.y-y*p.x);
-    }
-
-    Point operator *(double d)
-    {
-        return Point(x*d,y*d,z*d);
-    }
-
-    Point operator / (double d)
-    {
-        return Point(x/d,y/d,z/d);
-    }
-
-    //点乘
-    double  operator ^(Point p)
-    {
-        return (x*p.x+y*p.y+z*p.z);
-    }
+    Point operator -(const Point p1){return Point(x-p1.x,y-p1.y,z-p1.z);}
+    Point operator +(const Point p1){return Point(x+p1.x,y+p1.y,z+p1.z);}
+    Point operator *(const Point p){return Point(y*p.z-z*p.y,z*p.x-x*p.z,x*p.y-y*p.x);}
+    Point operator *(double d){return Point(x*d,y*d,z*d);}
+    Point operator /(double d){return Point(x/d,y/d,z/d);}
+    double  operator ^(Point p){return (x*p.x+y*p.y+z*p.z);}
 };
 
-struct CH3D
-{
-    struct face
-    {
+struct CH3D{
+    struct face{
         //表示凸包一个面上的三个点的编号
         int a,b,c;
         //表示该面是否属于最终凸包上的面
@@ -69,46 +39,35 @@ struct CH3D
     //凸包表面的三角形
     int g[MAXN][MAXN];
     //向量长度
-    double vlen(Point a)
-    {
-        return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);
-    }
+    double vlen(Point a){return sqrt(a.x*a.x+a.y*a.y+a.z*a.z);}
     //叉乘
-    Point cross(const Point &a,const Point &b,const Point &c)
-    {
+    Point cross(const Point &a,const Point &b,const Point &c){
         return Point((b.y-a.y)*(c.z-a.z)-(b.z-a.z)*(c.y-a.y),
                      (b.z-a.z)*(c.x-a.x)-(b.x-a.x)*(c.z-a.z),
                      (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x)
                      );
     }
     //三角形面积*2
-    double area(Point a,Point b,Point c)
-    {
+    double area(Point a,Point b,Point c){
         return vlen((b-a)*(c-a));
     }
     //四面体有向体积*6
-    double volume(Point a,Point b,Point c,Point d)
-    {
+    double volume(Point a,Point b,Point c,Point d){
         return (b-a)*(c-a)^(d-a);
     }
     //正：点在面同向
-    double dblcmp(Point &p,face &f)
-    {
+    double dblcmp(Point &p,face &f){
         Point m=P[f.b]-P[f.a];
         Point n=P[f.c]-P[f.a];
         Point t=p-P[f.a];
         return (m*n)^t;
     }
-    void deal(int p,int a,int b)
-    {
+    void deal(int p,int a,int b){
         int f=g[a][b];//搜索与该边相邻的另一个平面
         face add;
-        if(F[f].ok)
-        {
-            if(dblcmp(P[p],F[f])>eps)
-              dfs(p,f);
-            else
-            {
+        if(F[f].ok){
+            if(dblcmp(P[p],F[f])>eps)dfs(p,f);
+            else{
                 add.a=b;
                 add.b=a;
                 add.c=p;//这里注意顺序，要成右手系
@@ -118,15 +77,14 @@ struct CH3D
             }
         }
     }
-    void dfs(int p,int now)//递归搜索所有应该从凸包内删除的面
-    {
+    //递归搜索所有应该从凸包内删除的面
+    void dfs(int p,int now){
          F[now].ok=0;
          deal(p,F[now].b,F[now].a);
          deal(p,F[now].c,F[now].b);
          deal(p,F[now].a,F[now].c);
     }
-    bool same(int s,int t)
-    {
+    bool same(int s,int t){
         Point &a=P[F[s].a];
         Point &b=P[F[s].b];
         Point &c=P[F[s].c];
@@ -207,30 +165,6 @@ struct CH3D
             F[num++]=F[i];
 
     }
-    //表面积
-    double area()
-    {
-        double res=0;
-        if(n==3)
-        {
-            Point p=cross(P[0],P[1],P[2]);
-            res=vlen(p)/2.0;
-            return res;
-        }
-        for(int i=0;i<num;i++)
-          res+=area(P[F[i].a],P[F[i].b],P[F[i].c]);
-        return res/2.0;
-    }
-    //体积
-    double volume()
-    {
-        double res=0;
-        Point tmp(0,0,0);
-        for(int i=0;i<num;i++)
-           res+=volume(tmp,P[F[i].a],P[F[i].b],P[F[i].c]);
-        return fabs(res/6.0);
-    }
-    //表面三角形个数
     int triangle()
     {
         return num;
@@ -251,25 +185,6 @@ struct CH3D
             res+=flag;
         }
         return res;
-    }
-    //三维凸包重心
-    Point barycenter()
-    {
-        Point ans(0,0,0),o(0,0,0);
-        double all=0;
-        for(int i=0;i<num;i++)
-        {
-            double vol=volume(o,P[F[i].a],P[F[i].b],P[F[i].c]);
-            ans=ans+(o+P[F[i].a]+P[F[i].b]+P[F[i].c])/4.0*vol;
-            all+=vol;
-        }
-        ans=ans/all;
-        return ans;
-    }
-    //点到面的距离
-    double ptoface(Point p,int i)
-    {
-        return fabs(volume(P[F[i].a],P[F[i].b],P[F[i].c],p)/vlen((P[F[i].b]-P[F[i].a])*(P[F[i].c]-P[F[i].a])));
     }
 };
 
