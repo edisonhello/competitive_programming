@@ -92,7 +92,55 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[1044];
+int n,s,m; 
+
+int dfs(int now){
+    if(now>n){
+        for(int i=2;i<=n;++i){
+            bool diff=0;
+            for(int j=1;j<=i/2;++j){
+                if(a[j]!=a[i+1-j]){
+                    diff=1;
+                    break;
+                }
+            }
+            if(!diff)return 0;
+        }
+        return 1;
+    }
+    int r=0;
+    for(int i=1;i<=s;++i){
+        a[now]=i;
+        r+=dfs(now+1);
+        if(r>=m)r-=m;
+    }
+    return r;
+}
+
+int pw(int b,int n,int a=1){
+    while(n){
+        if(n&1)a=1ll*a*b%m;
+        b=1ll*b*b%m; n>>=1;
+    }
+    return a;
+}
+
 
 int main(){
     CPPinput;
+    cin>>n>>s>>m;
+    for(int i=2;i<=n;++i){
+        a[i]=(1ll*s*a[i-1]%m+1ll*pw(s,(i+1)/2)-1ll*a[(i+1)/2]+m)%m;
+        PDE(i,a[i]);
+    }
+    cout<<(0ll+pw(s,n)-a[n]+m)%m<<endl;
+    /* m=mod;
+    for(s=1;s<=10;++s){
+        for(n=1;n<=10;++n){
+            cout<<dfs(1)<<",";
+        }
+        cout<<endl;
+    } */
+    // cout<<dfs(1)<<endl;
 }

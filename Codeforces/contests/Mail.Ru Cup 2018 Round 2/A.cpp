@@ -92,7 +92,23 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[1123],b[1123];
 
 int main(){
     CPPinput;
+    int n,k; cin>>n>>k;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=n;++i)cin>>b[i];
+    if(!a[1])NO,exit(0);
+    int far=1;
+    for(int i=1;i<=n;++i){
+        if(a[i]){
+            if(b[i])far=i;
+            if(i==k)YES,exit(0);
+        }
+    }
+    for(int i=far;i>=1;--i){
+        if(b[i] && i==k)YES,exit(0);
+    }
+    NO;
 }

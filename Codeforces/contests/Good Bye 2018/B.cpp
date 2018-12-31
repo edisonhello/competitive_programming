@@ -92,7 +92,23 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+map<pair<int,int>,int> cnt;
+pair<int,int> p[1005],c[1005];
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=0;i<n;++i)cin>>p[i].first>>p[i].second;
+    for(int i=0;i<n;++i)cin>>c[i].first>>c[i].second;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<n;++j){
+            cnt[make_pair(p[i].first+c[j].first,p[i].second+c[j].second)]+=1;
+        }
+    }
+    for(auto &p:cnt){
+        if(p.second==n){
+            cout<<p.first.first<<" "<<p.first.second<<endl;
+            exit(0);
+        }
+    }
 }

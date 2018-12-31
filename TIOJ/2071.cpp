@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -92,7 +93,47 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+pair<int,int> pt[2006];
+
+pair<int,int> operator-(const pair<int,int> &a,const pair<int,int> &b){ return pair<int,int>(a.first-b.first,a.second-b.second); }
+long long operator^(const pair<int,int> &a,const pair<int,int> &b){ return 1ll*a.first*b.second-1ll*a.second*b.first; }
+
+int gtbz(vector<pair<int,int>> v){
+    sort(v.begin(),v.end());
+    vector<pair<int,int>> tb;
+    for(auto p:v){
+        while(tb.size()>1u && ((p-tb.back())^(tb[tb.size()-2]-tb.back()))>=0)tb.pop_back();
+        tb.push_back(p);
+    }
+    v.pop_back();
+    reverse(v.begin(),v.end());
+    auto t=tb.size();
+    for(auto p:v){
+        while(tb.size()>t && ((p-tb.back())^(tb[tb.size()-2]-tb.back()))>=0)tb.pop_back();
+        tb.push_back(p);
+    }
+    return tb.size()-1;
+}
 
 int main(){
     CPPinput;
+    int n; cin>>n; n<<=1;
+    for(int i=0;i<n;++i)cin>>pt[i].first>>pt[i].second;
+    for(int z=0;;++z){
+        vector<pair<int,int>> v[2];
+        for(int i=0;i<n;++i)v[!!(z&(1<<i))].push_back(pt[i]);
+        if(v[0].empty() || v[1].empty())continue;
+        if(gtbz(v[0])==gtbz(v[1])){
+            cout<<"Yes\n";
+            vector<int> v[2];
+            for(int i=0;i<n;++i)v[!!(z&(1<<i))].push_back(i);
+            cout<<v[0].size()<<endl;
+            for(int i:v[0])cout<<i+1<<" "; cout<<endl;
+            cout<<v[1].size()<<endl;
+            for(int i:v[1])cout<<i+1<<" "; cout<<endl;
+            exit(0);
+        }
+    }
+    cout<<"No"<<endl;
+    
 }

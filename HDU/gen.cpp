@@ -7,7 +7,7 @@ double frand(){
 
 int main(){
     srand(time(0)+clock());
-    int t=1; while(t--){
+    int t=100; while(t--){
         int n=300; 
         cout<<n<<endl;
         for(int i=0;i<n;++i){

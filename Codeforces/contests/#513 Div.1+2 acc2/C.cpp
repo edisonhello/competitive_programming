@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -92,7 +93,47 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[2005],b[2005],pa[2005],pb[2005];
+vector<pair<int,int>> ball,tmp;
 
 int main(){
     CPPinput;
+    int n,m; cin>>n>>m;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1;i<=m;++i)cin>>b[i];
+    int x; cin>>x;
+    for(int i=1;i<=n;++i)pa[i]=pa[i-1]+a[i];
+    for(int i=1;i<=m;++i)pb[i]=pb[i-1]+b[i];
+    for(int i=1;i<=m;++i){
+        for(int j=i;j<=m;++j){
+            int sum=pb[j]-pb[i-1];
+            ball.eb(sum,j-i+1);
+        }
+    }
+    sort(ball.begin(),ball.end());
+    tmp.push_back(ball[0]);
+    for(int i=1;i<int(ball.size());++i){
+        if(ball[i].first==tmp.back().first)tmp.back()=ball[i];
+        else tmp.push_back(ball[i]);
+    }
+    ball.swap(tmp);
+    for(int i=1;i<int(ball.size());++i){
+        ball[i].second=max(ball[i].second,ball[i-1].second);
+    }
+    PDE(ball);
+    int ara=0;
+    for(int i=1;i<=n;++i){
+        for(int j=i;j<=n;++j){
+            int sum=pa[j]-pa[i-1];
+            int lim=x/sum;
+            if(!lim)break;
+            auto it=upper_bound(ball.begin(),ball.end(),make_pair(lim,1000000000));
+            if(it==ball.begin())break;
+            --it;
+            if((j-i+1)*(it->second)>ara){
+                ara=(j-i+1)*(it->second);
+            }
+        }
+    }
+    cout<<ara<<endl;
 }

@@ -92,7 +92,38 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+map<int,int> de;
+vector<long long> ans;
+int n;
+
+void dfs(map<int,int>::iterator it,int now){
+    if(it==de.end()){
+        PDE(now);
+        int steps=n/now;
+        long long tmp=steps;
+        tmp+=(0+1ll*(steps-1)*now)*steps/2;
+        ans.push_back(tmp);
+        return;
+    }
+    for(int i=0;i<=it->second;++i){
+        dfs(next(it),now);
+        now*=it->first;
+    }
+}
 
 int main(){
     CPPinput;
+    cin>>n;
+    int x=n;
+    for(int i=2;i*i<=x;++i){
+        while(x%i==0){
+            de[i]++;
+            x/=i;
+        }
+    }
+    if(x>1)++de[x],x=1;
+    PDE(de);
+    dfs(de.begin(),1);
+    sort(ans.begin(),ans.end());
+    for(long long i:ans)cout<<i<<" ";
 }

@@ -95,4 +95,12 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int a,b,c; cin>>a>>b>>c;
+    int mx=0;
+    for(int i=0;i<200;++i){
+        if(a>=i && b>=i+1 && c>=i+2){
+            mx=max(3*i+3,mx);
+        }
+    }
+    cout<<mx<<endl;
 }

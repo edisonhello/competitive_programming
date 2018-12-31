@@ -95,4 +95,24 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    /*int n;cin>>n;
+    int x,y;
+    int sumx=0,sumy=0;
+    for(int i=0;i<2*n;++i){
+        cin>>x>>y;
+        sumx+=x;
+        sumy+=y;
+
+    }
+    cout<<sumx/n<<" "<<sumy/n<<endl;*/
+    int n;cin>>n;
+    int ax[n+1],ay[n+1];
+    int bx[n+1],by[n+1];
+    for(int i=0;i<n;++i)cin>>ax[i]>>ay[i];
+    for(int i=0;i<n;++i)cin>>bx[i]>>by[i];
+    int sx[n+1]={0},sy[n+1]={0};
+    for(int i=0;i<n;++i)sx[i]=ax[i]+bx[i],sy[i]=ay[i]+by[i];
+    int avgx=0,avgy=0;
+    for(int i=0;i<n;++i)avgx+=sx[i],avgy+=sy[i];
+    cout<<avgx/n<<" "<<avgy/n<<endl;
 }

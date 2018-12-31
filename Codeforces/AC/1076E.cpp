@@ -1,3 +1,5 @@
+#include<bits/stdc++.h>
+using namespace std;
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmisleading-indentation"
@@ -45,3 +47,55 @@ struct outputter{
     ~outputter(){ fwrite(buffer,sizeof(char),ptr-buffer,stdout); }
 } pit;
 #pragma GCC diagnostic pop
+
+vector<int> G[300005];
+
+vector<pair<int,int>> tags[300005];
+
+long long ans[300005];
+
+long long vals[600005];
+long long value;
+
+void dfs(int now,int pa,int dep){
+    for(auto &p:tags[now]){
+        vals[p.first+dep]+=p.second;
+        value+=p.second;
+    }
+    value-=vals[dep-1];
+    ans[now]=value;
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs(i,now,dep+1);
+    }
+    value+=vals[dep-1];
+    for(auto &p:tags[now]){
+        vals[p.first+dep]-=p.second;
+        value-=p.second;
+    }
+}
+
+vector<pair<int,int>> edg;
+int deg[300005];
+int main(){
+    int n; rit(n);
+    edg.resize(n-1);
+    for(int i=1,u,v;i<n;++i){
+        rit(u,v);
+        ++deg[u]; ++deg[v];
+        edg[i-1]={u,v};
+    }
+    for(int i=1;i<=n;++i)G[i].resize(deg[i]);
+    for(auto &p:edg){
+        G[p.first][--deg[p.first]]=p.second;
+        G[p.second][--deg[p.second]]=p.first;
+    }
+    int m,v,d,x; rit(m);
+    while(m--){
+        rit(v,d,x);
+        d=min(d,n);
+        tags[v].emplace_back(d,x);
+    }
+    dfs(1,1,1);
+    for(int i=1;i<=n;++i)cout<<ans[i]<<" "; cout<<endl;
+}

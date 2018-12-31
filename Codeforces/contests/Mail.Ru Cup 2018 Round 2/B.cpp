@@ -92,7 +92,70 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[100005];
+set<pair<int,int>> st;
 
 int main(){
     CPPinput;
+    int n,m,l; cin>>n>>m>>l;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    for(int i=1,j=1;i<=n;i=j){
+        if(a[i]<=l){ j=i+1; continue; }
+        for(j=i;j<=n;++j){
+            if(a[j]<=l)break;
+        }
+        st.insert({i,j-1});
+    }
+    while(m--){
+        int c; cin>>c;
+        if(c==0){
+            cout<<st.size()<<endl;
+        }
+        else{
+            int z,x; cin>>z>>x;
+            if(a[z]>l)continue;
+            a[z]+=x;
+            if(a[z]>l){
+                auto it=st.lower_bound({z,0});
+                bool merge=0;
+                if(it==st.end());
+                else{
+                    if(it->first==z+1){
+                        merge=1;
+                        auto p=*it;
+                        st.erase(it);
+                        --p.first;
+                        st.insert(p);
+                        it=st.lower_bound({z,0});
+                        PDE(st);
+                        if(it!=st.begin()){
+                            --it;
+                            PDE(*it);
+                            if(it->second==z-1){
+                                p=*it;
+                                ++it;
+                                auto pp=*it;
+                                st.erase(prev(it));
+                                st.erase(it);
+                                st.insert({p.first,pp.second});
+                                PDE(st);
+                            }
+                        }
+                    }
+                }
+                it=st.lower_bound({z,0});
+                if(it!=st.begin()){
+                    --it;
+                    if(it->second==z-1){
+                        merge=1;
+                        auto p=*it;
+                        st.erase(it);
+                        ++p.second;
+                        st.insert(p);
+                    }
+                }
+                if(!merge)st.insert({z,z});
+            }
+        }
+    }
 }

@@ -90,9 +90,68 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
-const ll mod=1e9+7;
+ll mods[]={1000000000+7,1000000000+9,1000000000+123,1000000000+87};
+ll mod;
 
+string s[3333],t[3333];
+ll hhs[3003][3003],hht[3003][3003],pp[3333];
+
+#define gethh(a,l,r) (((a[r]-a[(l)-1]+mod)*pp[3005-(r)]%mod))
 
 int main(){
     CPPinput;
+    srand(time(0)+clock());
+    mod=mods[rand()%4];
+
+    pp[0]=1;
+    for(int i=1;i<3333;++i)pp[i]=pp[i-1]*47017%mod;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>s[i],s[i]=" "+s[i]+" ";
+    for(int i=1;i<=n;++i)cin>>t[i],t[i]=" "+t[i]+" ";
+    for(int i=1;i<=n;++i)for(int j=1;j<int(s[i].size());++j)hhs[i][j]=(hhs[i][j-1]+s[i][j]*pp[j])%mod;
+    for(int i=1;i<=n;++i)for(int j=1;j<int(t[i].size());++j)hht[i][j]=(hht[i][j-1]+t[i][j]*pp[j])%mod;
+    int L=1e9,R=0;
+    ll pattern=0,to=0;
+    int patlen=0;
+    string pastr,tostr;
+    for(int i=1;i<=n;++i){
+        for(int j=1;j<int(s[i].size());++j){
+            if(s[i][j]!=t[i][j])L=min(L,j),R=max(R,j);
+        }
+        if(R){
+            pattern=gethh(hhs[i],L,R);
+            to=gethh(hht[i],L,R);
+            patlen=R-L+1;
+            pastr=s[i].substr(L,patlen);
+            tostr=t[i].substr(L,patlen);
+            break;
+        }
+    }
+    PDE(L,R,pastr,tostr,patlen);
+    if(!R){
+        cout<<"YES\na\na\n";
+        exit(0);
+    }
+    for(int i=1;i<=n;++i){
+        bool gotdiff=0;
+        for(int j=1;j+patlen-1<int(s[i].size());++j){
+            if(gethh(hhs[i],j,j+patlen-1)==pattern && !gotdiff){
+                PDE(i,j);
+                PDE(gethh(hhs[i],1,j-1),to                        ,gethh(hhs[i],j+patlen,int(s[i].size())-1));
+                PDE(gethh(hht[i],1,j-1),gethh(hht[i],j,j+patlen-1),gethh(hht[i],j+patlen,int(s[i].size())-1));
+                if((gethh(hhs[i],1,j-1)+to+gethh(hhs[i],j+patlen,int(s[i].size())-1))%mod!=(gethh(hht[i],1,j-1)+gethh(hht[i],j,j+patlen-1)+gethh(hht[i],j+patlen,int(s[i].size())-1))%mod){
+                    cout<<"NO"<<endl;
+                    exit(0);
+                }
+                gotdiff=1;
+            }
+        }
+        if(!gotdiff && s[i]!=t[i]){
+            cout<<"NO"<<endl;
+            exit(0);
+        }
+    }
+    cout<<"YES"<<endl;
+    cout<<pastr<<endl;
+    cout<<tostr<<endl;
 }

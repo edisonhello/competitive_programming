@@ -92,7 +92,27 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+string s[303][303],t[303][303];
 
 int main(){
     CPPinput;
+    int n,m; cin>>n>>m;
+    for(int i=1;i<=n;++i)for(int j=1;j<=m;++j)cin>>s[i][j];
+    for(int i=1;i<=n;++i)for(int j=1;j<=m;++j)cin>>t[i][j];
+    int q; cin>>q;
+    while(q--){
+        int a,b,c,d; cin>>a>>b>>c>>d;
+        if(a==c && b==d)assert(0);
+        if(a!=c && b!=d)assert(0);
+        // swap(a,c); swap(b,d);
+        s[c][d]=s[a][b].back()+s[c][d];
+        s[a][b].pop_back();
+        for(int i=1;i<=n;++i){
+            for(int j=1;j<=m;++j){
+                cout<<s[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        cout<<endl;
+    }
 }
