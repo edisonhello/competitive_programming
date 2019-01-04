@@ -95,7 +95,24 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
-    int n=2000,m=2000;
-    while(n--)cout<<char('a'+rand()%2); cout<<endl;
-    while(m--)cout<<char('a'+rand()%2); cout<<endl;
+    srand(time(0)+clock());
+    int n=200000,k=5; cout<<n<<" "<<k<<endl;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<k;++j)cout<<rand()%1000000+1<<' ';
+        cout<<'\n';
+    }
+    int q=200000; cout<<q<<endl;
+    while(q--){
+        int c=rand()%2+1; cout<<c<<' ';
+        if(c==1){
+            cout<<rand()%n+1<<' ';
+            for(int j=0;j<k;++j)cout<<rand()%1000000+1<<' ';
+            cout<<'\n';
+        }
+        else{
+            int l=rand()%n+1,r=rand()%n+1;
+            if(l>r)swap(l,r);
+            cout<<l<<" "<<r<<'\n';
+        }
+    }
 }
