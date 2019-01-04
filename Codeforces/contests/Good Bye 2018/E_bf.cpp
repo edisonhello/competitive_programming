@@ -92,7 +92,35 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+bool can(vector<int> v){
+    while(v.size()){
+        sort(v.begin(),v.end(),greater<int>());
+        while(v.size() && v.back()==0)v.pop_back();
+        PDE(v);
+        if(v.empty())return 1;
+        if(v[0]>int(v.size())-1)return 0;
+        for(int i=1;i<=v[0];++i)v[i]--;
+        v[0]=0;
+    }
+    return 1;
+}
 
 int main(){
     CPPinput;
+    srand(time(0)+clock());
+    // int n; cin>>n;
+    int n=rand()%10+1;
+    vector<int> deg(n);
+    // for(int i=0;i<n;++i)cin>>deg[i];
+    for(int i=0;i<n;++i)deg[i]=rand()%(n);
+    for(int i=0;i<=n;++i){
+        deg.push_back(i);
+        PDE("deg: ",i);
+        if(can(deg)){
+            // cout<<i<<" ";
+            PDE("ok: ",i);
+        }
+        deg.pop_back();
+    }
+
 }

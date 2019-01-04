@@ -92,7 +92,40 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int a[200005];
+
+long long calc(int n,int k){
+    map<int,int> mp;
+    mp[0]=1;
+    int x=0;
+    long long rt=0;
+    auto f=[&](int x)->int{
+        auto it=mp.find(x);
+        if(it==mp.end())return 0;
+        else return it->second;
+    };
+    for(int i=1;i<=n;++i){
+        int to=a[i]^((1<<k)-1);
+        if(f(x^a[i])>f(x^to))a[i]=to;
+        x^=a[i];
+        rt+=mp[x];
+        ++mp[x];
+    }
+    return rt;
+}
 
 int main(){
+    srand(time(0)+clock());
     CPPinput;
+    int n,k; cin>>n>>k;
+    for(int i=1;i<=n;++i)cin>>a[i];
+    cout<<1ll*n*(n-1)/2+n-calc(n,k)<<endl;
+
+    /* PDE(calc(n));
+
+    for(int t=1;t<=10;++t){
+        int x=rand()%n+1;
+        a[x]=((1<<k)-1)^a[x];
+        PDE(calc(n));
+    } */
 }

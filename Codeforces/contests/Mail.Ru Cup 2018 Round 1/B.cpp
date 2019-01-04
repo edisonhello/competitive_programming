@@ -95,4 +95,15 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    int mx=-1;
+    for(int i=1;i<=n;++i){
+        int t; cin>>t;
+        if(t>mx+1){
+            cout<<i<<endl;
+            exit(0);
+        }
+        mx=max(mx,t);
+    }
+    cout<<-1<<endl;
 }

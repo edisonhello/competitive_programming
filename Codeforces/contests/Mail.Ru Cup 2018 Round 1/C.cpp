@@ -92,7 +92,36 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int l[1004],r[1004];
+int id[1004];
+int ans[1004];
+
+vector<int> sums[1004];
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    for(int i=1;i<=n;++i)cin>>l[i];
+    for(int i=1;i<=n;++i)cin>>r[i];
+    for(int i=1;i<=n;++i)if(l[i]+r[i]>=n)JIZZ("NO");
+    for(int i=1;i<=n;++i)sums[l[i]+r[i]].pb(i);
+    int add=0,now=n;
+    for(int i=0;i<=n;++i){
+        PDE(i,add,sums[i]);
+        if(sums[i].size() && i!=add)JIZZ("NO");
+        for(int x:sums[i]){
+            ++add;
+            ans[x]=now;
+        }
+        --now;
+    }
+    #undef ll
+    for(int i=1;i<=n;++i){
+        int ll=0,rr=0;
+        for(int j=1;j<i;++j)if(ans[j]>ans[i])++ll;
+        for(int j=i+1;j<=n;++j)if(ans[j]>ans[i])++rr;
+        if(ll!=l[i] || rr!=r[i])JIZZ("NO");
+    }
+    YES;
+    for(int i=1;i<=n;++i)cout<<ans[i]<<" ";
 }

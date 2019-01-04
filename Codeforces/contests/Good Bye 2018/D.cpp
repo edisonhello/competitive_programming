@@ -90,9 +90,39 @@ void JIZZ(string output=""){cout<<output; exit(0);}
 
 const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
-const ll mod=1e9+7;
+const ll mod=998244353;
 
+ll fac[1000006];
+ll big[1000006];
+ll mns[1000006];
+ll ans[1000006];
 
 int main(){
     CPPinput;
+    int n; cin>>n;
+    if(n==1)cout<<1<<endl;
+    if(n==2)cout<<2<<endl;
+    if(n<=2)exit(0);
+    fac[0]=1;
+    for(int i=1;i<=n;++i)fac[i]=fac[i-1]*i%mod;
+    for(int i=0;i<=n;++i)big[i]=fac[i]*i%mod;
+    mns[3]=9;
+    for(int i=4;i<=n;++i)mns[i]=(mns[i-1]*i+i)%mod;
+    cout<<(big[n]-mns[n]+mod)%mod<<endl;
+    /* vector<int> a(n); iota(a.begin(),a.end(),1);
+    vector<int> v;
+    do{
+        for(int i:a)v.push_back(i);
+    }while(next_permutation(a.begin(),a.end()));
+    PDE(v);
+    int cnt=0;
+    for(int i=0;i<v.size();++i){
+        int sum=0;
+        for(int j=i;j<v.size();++j){
+            sum+=v[j];
+            if(sum==n*(n+1)/2 && j-i+1==n)++cnt;
+            if(sum>=n*(n+1)/2)break;
+        }
+    }
+    cout<<cnt<<endl; */
 }

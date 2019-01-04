@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -92,7 +93,31 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+int cnt[10];
 
 int main(){
     CPPinput;
+    int n; cin>>n; string s; cin>>s;
+    int c8=0,co=0;
+    for(char c:s    ){
+        if(c=='8')++c8;
+        else ++co;
+    }
+    int a=0;
+    while(1){
+        if(c8>=1 && c8+co>=11){
+            PDE(c8,co);
+            --c8;
+            int ne=10;
+            int ccc=min(ne,co);
+            PDE(ne,ccc);
+            ne-=ccc;
+             co-=ccc;
+             c8-=ne;
+            ++a;
+
+        }
+        else break;
+    }
+    cout<<a<<endl;
 }

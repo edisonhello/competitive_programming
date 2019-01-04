@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -93,6 +94,17 @@ const ld eps=1e-10;
 const ll mod=1e9+7;
 
 
+vector<int> ls,rs;
 int main(){
     CPPinput;
+    int n; cin>>n;
+    ls.resize(n); rs.resize(n);
+    for(int i=0;i<n;++i){
+        cin>>ls[i]>>rs[i];
+    }
+    sort(ls.begin(),ls.end());
+    sort(rs.begin(),rs.end());
+    ll ans=n;
+    for(int i=0;i<n;++i)ans+=max(ls[i],rs[i]);
+    cout<<ans<<endl;
 }

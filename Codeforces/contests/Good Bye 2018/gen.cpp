@@ -92,7 +92,19 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+pair<int,int> p[1005],c[1005];
 
 int main(){
     CPPinput;
+    int n=1000; cout<<n<<endl;
+    int Tx=2500000,Ty=1500000;
+    for(int i=0;i<n;++i){
+        p[i]={1000000-i,0};
+        cout<<p[i].first<<" "<<p[i].second<<endl;
+    }
+    for(int i=0;i<n;++i){
+        c[i]={Tx-p[i].first,Ty-p[i].second};
+        cout<<c[i].first<<" "<<c[i].second<<endl;
+    }
+    
 }

@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC target("sse4.2,arch=core-avx2,tune=core-avx2")
 // #pragma GCC diagnostic ignored "-W"
 
 #include<cassert>
@@ -95,4 +96,24 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    srand(time(0)+clock());
+    int n=200000,k=5; cout<<n<<" "<<k<<endl;
+    for(int i=0;i<n;++i){
+        for(int j=0;j<k;++j)cout<<rand()%1000000+1<<' ';
+        cout<<'\n';
+    }
+    int q=200000; cout<<q<<endl;
+    while(q--){
+        int c=rand()%2+1; cout<<c<<' ';
+        if(c==1){
+            cout<<rand()%n+1<<' ';
+            for(int j=0;j<k;++j)cout<<rand()%1000000+1<<' ';
+            cout<<'\n';
+        }
+        else{
+            int l=rand()%n+1,r=rand()%n+1;
+            if(l>r)swap(l,r);
+            cout<<l<<" "<<r<<'\n';
+        }
+    }
 }

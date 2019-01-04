@@ -95,4 +95,11 @@ const ll mod=1e9+7;
 
 int main(){
     CPPinput;
+    int x,y,z,t1,t2,t3;
+    cin>>x>>y>>z>>t1>>t2>>t3;
+    int stair=abs(y-x)*t1;
+    int ele=abs(z-x)*t2+t3+t3+abs(x-y)*t2+t3;
+    PDE(ele,stair);
+    if(ele<=stair)YES;
+    else NO;
 }

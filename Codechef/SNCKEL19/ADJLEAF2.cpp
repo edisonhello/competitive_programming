@@ -92,7 +92,39 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+vector<int> G[500005];
+int p[21][500005],d[500005];
+
+void dfs(int now,int pa,int dep){
+    p[0][now]=pa;
+    for(int i=1;i<21;++i)p[i][now]=p[i-1][p[i-1][now]];
+    for(int i:G[now]){
+        if(i==pa)continue;
+        dfs(i,now,dep+1);
+    }
+}
+
+int lca(int u,int v){
+    if(u==v)return u;
+    if(d[u]<d[v])swap(u,v); d[u]>d[v];
+    for(int i=20;i>=0;--i)if((d[u]-d[v])&(1<<i)){
+        u=p[i][u];
+    }
+    if(u==v)return u;
+    for(int i=20;i>=0;--i)if(p[i][u]!=p[i][v]){
+        u=p[i][u]; v=p[i][v];
+    }
+    return p[0][u];
+}
 
 int main(){
     CPPinput;
+    int n,q; cin>>n>>q;
+    for(int i=1;i<n;++i){
+        int u,v; cin>>u>>v;
+        G[u].pb(v);
+        G[v].pb(u);
+    }
+    dfs(1,0,1);
+
 }
