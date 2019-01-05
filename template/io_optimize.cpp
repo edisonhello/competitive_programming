@@ -26,6 +26,10 @@ inline bool rit(T& x,Args& ...args){return rit(x)&&rit(args...);}
 
 struct outputter{
     char buffer[4112], *ptr=buffer, *end=buffer+4096;
+    inline void writebyte(char c) {
+        *ptr = c; ++ptr;
+        if (ptr > end) fwrite(buffer, sizeof(char), ptr-buffer,stdout), ptr=buffer;
+    }
     template <typename T> inline void writeint(T x, char endc='\n'){
         if(x<0)*ptr = '-', ++ptr, x=-x; if(!x)*ptr='0', ++ptr;
         char *s=ptr, c; T t;
