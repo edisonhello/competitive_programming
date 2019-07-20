@@ -133,55 +133,12 @@ const ll mod=1e9+7;
 
 vint G[200006];
 bool u[200006];
-int cf[200006],dep[200006],subs;
+int subs,dp[200006][2];
 
-int dfs(int now){
-    u[now]=1;
-    int rt=now;
+void dfs(int now,int pa){
+    int son=0;
     for(int i:G[now]){
-        if(u[i])continue;
-        dep[i]=dep[now]+1;
-        int srt=dfs(i);
-        if(dep[srt]>dep[rt])rt=srt;
-    }
-    u[now]=0;
-    return rt;
-}
-int ddfs(int now){
-    u[now]=1;
-    int rt=now;
-    for(int i:G[now]){
-        if(u[i])continue;
-        dep[i]=dep[now]+1;
-        int srt=ddfs(i);
-        if(dep[srt]>dep[rt])rt=srt;
-        cf[i]=now;
-    }
-    u[now]=0;
-    return rt;
-}
-
-void meow(int now){
-PDE1(now);
-    ++subs;
-    dep[now]=0;
-    int far1=dfs(now);
-    dep[far1]=0;
-    int far2=ddfs(far1);
-    PDE2(far1,far2);
-    int uv=far2;
-    u[uv]=1;
-    while(uv!=far1){
-        uv=cf[uv];
-        u[uv]=1;
-    }
-    uv=far2;
-    while(uv!=far1){
-        for(int i:G[uv]){
-            if(u[i])continue;
-            meow(i);
-        }
-        uv=cf[uv];
+        ++son;
     }
 }
 
@@ -199,6 +156,7 @@ int main(){
         else cout<<(ll)y*(n-1)<<endl;
         return 0;
     }
-    meow(1);
+    dfs(1,0);
+    subs=min(dp[1][0],dp[1][1]);
     cout<<(ll)(subs-1)*y+(ll)(n-subs)*x<<endl;
 }

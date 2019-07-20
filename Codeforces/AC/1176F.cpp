@@ -93,7 +93,43 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+long long dp[10], prv[10];
 
 int main(){
     CPPinput;
+    int n; cin >> n; 
+    for (int i = 1; i < 10; ++i) prv[i] = -1e18;
+    while (n--) {
+        for (int i = 0; i < 10; ++i) dp[i] = -1e18;
+        int n; cin >> n;
+        vector<int> v[5];
+        while (n--) {
+            int c, d; cin >> c >> d;
+            v[c].push_back(d);
+        }
+        for (int i = 1; i <= 3; ++i) sort(v[i].begin(), v[i].end(), greater<int>());
+        for (int i = 1; i <= 3; ++i) v[i].resize(min((int)v[i].size(), 3 / i));
+        vector<vector<pair<int, int>>> take = {{}, {{1, 0}}, {{1, 0}, {1, 1}}, {{1, 0}, {1, 1}, {1, 2}}, {{2, 0}}, {{2, 0}, {1, 0}}, {{3, 0}}};
+        for (auto &vt : take) {
+            bool ok = true;
+            for (auto &p : vt) if (p.second >= (int)v[p.first].size()) ok = false;
+            if (!ok) continue;
+            vector<long long> c;
+            for (auto &p : vt) c.push_back(v[p.first][p.second]);
+            sort(c.begin(), c.end());
+            do {
+                for (int i = 0; i < 10; ++i) {
+                    int j = i + c.size();
+                    if (j >= 10) {
+                        dp[j % 10] = max(dp[j % 10], prv[i] + accumulate(c.begin(), c.end(), 0ll) + c[9 - i]);
+                    } else {
+                        dp[j] = max(dp[j], prv[i] + accumulate(c.begin(), c.end(), 0ll));
+                    }
+                }
+            } while (next_permutation(c.begin(), c.end()));
+        }
+        for (int i = 0; i < 10; ++i) PDE(i, dp[i]);
+        swap(dp, prv);
+    }
+    cout << *max_element(prv, prv + 10) << endl;
 }

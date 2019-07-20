@@ -93,7 +93,71 @@ const ld PI=3.14159265358979323846264338327950288;
 const ld eps=1e-10;
 const ll mod=1e9+7;
 
+struct node {
+    node *l, *r;
+    int pri, val, sz;
+    int lz() { return l ? l->sz : 0; }
+    int rz() { return r ? r->sz : 0; }
+    void pull() { sz = lz() + rz() + 1; }
+    node(int v) : l(0), r(0), pri(rand()), val(v), sz(1) {}
+} *root;
+
+node* merge(node *a, node *b) {
+    if (!a) return b; if (!b) return a;
+    if (a->pri > b->pri) return a->r = merge(a->r, b), a->pull(), a;
+    else return b->l = merge(a, b->l), b->pull(), b;
+}
+void split(node *now, int v, node *&a, node *&b) {
+    if (!now) { a = b = 0; return; }
+    if (now->val <= v) a = now, split(now->r, v, a->r, b);
+    else b = now, split(now->l, v, a, b->l);
+    now->pull();
+}
+
+struct point {
+    int x, y;
+} p[200005];
+
+map<int, vector<int>> mp;
+
+int split(int l, int r) {
+    node *a, *b, *c, *d;
+    split(root, l, a, d);
+    split(d, r - 1, b, c);
+    int ans = (b ? b->sz : 0);
+    root = merge(a, merge(b, c));
+    return ans;
+}
+
+void insert(int x) {
+    node *a, *b, *c, *d;
+    split(root, x - 1, a, d);
+    split(d, x, b, c);
+    if (b) root = merge(a, merge(b, c));
+    else root = merge(a, merge(new node(x), c));
+}
 
 int main(){
     CPPinput;
+    int n; cin >> n;
+    for (int i = 0; i < n; ++i) cin >> p[i].x >> p[i].y;
+    for (int i = 0; i < n; ++i) mp[p[i].y].push_back(p[i].x);
+    long long ans = 0;
+    for (auto it = mp.rbegin(); it != mp.rend(); ++it) {
+        vector<int> &v = it->second;
+        sort(v.begin(), v.end());
+        int sz = split(-1000000001, v[0]);
+        ans -= 1ll * sz * (sz + 1) / 2;
+        sz = split(v.back(), 1000000001);
+        ans -= 1ll * sz * (sz + 1) / 2;
+        for (int i = 1; i < (int)v.size(); ++i) {
+            sz = split(v[i - 1], v[i]);
+            ans -= 1ll * sz * (sz + 1) / 2;
+        }
+        for (int i : v) insert(i);
+        sz = root->sz;
+        ans += 1ll * sz * (sz + 1) / 2;
+        PDE(root->sz, ans);
+    }
+    cout << ans << endl;
 }
