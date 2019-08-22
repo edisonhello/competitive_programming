@@ -1,21 +1,100 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int es[35][2];
+namespace matching {
+static const int maxn = 1005;
+int fa[maxn], match[maxn], aux[maxn], orig[maxn], v[maxn], tk;
+vector<int> g[maxn];
+queue<int> q;
+void init() {
+    for (int i = 0; i < maxn; ++i) {
+        g[i].clear();
+        match[i] = -1;
+        fa[i] = -1;
+        aux[i] = 0;
+    }
+    tk = 0;
+}
+void add_edge(int x, int y) {
+    g[x].push_back(y);
+    g[y].push_back(x);
+}
+void augment(int x, int y) {
+    int a = y, b = -1;
+    do {
+        a = fa[y], b = match[a];
+        match[y] = a, match[a] = y;
+        y = b;
+    } while (x != a);
+}
+int lca(int x, int y) {
+    ++tk;
+    while (true) {
+        if (~x) {
+            if (aux[x] == tk) return x;
+            aux[x] = tk;
+            x = orig[fa[match[x]]];
+        }
+        swap(x, y);
+    }
+}
+void blossom(int x, int y, int a) {
+    while (orig[x] != a) {
+        fa[x] = y, y = match[x];
+        if (v[y] == 1) q.push(y), v[y] = 0;
+        orig[x] = orig[y] = a;
+        x = fa[y];
+    }
+}
+bool bfs(int s) {
+    for (int i = 0; i < maxn; ++i) {
+        v[i] = -1;
+        orig[i] = i;
+    }
+    q = queue<int>();
+    q.push(s);
+    v[s] = 0;
+    while (q.size()) {
+        int x = q.front(); q.pop();
+        for (const int &u : g[x]) {
+            if (v[u] == -1) {
+                fa[u] = x, v[u] = 1;
+                if (!~match[u]) return augment(s, u), true;
+                q.push(match[u]);
+                v[match[u]] = 0;
+            } else if (v[u] == 0 && orig[x] != orig[u]) {
+                int a = lca(orig[x], orig[u]);
+                blossom(u, x, a);
+                blossom(x, u, a);
+            }
+        }
+    }
+    return false;
+}
+int solve(int n) {
+    int ans = 0;
+    vector<int> z(n);
+    iota(z.begin(), z.end(), 0);
+    random_shuffle(z.begin(), z.end());
+    for (int x : z) if (!~match[x]) {
+        for (int y : g[x]) if (!~match[y]) {
+            match[y] = x;
+            match[x] = y;
+            ++ans;
+            break;
+        }
+    }
+    for (int i = 0; i < n; ++i) if (!~match[i] && bfs(i)) ++ans;
+    return ans;
+}}
 
 int main() {
     ios_base::sync_with_stdio(0); cin.tie(0);
     int n, m; cin >> n >> m;
-    for (int i = 0; i < m; ++i) cin >> es[i][0] >> es[i][1];
-    int mx = 0;
-    for (int z = 0; z < (1 << m); ++z) {
-        set<int> st;
-        bool no = false;
-        for (int i = 0; i < m; ++i) if (z & (1 << i)) {
-            if (st.count(es[i][0]) || st.count(es[i][1])) { no = true; break; }
-            st.insert(es[i][0]); st.insert(es[i][1]);
-        }
-        if (!no) mx = max(mx, (int)st.size() / 2);
+    matching::init();
+    for (int i = 0; i < m; ++i) {
+        int u, v; cin >> u >> v;
+        matching::add_edge(u - 1, v - 1);
     }
-    cout << mx << endl;
+    cout << matching::solve(n) << endl;
 }

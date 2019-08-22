@@ -6,8 +6,8 @@ int dfn[200005], low[200005], nt, cc;
 bitset<200005> matched;
 
 void dfs1(int now, int pa) {
-    static stack<int> st;
-    st.push(now);
+    static stack<pair<int, int>> st;
+    st.emplace(now, pa);
     int sons = 0;
     dfn[now] = low[now] = ++nt;
     bool cut = false;
@@ -21,13 +21,18 @@ void dfs1(int now, int pa) {
             if (low[i] >= dfn[now]) {
                 ++cc;
                 cut = true;
-                while (st.top() != now) {
-                    bel[st.top()].insert(cc);
-                    mem[cc].insert(st.top());
+                while (st.top() != make_pair(i, now)) {
+                    bel[st.top().first].insert(cc);
+                    mem[cc].insert(st.top().first);
+                    bel[st.top().second].insert(cc);
+                    mem[cc].insert(st.top().second);
                     st.pop();
                 }
-                bel[st.top()].insert(cc);
-                mem[cc].insert(st.top());
+                bel[st.top().first].insert(cc);
+                mem[cc].insert(st.top().first);
+                bel[st.top().second].insert(cc);
+                mem[cc].insert(st.top().second);
+                st.pop();
             }
         }
     }
