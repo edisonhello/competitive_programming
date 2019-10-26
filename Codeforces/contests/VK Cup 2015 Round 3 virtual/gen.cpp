@@ -97,4 +97,16 @@ const long long mod = 1e9+7;
 
 int main() {
     CPPinput;
+    srand(time(0) * clock());
+    int n = 10, m = 10; cout << n << " " << m << endl;
+    for (int i = 1; i <= n; ++i) {
+        int l = rand() % 1000000000, r = rand() % 1000000000;
+        if (l > r) swap(l, r);
+        cout << l << " " << r << endl;
+    }
+    for (int i = 1; i <= m; ++i) {
+        int l = rand() % 1000000000, r = rand() % 1000000000;
+        if (l > r) swap(l, r);
+        cout << l << " " << r << " " << rand() % 20 + 1 << endl;
+    }
 }

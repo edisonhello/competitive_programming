@@ -94,7 +94,34 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+int a[50005];
 
 int main() {
     CPPinput;
+    int n; cin >> n;
+    for (int i = 0; i < n; ++i) cin >> a[i];
+    bool tag = 0;
+    for (int i = 0; i < n; ++i) {
+        if (a[i] % 2 == 0) {
+            cout << a[i] / 2 << '\n';
+        } else {
+            if (tag) {
+                if (a[i] < 0) {
+                    a[i] /= 2;
+                    --a[i];
+                } else {
+                    a[i] /= 2;
+                }
+            } else {
+                if (a[i] < 0) {
+                    a[i] /= 2;
+                } else {
+                    a[i] /= 2;
+                    ++a[i];
+                }
+            }
+            tag ^= 1;
+            cout << a[i] << '\n';
+        }
+    }
 }

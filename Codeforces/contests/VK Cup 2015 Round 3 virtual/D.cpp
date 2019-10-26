@@ -66,10 +66,10 @@ using namespace std;
 #define expl explexplexpl
 #define data datadetedoto
 
-#define YES cout << "YES" << endl
-#define NO cout << "NO" << endl
-#define Yes cout << "Yes" << endl
-#define No cout << "No" << endl
+#define YES cout <<"YES" << endl
+#define NO cout <<"NO" << endl
+#define Yes cout <<"Yes" << endl
+#define No cout <<"No" << endl
 
 #ifdef WEAK
 #include"/home/edison/Coding/cpp/template/debug.cpp"
@@ -94,7 +94,36 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+bitset<1000005> np;
+vector<int> p;
+
+int J(int x) {
+    int sum = 0;
+    for (int i = 1; i <= x; ++i) {
+        if (x % i == 0 && __gcd(i, x / i) == 1)
+            sum += i;
+    }
+    return sum;
+}
 
 int main() {
     CPPinput;
+    for (int i = 2; i <= 1000000; ++i) {
+        if (np[i]) continue;
+        p.push_back(i);
+        for (long long j = 1ll * i * i; j <= 1000000; j += i) {
+            np[j] = 1;
+        }
+    }
+    vector<int> cnt(1000001, 0);
+    int mx = 0;
+    for (int i = 1; i <= 100; ++i) {
+        int j = J(i);
+        mx = max(mx, j);
+        ++cnt[j];
+        PDE(i, j);
+    }
+    for (int i = 1; i <= mx; ++i) if (cnt[i]) PDE(i, cnt[i]);
+    // long long A; cin >> A;
+
 }

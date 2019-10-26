@@ -94,7 +94,33 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+int a[100005], pos[100005], b[100005];
+
+int bit[100005];
+int query(int x) {
+    int a = 0;
+    for (; x; x -= lowbit(x)) a += bit[x];
+    return a;
+}
+void add(int x) {
+    for (; x < 100005; x += lowbit(x)) ++bit[x];
+}
 
 int main() {
     CPPinput;
+    int n; cin >> n;
+    for (int i = 1; i <= n; ++i) cin >> a[i], pos[a[i]] = i;
+    for (int i = 1; i <= n; ++i) {
+        int t; cin >> t;
+        b[i] = pos[t];
+        PDE(i, b[i]);
+    }
+    int ans = 0;
+    for (int i = n; i >= 1; --i) {
+        if (query(b[i])) {
+            ++ans;
+        } 
+        add(b[i]);
+    }
+    cout << ans << endl;
 }

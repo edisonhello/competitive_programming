@@ -94,7 +94,79 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+struct node {
+    node *l, *r;
+    int mx, mn;
+    void pull() {
+        mx = max(l->mx, r->mx);
+        mn = min(l->mn, r->mn);
+    }
+} *croot, *toroot;
+
+#define mid ((l + r) >> 1)
+void build(node *now, int l, int r, vector<int> &ref) {
+    if (l == r) {
+        now->mx = now->mn = ref[l];
+        return;
+    }
+    build(now->l = new node(), l, mid, ref);
+    build(now->r = new node(), mid + 1, r, ref);
+    now->pull();
+}
+
+int qmin(node *now, int l, int r, int ql, int qr) {
+    if (qr < l || r < ql) return 1000000006;
+    if (ql <= l && r <= qr) return now->mn;
+    return min(qmin(now->l, l, mid, ql, qr), qmin(now->r, mid + 1, r, ql, qr));
+}
+int qmax(node *now, int l, int r, int ql, int qr) {
+    if (qr < l || r < ql) return -2;
+    if (ql <= l && r <= qr) return now->mx;
+    return max(qmax(now->l, l, mid, ql, qr), qmax(now->r, mid + 1, r, ql, qr));
+}
 
 int main() {
     CPPinput;
+    int n; cin >> n;
+    vector<int> a(n);
+    for (int i = 0; i < n; ++i) cin >> a[i];
+    int mx = 0;
+    for (int i = 0; i < n; ++i) mx = max(mx, a[i]);
+    bool inf = true;
+    for (int i = 0; i < n; ++i) if (a[i] * 2 < mx) {
+        inf = false;
+    }
+    if (inf) {
+        for (int i = 0; i < n; ++i) cout << -1 << ' ';
+        cout << endl;
+        exit(0);
+    }
+    for (int i = 0; i < n; ++i) a.push_back(a[i]);
+    for (int i = 0; i < n; ++i) a.push_back(a[i]);
+    build(croot = new node(), 0, 3 * n - 1, a);
+    vector<int> maxto(n * 3);
+    for (int i = 0; i < n; ++i) {
+        int L = i, R = 3 * n - 1;
+        while (L < R) {
+            int M = (L + R + 1) >> 1;
+            if (qmin(croot, 0, 3 * n - 1, L, M) * 2 < a[i]) R = M - 1;
+            else L = M;
+        }
+        maxto[i] = L;
+        maxto[i + n] = L + n;
+        maxto[i + n + n] = L + n + n;
+    }
+    PDE(maxto);
+    build(toroot = new node(), 0, 3 * n - 1, maxto);
+    for (int i = 0; i < n; ++i) {
+        int L = i, R = 3 * n - 1;
+        while (L < R) {
+            int M = (L + R) >> 1;
+            if (qmin(toroot, 0, 3 * n - 1, i, M) >= M) L = M + 1;
+            else R = M;
+        }
+        cout << L - i << ' ';
+    }
+    cout << endl;
+
 }

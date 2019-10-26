@@ -94,7 +94,23 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+ll t[1005][2], v[1005][3];
 
 int main() {
     CPPinput;
+    int n, m; cin >> n >> m;
+    for (int i = 0; i < n; ++i) cin >> t[i][0] >> t[i][1];
+    for (int i = 0; i < m; ++i) cin >> v[i][0] >> v[i][1] >> v[i][2];
+    long long mx = 0, a, b;
+    for (int i = 0; i < n; ++i) for (int j = 0; j < m; ++j) {
+        int l = max(t[i][0], v[j][0]), r = min(t[i][1], v[j][1]);
+        if (l >= r) continue;
+        ll z = v[j][2] * (r - l);
+        if (z > mx) {
+            mx = z;
+            a = i, b = j;
+        }
+    }
+    cout << mx << endl;
+    if (mx) cout << a + 1 << " " << b + 1 << endl;
 }

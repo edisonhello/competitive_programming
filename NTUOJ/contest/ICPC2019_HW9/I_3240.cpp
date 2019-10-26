@@ -32,12 +32,12 @@
 #include <tuple>
 #endif
 
-// #include<ext/pb_ds/assoc_container.hpp>
+#include<ext/pb_ds/assoc_container.hpp>
 // #include<ext/pb_ds/tree_policy.hpp>
 // #include<ext/rope>
 
 using namespace std;
-// using namespace __gnu_pbds;
+using namespace __gnu_pbds;
 
 #define ll long long
 #define ld long double
@@ -94,7 +94,57 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+cc_hash_table<int, vector<pair<int, int>>> mp;
 
 int main() {
     CPPinput;
+    int curmaxsize = 0;
+    for (long long i = 330000000; ; ++i) {
+        vector<pair<long long, long long>> ans;
+        for (long long x = 0; 2 * x * x <= i; ++x) {
+            long long yy = sqrt(i - x * x);
+            for (long long y = yy - 2; y <= yy + 2; ++y) {
+                if (x * x + y * y == i) {
+                    set<pair<long long, long long>> st;
+                    st.insert(make_pair(x, y));
+                    st.insert(make_pair(y, x));
+                    st.insert(make_pair(-x, y));
+                    st.insert(make_pair(y, -x));
+                    st.insert(make_pair(x, -y));
+                    st.insert(make_pair(-y, x));
+                    st.insert(make_pair(-x, -y));
+                    st.insert(make_pair(-y, -x));
+                    for (auto p : st) ans.push_back(p);
+                }
+            }
+        }
+        if ((int)ans.size() >= 1000) {
+            for (auto p : ans) cout << p.first << ' ' << p.second << '\n';
+            exit(0);
+        }
+        curmaxsize = max(curmaxsize, (int)ans.size());
+        if ((i & 65535) == 0) cerr << "r = " << i << ", curmax = " << curmaxsize << endl;
+    }
+    // for (int i = 0; i <= 10000; ++i) {
+    //     for (int j = 0; j <= 10000; ++j) {
+    //         int x = i * i + j * j;
+    //         set<pair<int, int>> st;
+    //         st.insert(make_pair(i, j));
+    //         st.insert(make_pair(j, i));
+    //         st.insert(make_pair(-i, j));
+    //         st.insert(make_pair(j, -i));
+    //         st.insert(make_pair(i, -j));
+    //         st.insert(make_pair(-j, i));
+    //         st.insert(make_pair(-i, -j));
+    //         st.insert(make_pair(-j, -i));
+    //         for (auto p : st) mp[x].push_back(p);
+    //     }
+    // }
+    // int n; cin >> n;
+    // for (auto &p : mp) {
+    //     if ((int)p.second.size() >= n) {
+    //         for (int i = 0; i < n; ++i) cout << p.second[i].first << ' ' << p.second[i].second << '\n';
+    //         break;
+    //     }
+    // }
 }

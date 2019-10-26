@@ -94,7 +94,53 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9+7;
 
+vector<int> g[1005];
+int c[1005];
+
+void dfs(int x, int nc) {
+    c[x] = nc;
+    for (int i : g[x]) {
+        if (c[i]) {
+            if (c[i] == nc) {
+                JIZZ("-1");
+            }
+        } else {
+            dfs(i, -nc);
+        }
+    }
+}
+
+int djs[1005];
+int F(int x) { return x == djs[x] ? x : djs[x] = F(djs[x]); }
+int mx[1005];
+int d[1005];
+
+void go(int s) {
+    memset(d, -1, sizeof(d));
+    queue<int> q; q.push(s); d[s] = 0;
+    while (q.size()) {
+        int x = q.front(); q.pop();
+        for (int i : g[x]) {
+            if (d[i] == -1) {
+                d[i] = d[x] + 1;
+                q.push(i);
+                mx[F(s)] = max(mx[F(s)], d[i]);
+            }
+        }
+    }
+}
 
 int main() {
     CPPinput;
+    int n, m; cin >> n >> m;
+    for (int i = 1; i <= n; ++i) djs[i] = i;
+    for (int i = 1; i <= m; ++i) {
+        int u, v; cin >> u >> v;
+        g[u].pb(v);
+        g[v].pb(u);
+        djs[F(u)] = F(v);
+    }
+    for (int i = 1; i <= n; ++i) if (!c[i]) dfs(i, 1);
+    for (int i = 1; i <= n; ++i) go(i);
+    cout << accumulate(mx, mx + 1005, 0) << endl;
 }
