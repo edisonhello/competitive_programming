@@ -3,14 +3,15 @@ using namespace std;
 
 int main() {
     srand(time(0) * clock());
-    int t = 5; cout << t << endl; while (t--) {
-        int n = rand() % 10 + 1; cout << n << endl;
-        vector<pair<int, int>> v;
-        for (int i = 1; i < n; ++i) {
-            v.emplace_back(i, rand() % i);
-        }
-        vector<int> o(n);
-        iota(o.begin(), o.end(), 1);
-        for (auto &p : v) cout << o[p.first] << ' ' << o[p.second] << '\n';
-    }
+	int n = 120000; cout << n << endl;
+	vector<int> v(n); iota(v.begin(), v.end(), 1);
+	random_shuffle(v.begin(), v.end());
+	for (int i : v) cout << i << ' '; cout << endl;
+	int q = 120000; cout << q << endl;
+	while (q--) {
+		int l = rand() % n + 1, r = rand() % n + 1;
+		if (r < l) swap(r, l);
+		int k = rand() % (r - l + 1);
+		cout << l << ' ' << r << ' ' << k << endl;
+	}
 }
