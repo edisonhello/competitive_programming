@@ -74,8 +74,8 @@ using namespace std;
 #ifdef WEAK
 #include"/home/edison/Coding/cpp/template/debug.cpp"
 #define DEB(...) printf(__VA_ARGS__), fflush(stdout)
-#define WHR() printf("%s: Line %d", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
-#define LOG(...) printf("%s: Line %d ", __PRETTY_FUNCTION__, __LINE__), printf(__VA_ARGS__), fflush(stdout)
+#define WHR() printf("%s: Line %d\n", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
+#define LOG(...) printf("%s: Line %d ", __PRETTY_FUNCTION__, __LINE__), printf(__VA_ARGS__), puts(""), fflush(stdout)
 #define DEBUG 1
 #define exit(x) cout << "exit code " << x << endl, exit(0)
 #else
