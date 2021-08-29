@@ -20,6 +20,18 @@
 #define PDE9(a,b,c,d,e,f,g,h,i) cout<<#a<<" = "<<(a)<<" , ", PDE8(b,c,d,e,f,g,h,i)
 #define PDE(...) macro_dispatcher(PDE, __VA_ARGS__)(__VA_ARGS__)
 
+#include <iostream>
+using namespace std;
+
+#include <vector>
+#include <utility>
+#include <set>
+#include <map>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
+
 template<typename TA,typename TB> ostream& operator<<(ostream& ostm, const pair<TA,TB> &p){ostm<<"("<<p.first<<","<<p.second<<")";return ostm;}
 template<typename T> ostream& operator<<(ostream &ostm, const vector<T> &v){ostm<<"[ ";for(auto i:v)ostm<<i<<" ";ostm<<"]";return ostm;}
 template<typename TA,typename TB,typename TC> ostream& operator<<(ostream &ostm, const map<TA,TB,TC> &mp){ostm<<"[ ";for(auto &it:mp)ostm<<it<<" ";ostm<<"]";return ostm;}
