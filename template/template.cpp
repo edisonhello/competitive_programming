@@ -1,35 +1,36 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
+#include <algorithm>
+#include <bitset>
 #include <cassert>
+#include <climits>
+#include <cmath>
+#include <complex>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <cmath>
 #include <ctime>
-#include <algorithm>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <deque>
-#include <queue>
-#include <stack>
-#include <map>
-#include <set>
-#include <bitset>
-#include <vector>
-#include <utility>
 #include <functional>
-#include <complex>
-#include <climits>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
 #include <random>
+#include <set>
+#include <sstream>
+#include <stack>
 #include <thread>
+#include <utility>
+#include <vector>
 
 #if __cplusplus >= 201103L
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
-#include <tuple>
 #endif
 
 // #include<ext/pb_ds/assoc_container.hpp>
@@ -51,10 +52,13 @@ using namespace std;
 #define SS stringstream
 #define PQ priority_queue
 #define MS(x, v) memset((x), (v), sizeof(x))
-#define RZUNI(x) sort(x.begin(), x.end()), x.resize(unique(x.begin(), x.end()) - x.begin())
+#define RZUNI(x)              \
+    sort(x.begin(), x.end()), \
+	x.resize(unique(x.begin(), x.end()) - x.begin())
 #define FLH fflush(stdout)
 #define CPPinput ios_base::sync_with_stdio(0), cin.tie(0)
-#define FIO(fname) freopen(fname ".in", "r", stdin), freopen(fname ".out", "w", stdout)
+#define FIO(fname) \
+    freopen(fname ".in", "r", stdin), freopen(fname ".out", "w", stdout)
 #define FIN(fname) freopen(fname, "r", stdin)
 #define FOUT(fname) freopen(fname, "w", stdout)
 
@@ -72,10 +76,13 @@ using namespace std;
 #define No cout << "No" << endl
 
 #ifdef WEAK
-#include"/home/edison/Coding/cpp/template/debug.cpp"
+#include "/home/edison/Coding/cpp/template/debug.cpp"
 #define DEB(...) printf(__VA_ARGS__), fflush(stdout)
-#define WHR() printf("%s: Line %d\n", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
-#define LOG(...) printf("%s: Line %d ", __PRETTY_FUNCTION__, __LINE__), printf(__VA_ARGS__), puts(""), fflush(stdout)
+#define WHR() \
+    printf("%s: Line %d\n", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
+#define LOG(...)                                           \
+    printf("%s: Line %d ", __PRETTY_FUNCTION__, __LINE__), \
+	printf(__VA_ARGS__), puts(""), fflush(stdout)
 #define DEBUG 1
 #define exit(x) cout << "exit code " << x << endl, exit(0)
 #else
@@ -88,13 +95,26 @@ using namespace std;
 
 #define lowbit(x) ((x) & (-(x)))
 
-void JIZZ(string output = ""){ cout << output; exit(0); }
+void JIZZ(string output = "") {
+  cout << output;
+  exit(0);
+}
 
 const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
-const long long mod = 1e9+7;
+const long long mod = 1e9 + 7;
 
+void solve() {
+
+}
 
 int main() {
-    CPPinput;
+  CPPinput;
+  int t;
+  cin >> t;
+  // t = 1;
+  for (int i = 1; i <= t; ++i) {
+    // cout << "Case #" << i << ": ";
+    solve();
+  }
 }
