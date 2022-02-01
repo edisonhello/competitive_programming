@@ -104,16 +104,44 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+int n, k;
+int clr[12][12];
+vector<pair<int, int>> edgs;
 
+void dfs(int now) {
+  if (now == edgs.size()) {
+    for (int i = 1; i <= n; ++i) {
+      for (int j = 1; j <= n; ++j) {
+        cout << clr[i][j] << ' ';
+      }
+      cout << endl;
+    }
+    cout << endl;
+    return;
+  }
+  auto [u, v] = edgs[now];
+  for (int c = 1; c <= 3; ++c) {
+    clr[u][v] = clr[v][u] = c;
+    bool bad = 0;
+    for (int i = 1; i < u; ++i) if (clr[i][u] == c) bad = 1;
+    if (bad) continue;
+    dfs(now + 1);
+  }
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
+  n = 9;
+  k = 2;
+
+  for (int i = 1; i <= n; ++i) {
+    for (int j = i + 1; j <= n; ++j) {
+      edgs.emplace_back(i, j);
+    }
   }
+
+  dfs(0);
+
+
+
 }

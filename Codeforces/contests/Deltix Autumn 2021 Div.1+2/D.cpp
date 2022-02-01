@@ -104,14 +104,43 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+int djs[1005];
 
+int F(int x) { return x == djs[x] ? x : djs[x] = F(djs[x]); }
+void U(int x, int y) { djs[F(x)] = F(y); }
+
+void solve() {
+  int n, m;
+  cin >> n >> m;
+  for (int i = 1; i <= n; ++i) djs[i] = i;
+
+  int fe = 0;
+  while (m--) {
+    int u, v;
+    cin >> u >> v;
+    if (F(u) == F(v)) {
+      ++fe;
+    } else {
+      U(u, v);
+    }
+
+    vector<int> sz(n + 2);
+    for (int i = 1; i <= n; ++i) ++sz[F(i)];
+
+    sort(sz.begin(), sz.end());
+    reverse(sz.begin(), sz.end());
+    int sum = 0;
+    for (int i = 0; i <= min(fe, (int)sz.size()); ++i) {
+      sum += sz[i];
+    }
+
+    cout << sum - 1 << '\n';
+  }
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

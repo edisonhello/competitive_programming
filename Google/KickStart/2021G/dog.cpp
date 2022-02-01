@@ -104,16 +104,41 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+#define int int64_t
 
+void solve() {
+  int n, d, c, m; cin >> n >> d >> c >> m;
+  string s; cin >> s;
+  int it = 0;
+  while (it < s.size()) {
+    if (s[it] == 'D' && d > 0) {
+      --d;
+      ++it;
+      c += m;
+    } 
+    else if (s[it] == 'C' && c > 0) {
+      --c;
+      ++it;
+    }
+    else break;
+  }
+  while (it < s.size()) {
+    if (s[it] == 'D') {
+      cout << "NO" << endl;
+      return;
+    }
+    ++it;
+  }
+  cout << "YES" << endl;
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
+    cout << "Case #" << i << ": ";
     solve();
   }
 }

@@ -104,8 +104,32 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+int lis(vector<int> v) {
+  vector<int> lis;
+  for (int i : v) {
+    if (lis.empty() || i >= lis.back()) lis.push_back(i);
+    *upper_bound(lis.begin(), lis.end(), i) = i;
+  }
+  return lis.size();
+}
 
+void solve() {
+  int n, k;
+  cin >> n >> k;
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i) cin >> v[i];
+  sort(v.begin(), v.end());
+
+  do {
+    int len = lis(v);
+    if (len == k) {
+      for (int i : v) cout << i << ' ';
+      cout << endl;
+      return;
+    }
+  } while (next_permutation(v.begin(), v.end()));
+
+  cout << -1 << endl;
 }
 
 int32_t main() {

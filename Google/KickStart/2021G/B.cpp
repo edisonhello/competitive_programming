@@ -104,16 +104,95 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+#define int int64_t
 
+void solve() {
+  int n; cin >> n;
+  vector<tuple<int, int, int, int>> rec;
+  while (n--) {
+    int a, b, c, d;
+    cin >> a >> b >> c >> d;
+    a += 1e9;
+    b += 1e9;
+    c += 1e9;
+    d += 1e9;
+    rec.emplace_back(a, b, c, d);
+  }
+
+  auto getx = [&](int x) -> pair<int, int> {
+    auto gety = [&](int y) -> int {
+      int tot = 0;
+      for (auto [x1, y1, x2, y2] : rec) {
+        if (x <= x1) {
+          tot += x1 - x;
+        } else if (x1 <= x && x <= x2) {
+          tot += 0;
+        } else {
+          tot += x - x2;
+        }
+        if (y <= y1) {
+          tot += y1 - y;
+        } else if (y1 <= y && y <= y2) {
+          tot += 0;
+        } else {
+          tot += y - y2;
+        }
+      }
+      return tot;
+    };
+
+    int yl = 0, yr = 2e9;
+    while (yr - yl > 5) {
+      int ym = (yl + yr) / 2;
+      int ym1 = ym + 1;
+      auto ans = gety(ym);
+      auto ans1 = gety(ym1);
+      if (ans <= ans1) yr = ym1;
+      else yl = ym;
+    }
+
+    int mny = -1, mnval = LLONG_MAX;
+    for (int i = yl; i <= yr; ++i) {
+      auto ans = gety(i);
+      if (ans < mnval) {
+        mnval = ans;
+        mny = i;
+      }
+    }
+    return make_pair(mnval, mny);
+  };
+
+  int xl = 0, xr = 2e9;
+  while (xr - xl > 5) {
+    int xm = (xl + xr) / 2;
+    int xm1 = xm + 1;
+    auto [ans, _aty] = getx(xm);
+    auto [ans1, _aty1] = getx(xm1);
+    if (ans <= ans1) xr = xm1;
+    else xl = xm;
+  }
+
+  int mnx = -1, mny = -1, mnval = LLONG_MAX;
+  for (int i = xl - 10; i <= xr; ++i) {
+    auto [ans, yy] = getx(i);
+    PDE(i, ans, yy);
+    if (ans < mnval) {
+      mnval = ans;
+      mnx = i;
+      mny = yy;
+    }
+  }
+
+  cout << mnx - 1000000000 << ' ' << mny - 1000000000 << endl;
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
+    cout << "Case #" << i << ": ";
     solve();
   }
 }

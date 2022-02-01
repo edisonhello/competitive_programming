@@ -104,11 +104,63 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+bool np[1000006];
 
+int64_t solve(vector<int> v) {
+  int n = v.size();
+  for (int i = 0; i < n; ++i) {
+    if (v[i] == 1) v[i] = 0;
+    else if (!np[v[i]]) v[i] = 1;
+    else v[i] = 2;
+  }
+
+  auto get = [&](int ub) {
+    int64_t ans = 0;
+    int r = -1;
+    int sum = 0;
+    for (int l = 0; l < n; ++l) {
+      while (r + 1 < n && sum + v[r + 1] < ub) {
+        ++r;
+        sum += v[r];
+      }
+      ans += max(0, r - l);
+      sum -= v[l];
+    }
+    return ans;
+  };
+
+  int64_t ans = get(2) - get(1);
+  PDE(v, get(1), get(2), ans);
+
+  return ans;
+}
+
+void solve() {
+  int n, e; 
+  cin >> n >> e;
+
+  vector<int> a(n);
+  for (int i = 0; i < n; ++i) cin >> a[i];
+
+  int64_t ans = 0;
+  for (int i = 0; i < e; ++i) {
+    vector<int> vv;
+    for (int j = i; j < n; j += e) {
+      vv.push_back(a[j]);
+    }
+
+    ans += solve(vv);
+  }
+
+  cout << ans << '\n';
 }
 
 int32_t main() {
+  for (int i = 2; i <= 1000000; ++i) {
+    for (auto j = 1ll * i * i; j <= 1000000; j += i) {
+      np[j] = 1;
+    }
+  }
   CPPinput;
   int t = 1;
   cin >> t;

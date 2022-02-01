@@ -105,7 +105,23 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n;
+  cin >> n;
+  vector<string> mp(n, string(n, '.'));
 
+  if (n & 1) {
+    for (int i = 1; i < n - 1; ++i) {
+      mp[i][i] = 'Q';
+    }
+  } else {
+    mp[0][0] = 'Q';
+    for (int i = 2; i < n - 1; ++i) {
+      mp[i][i] = 'Q';
+    }
+  }
+
+
+  for (int i = 0; i < n; ++i) cout << mp[i] << '\n';
 }
 
 int32_t main() {

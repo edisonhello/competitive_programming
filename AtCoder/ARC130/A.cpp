@@ -105,13 +105,21 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
-
+	int n;
+	string s;
+	cin >> n >> s;
+	int64_t ans = 0;
+	for (int i = 0, j; i < n; i = j) {
+		for (j = i; j < n && s[j] == s[i]; ++j);
+		int64_t d = j - i;
+		ans += d * (d - 1) / 2;
+	}
+	cout << ans << endl;
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

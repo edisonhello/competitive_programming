@@ -105,15 +105,31 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, a; 
+  cin >> n >> a;
+  if (a < n - 2) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+  cout << "POSSIBLE" << endl;
+  for (int i = 0; i < (n + 1) / 2; ++i) {
+    cout << i << ' ' << (i & 1) << '\n';
+  }
+  for (int i = n / 2 - 1; i >= 1; --i) {
+    cout << i << ' ' << 1 + (i & 1) << '\n';
+  }
 
+  int extra = a - (n - 2);
+  cout << 0 << ' ' << 1 + extra << '\n';
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
+    cout << "Case #" << i << ": ";
     solve();
   }
 }

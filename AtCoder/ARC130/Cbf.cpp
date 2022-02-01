@@ -104,14 +104,43 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+int add(string a, string b) {
+	int sum = 0;
+	int add = 0;
+  reverse(a.begin(), a.end());
+  reverse(b.begin(), b.end());
+	for (int i = 0; i < (int)max(a.size(), b.size()); ++i) {
+		int ds = add;
+		add = 0;
+		if (i < (int)a.size()) ds += a[i] - '0';
+		if (i < (int)b.size()) ds += b[i] - '0';
+		sum += ds % 10;
+		add = ds / 10;
+	}
+  return sum + add;
+}
 
+void solve() {
+  string a, b;
+  cin >> a >> b;
+  sort(a.begin(), a.end());
+  sort(b.begin(), b.end());
+  int mx = 1e9;
+  do {
+    do {
+      int res = add(a, b);
+      if (res < mx) {
+        mx = res;
+        PDE(res, a, b);
+      }
+    } while (next_permutation(b.begin(), b.end()));
+  } while (next_permutation(a.begin(), a.end()));
+  cout << mx << endl;
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

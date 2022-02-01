@@ -109,11 +109,7 @@ void solve() {
 }
 
 int32_t main() {
-  CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
-  }
+  int x; cin >> x;
+  if (x > 0 && x % 100 == 0) cout << "Yes" << endl;
+  else cout << "No" << endl;
 }

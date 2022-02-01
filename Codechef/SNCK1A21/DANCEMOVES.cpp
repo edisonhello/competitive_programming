@@ -105,13 +105,19 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
-
+  int x, y; cin >> x >> y;
+  if (y <= x) {
+    cout << x - y << '\n';
+  } else if (x <= y) {
+    cout << (y - x) / 2 + ((y - x) % 2 ? 2 : 0) << '\n';
+  }
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

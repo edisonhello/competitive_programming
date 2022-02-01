@@ -104,14 +104,73 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
+// now 42 min start 
+struct node {
+  node *l, *r;
+  int tag, mn;
+  node(): tag(0), mn(0) {}
+  void addtag(int v) { tag += v; mn += v; }
+  void pull() { mn = min(l->mn, r->mn); }
+  void push() { if (tag) {
+    l->addtag(tag);
+    r->addtag(tag);
+    tag = 0;
+  } }
+} *root;
+
+void build(node *now, int l, int r) {
+  if (l == r) {
+    return;
+  }
+  build(now->l = new node(), l, mid);
+  build(now->r = new node(), mid + 1, r);
+}
+
+void modify(node *now, int l, int r, int ml, int mr, int v) {
+  if (r < ml || mr < l) return;
+  if (ml <= l && r <= mr) {
+    now->addtag(v);
+    return;
+  }
+  now->push();
+  modify(now->l, l, mid, ml, mr, v);
+  modify(now->r, mid + 1, r, ml, mr, v);
+  now->pull();
+}
+
+int query(node *now, int l, int r, int ml, int mr) {
+  if (r < ml || mr < l) return INT_MAX;
+  if (ml <= l && r <= mr) {
+    return now->mn;
+  }
+  now->push();
+  return min(
+    query(now->l, l, mid, ml, mr),
+    query(now->r, mid + 1, r, ml, mr));
+}
+
+
 void solve() {
+  int n, q; 
+  cin >> n >> q;
+  string s;
+  cin >> s;
+
+  build(root = new node(), 0, n);
+
+  for (int i = 1; i <= n; ++i) {
+    if (s[i - 1] == 'a') {
+      modify(root, 0, n, i, n, 1);
+    } else if (s[i - 1] == 'b') {
+
+    }
+  }
 
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

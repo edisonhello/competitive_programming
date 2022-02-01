@@ -105,13 +105,81 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, m;
+  cin >> n >> m;
+  vector<int> a(n);
+  vector<int> b(m);
+  for (int i = 0; i < n; ++i) cin >> a[i];
+  for (int i = 0; i < m; ++i) cin >> b[i];
+  sort(b.begin(), b.end());
 
+  vector<int> putb4(m);
+
+  auto dc = [&](auto dc, int ml, int mr, int nl, int nr) -> void {
+    if (mr < ml) return;
+    int mm = (ml + mr) / 2;
+    int val = b[mm];
+    PDE(mm, val, nl, nr);
+
+    int add_large = 0, add_small = 0;
+    for (int i = nl; i < nr; ++i) if (a[i] < val) ++add_small;
+
+    int best = nl, best_large = add_large, best_small = add_small;
+    for (int i = nl; i < nr; ++i) {
+      if (a[i] < val) --add_small;
+      if (a[i] > val) ++add_large;
+      if (add_small + add_large < best_large + best_small) {
+        best_large = add_large;
+        best_small = add_small;
+        best = i + 1;
+      }
+    }
+
+    putb4[mm] = best;
+
+    dc(dc, ml, mm - 1, nl, best);
+    dc(dc, mm + 1, mr, best, nr);
+  };
+
+  dc(dc, 0, m - 1, 0, n);
+
+  vector<int> na;
+  int nowi = 0;
+  for (int i = 0; i < m; ++i) {
+    while (nowi < putb4[i]) na.push_back(a[nowi++]);
+    na.push_back(b[i]);
+  }
+  while (nowi < n) na.push_back(a[nowi++]);
+  a = na;
+
+  auto num = a;
+  sort(num.begin(), num.end());
+  num.resize(unique(num.begin(), num.end()) - num.begin());
+  for (int &i : a) i = upper_bound(num.begin(), num.end(), i) - num.begin();
+
+  vector<int> bit(num.size() + 2);
+  auto add = [&](int x) {
+    for (; x < bit.size(); x += x & -x) ++bit[x];
+  };
+  auto query = [&](int x) {
+    int a = 0;
+    for (; x; x -= x & -x) a += bit[x];
+    return a;
+  };
+  int64_t ans = 0;
+  for (int i : a) {
+    ans += query(num.size()) - query(i);
+    add(i);
+  }
+
+  cout << ans << '\n';
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

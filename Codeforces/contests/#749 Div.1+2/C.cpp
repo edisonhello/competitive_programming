@@ -105,13 +105,69 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, m;
+  cin >> n >> m;
+  vector<string> mp(n);
+  for (int i = 0; i < n; ++i) cin >> mp[i];
 
+  // vector<vector<int>> mostleft(n, vector<int>(m, 1000000000));
+  // for (int i = 0; i < m; ++i) if (mp[0][i] == '.') mostleft[0][i] = -1;
+  // for (int i = 0; i < m; ++i) {
+  //   for (int j = 0; j < n; ++j) {
+  //     if (mp[j][i] == '.') {
+  //       mostleft[j][i] = min(mostleft[j][i], i);
+  //       if (j && mp[j - 1][i] == '.') mostleft[j][i] = min(mostleft[j][i], mostleft[j - 1][i]);
+  //       if (i && mp[j][i - 1] == '.') mostleft[j][i] = min(mostleft[j][i], mostleft[j][i - 1]);
+  //     } else {
+  //       mostleft[j][i] = -1;
+  //     }
+  //   }
+  // }
+  // PDE(mostleft);
+
+  // vector<int> cmx(m, -1);
+  // for (int i = 0; i < n; ++i) for (int j = 0; j < m; ++j) {
+  //   cmx[j] = max(cmx[j], mostleft[i][j]);
+  // }
+
+  int q; cin >> q;
+  vector<tuple<int, int, int>> qs;
+  for (int i = 0; i < q; ++i) {
+    int a, b; cin >> a >> b;
+    --a, --b;
+    qs.emplace_back(i, a, b);
+  }
+
+  sort(qs.begin(), qs.end(), [&](auto &t1, auto &t2) -> bool {
+      return get<2>(t1) < get<2>(t2);
+      });
+
+  vector<int> ans(q);
+  int lemx = 0;
+  int nowr = 0;
+  for (auto [i, l, r] : qs) {
+    while (nowr < r) {
+      ++nowr;
+      for (int j = 0; j < n - 1; ++j) {
+        if (mp[j][nowr] == 'X' && mp[j + 1][nowr - 1] == 'X') {
+          lemx = nowr;
+        }
+      }
+    }
+
+    if (l >= lemx) ans[i] = 1;
+    else ans[i] = 0;
+  }
+
+  for (int i = 0; i < q; ++i) {
+    cout << (ans[i] ? "YES" : "NO") << '\n';
+  }
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
+  // cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

@@ -105,6 +105,29 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n; cin >> n;
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i) cin >> v[i];
+
+  if (v[0] % 2 == 0) {
+    cout << "NO" << '\n';
+    return;
+  }
+
+  for (int i = 1; i < n; ++i) {
+    int ii = i + 1;
+    int div = ii + 1;
+    int val = v[i];
+    int ok = 0;
+    for (int d = div; d >= 2; --d) {
+      if (val % d) { ++ok; break; }
+    }
+    if (!ok) {
+      cout << "NO" << '\n';
+      return;
+    }
+  }
+  cout << "YES" << '\n';
 
 }
 

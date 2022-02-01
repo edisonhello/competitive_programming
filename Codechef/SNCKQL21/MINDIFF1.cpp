@@ -105,13 +105,49 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, m; cin >> n >> m;
+  vector<set<int>> g(n);
+  for (int i = 0; i < m; ++i) {
+    int u, v;
+    cin >> u >> v;
+    --u, --v;
+    g[u].insert(v);
+    g[v].insert(u);
+  }
+  set<pair<int, int>> sq;
+  for (int i = 0; i < n; ++i) {
+    sq.insert(make_pair(g[i].size(), i));
+  }
+  int mx = 0;
+  int num = n;
+  vector<int> ans(n);
+  while (sq.size()) {
+    auto [dsm, now] = *sq.begin();
+    PDE(sq, now, dsm);
+    sq.erase(sq.begin());
+    mx = max(mx, dsm);
+    ans[now] = num--;
+
+    for (int i : g[now]) {
+      sq.erase(make_pair(g[i].size(), i));
+      g[i].erase(now);
+      sq.insert(make_pair(g[i].size(), i));
+    }
+  }
+
+  cout << mx << endl;
+  for (int i = 0; i < n; ++i) {
+    cout << ans[i] << " \n"[i == n - 1];
+  }
+  cout << endl;
 
 }
 
-int32_t main() {
+int main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

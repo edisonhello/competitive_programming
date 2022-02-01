@@ -104,14 +104,53 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+bool ok(int x) {
+  for (int i = 2; i * i <= x; ++i) {
+    if (x % i == 0) return true;
+  }
+  return false;
+}
 
+void solve() {
+  int n; cin >> n;
+  vector<int> a(n);
+  int sum = 0;
+  for (int i = 0; i < n; ++i) cin >> a[i], sum += a[i];
+
+  if (ok(sum)) {
+    cout << n << '\n';
+    for (int i = 0; i < n; ++i) cout << i + 1 << ' ';
+    cout << '\n';
+    return;
+  } else {
+    for (int i = 0; i < n; ++i) {
+      if (ok(sum - a[i])) {
+        cout << n - 1 << '\n';
+        for (int j = 0; j < n; ++j) if (i != j) cout << j + 1 << ' ';
+        cout << '\n';
+        return;
+      }
+    }
+
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < n; ++j) if (i != j) {
+      if (ok(sum - a[i] - a[j])) {
+        cout << n - 2 << '\n';
+        for (int k = 0; k < n; ++k) if (i != k && j != k) cout << k + 1 << ' ';
+        cout << '\n';
+        return;
+      }
+      }
+    }
+  }
+  assert(0);
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

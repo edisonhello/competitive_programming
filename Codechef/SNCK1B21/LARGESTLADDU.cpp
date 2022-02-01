@@ -105,7 +105,14 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
-
+  int n; cin >> n;
+  n = (1 << n);
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i) cin >> v[i];
+  int mn = *min_element(v.begin(), v.end());
+  int mx = *max_element(v.begin(), v.end());
+  if (mx - mn > 1) cout << "NO" << '\n';
+  else cout << "YES" << '\n';
 }
 
 int32_t main() {

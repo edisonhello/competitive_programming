@@ -105,7 +105,36 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int k; cin >> k;
+  int mx = 1;
 
+  auto dfs = [&](auto dfs, int nl, int prev, int prev2) -> void {
+    mx = max(mx, nl);
+    for (int i = 1; i <= k; ++i) {
+      bool ok = 1;
+      if (nl > 1 && prev * 2 <= prev2 + i) {
+        ok = 0;
+      }
+
+      if (ok) {
+        dfs(dfs, nl + 1, i, prev);
+      }
+    }
+  };
+
+  // dfs(dfs, 1, 1, 0);
+
+  // int tot = 0;
+  // for (int i = 1; ; ++i) {
+  //   tot += i;
+  //   if (tot >= k) {
+  //     // assert(i * 2 == mx);
+  //     cout << i * 2 << '\n';
+
+  //     return;
+  //   }
+  // }
+  cout << (long long)ceil((-1 + sqrt(1 + (long double)8 * k)) / 2) * 2 << endl;
 }
 
 int32_t main() {

@@ -105,13 +105,35 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, m; cin >> n >> m;
+  vector<int> djs(n);
+  iota(djs.begin(), djs.end(), 0);
 
+  function<int(int)> F = [&](int x) { return djs[x] == x ? x : djs[x] = F(djs[x]); };
+  auto U = [&](int x, int y) { djs[F(x)] = F(y); };
+
+  vector<tuple<int, int, int>> res;
+  vector<int> used(n);
+  while (m--) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    --a, --b, --c;
+    res.emplace_back(a, b, c);
+    used[b] = 1;
+  }
+
+  int root = -1;
+  for (int i = 0; i < n; ++i) if (!used[i]) root = i;
+  for (int i = 0; i < n; ++i) if (i != root) {
+    cout << root + 1 << ' ' << i + 1 << '\n';
+  }
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

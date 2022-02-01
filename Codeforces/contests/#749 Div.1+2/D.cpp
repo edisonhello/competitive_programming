@@ -109,11 +109,28 @@ void solve() {
 }
 
 int32_t main() {
-  CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
+  int n; cin >> n;
+
+  vector<int> diff(n);
+  for (int i = -n + 1; i <= n - 1; ++i) {
+    if (i == 0) continue;
+    if (i < 0) {
+      cout << "?";
+      for (int j = 0; j < n - 1; ++j) cout << ' ' << -i + 1;
+      cout << " " << 1 << endl;
+    } else {
+      cout << "?";
+      for (int j = 0; j < n - 1; ++j) cout << ' ' << 1;
+      cout << " " << i + 1 << endl;
+    }
+    int x; cin >> x;
+    if (x) diff[x - 1] = i;
+  }
+  int mn = *min_element(diff.begin(), diff.end());
+  cout << "! ";
+  for (int i = 0; i < n; ++i) {
+    cout << diff[i] - mn + 1;
+    if (i == n - 1) cout << endl;
+    else cout << ' ';
   }
 }

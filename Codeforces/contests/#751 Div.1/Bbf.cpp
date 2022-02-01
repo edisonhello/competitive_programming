@@ -105,13 +105,73 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n;
+  cin >> n;
+  vector<int> a(n + 4), b(n + 4);
+  for (int i = 1; i <= n; ++i) cin >> a[i];
+  for (int i = 1; i <= n; ++i) cin >> b[i];
+
+  vector<vector<pair<int, int>>> g(n + 5);
+
+#define mid ((l + r) >> 1)
+
+  auto add_edge = [&](int so, int l, int r) {
+    PDE(so, l, r);
+    for (int i = r; i >= l; --i) g[so].emplace_back(i, 1);
+  };
+
+  add_edge(n, n - a[n], n);
+  for (int i = n - 1; i >= 1; --i) {
+    int start = min(n, i + b[i]);
+    int hi = max(0, start - a[start]);
+    add_edge(i, hi, start);
+  }
+
+  priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+  vector<int> d(n + 5, 1000000000);
+  vector<int> vis(n + 5, 0);
+  vector<int> cf(n + 5, 0);
+  pq.emplace(0, n);
+  d[n] = 0;
+
+  while (pq.size()) {
+    while (pq.size() && vis[pq.top().second]) pq.pop();
+    if (pq.empty()) break;
+    int now = pq.top().second;
+    vis[now] = 1;
+    for (auto [u, co] : g[now]) {
+      if (d[now] + co < d[u]) {
+        d[u] = d[now] + co;
+        pq.emplace(d[u], u);
+        cf[u] = now;
+      }
+    }
+  }
+
+  if (d[0] >= 1000000000) {
+    cout << -1 << endl;
+    return;
+  }
+
+  vector<int> path;
+  for (int i = 0; ; i = cf[i]) {
+    path.push_back(i);
+    if (i == n) break;
+  }
+
+  cout << path.size() - 1 << endl;
+  for (int i = path.size() - 2; i >= 0; --i) {
+    cout << path[i] << ' ';
+  }
+  cout << endl;
 
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
+  int t;
+  // cin >> t;
+  t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

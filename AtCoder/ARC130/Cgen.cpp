@@ -110,10 +110,13 @@ void solve() {
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
-  }
+  srand(time(0) * clock());
+  do {
+    int a = rand() % 100000;
+    int b = rand() % 100000;
+    if (to_string(a).find("0") != string::npos) continue;
+    if (to_string(b).find("0") != string::npos) continue;
+    cout << a << ' ' << b << endl;
+    break;
+  } while (true);
 }

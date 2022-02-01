@@ -110,10 +110,13 @@ void solve() {
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
+  string s; cin >> s;
+  string mn = s, mx = s;
+  int n = s.size();
+  while (n--) {
+    s = s.substr(1, s.size() - 1) + s[0];
+    mn = min(mn, s);
+    mx = max(mx, s);
   }
+  cout << mn << endl << mx << endl;
 }

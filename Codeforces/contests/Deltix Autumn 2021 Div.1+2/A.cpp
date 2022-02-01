@@ -103,9 +103,30 @@ void JIZZ(string output = "") {
 const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
+#define int int64_t
 
 void solve() {
+  int n; 
+  cin >> n;
+  vector<int> v(n);
+  int cnt = 0;
+  for (int i = 0; i < n; ++i) {
+    cin >> v[i];
+    while (v[i] % 2 == 0) {
+      ++cnt;
+      v[i] /= 2;
+    }
+  }
+  auto it = max_element(v.begin(), v.end());
+  while (cnt > 0) {
+    --cnt;
+    *it *= 2;
+  }
 
+  int sum = 0;
+  for (int i = 0; i < n; ++i) sum += v[i];
+
+  cout << sum << '\n';
 }
 
 int32_t main() {

@@ -110,10 +110,12 @@ void solve() {
 
 int32_t main() {
   CPPinput;
+  srand(time(0) * clock());
   int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
-  }
+  cout << t << endl;
+  int n = rand() % 10 + 1;
+  int k = rand() % n + 1;
+  cout << n << ' ' << k << endl;
+  for (int i = 0; i < n; ++i) cout << rand() % n + 1 << ' ';
+  cout << endl;
 }

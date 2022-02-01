@@ -105,10 +105,26 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
-
+  ll x, y;
+  cin >> x >> y;
+  if (x > y) {
+    cout << x + y << '\n';
+  } else if (x == y) {
+    cout << x << '\n';
+  } else {
+    cout << y - (y % x) / 2 << '\n';
+  }
 }
 
 int32_t main() {
+  // ll x, y;
+  // cin >> x >> y;
+  // for (ll n = 2; n <= 10000000; ++n) {
+  //   if (n % x == y % n) cout << n << endl;
+  // }
+  // cout << "mid " << (x +y ) / 2 << endl;
+  // cout << "x / 2 " << y - x / 2 << endl;
+  // cout << "% / 2 " << y - (y % x) / 2 << endl;
   CPPinput;
   int t = 1;
   cin >> t;

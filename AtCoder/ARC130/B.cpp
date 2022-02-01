@@ -104,14 +104,39 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {
+set<pair<int, int>> used;
+int64_t ans[300005];
 
+void solve() {
+	int h, w, c, q;
+	cin >> h >> w >> c >> q;
+	stack<tuple<int, int, int>> qs;
+	while (q--) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		qs.emplace(tuple{a, b, c});
+	}
+	int row = w, col = h;
+	while (qs.size()) {
+		auto [t, n, c] = qs.top();
+		qs.pop();
+		if (used.count(make_pair(t, n))) continue;
+		used.insert(make_pair(t, n));
+
+		ans[c] += t == 1 ? row : col;
+		if (t == 1) --col;
+		else --row;
+	}
+	for (int i = 1; i <= c; ++i) {
+		cout << ans[ i] << ' ';
+	}
+	cout << endl;
+	
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

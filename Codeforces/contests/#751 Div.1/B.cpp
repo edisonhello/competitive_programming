@@ -105,13 +105,100 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n;
+  cin >> n;
+  vector<int> a(n + 4), b(n + 4);
+  for (int i = 1; i <= n; ++i) cin >> a[i];
+  for (int i = 1; i <= n; ++i) cin >> b[i];
+
+  vector<vector<pair<int, int>>> g(n * 4 + 5);
+
+#define mid ((l + r) >> 1)
+  vector<int> pid(n + 4);
+  auto build = [&](auto build, int o, int l, int r) {
+    if (l == r) {
+      pid[l] = o;
+      return;
+    }
+    build(build, o * 2 + 1, l, mid);
+    build(build, o * 2 + 2, mid + 1, r);
+    g[o].emplace_back(o * 2 + 1, 0);
+    g[o].emplace_back(o * 2 + 2, 0);
+  };
+  build(build, 0, 0, n);
+
+
+  auto add_edge = [&](int so, int l, int r) {
+    auto dfs = [&](auto dfs, int o, int l, int r, int ml, int mr, int x) {
+      if (r < ml || mr < l) return;
+      if (ml <= l && r <= mr) {
+        g[x].emplace_back(o, 1);
+        return;
+      }
+      dfs(dfs, o * 2 + 1, l, mid, ml, mr, x);
+      dfs(dfs, o * 2 + 2, mid + 1, r, ml, mr, x);
+    };
+    dfs(dfs, 0, 0, n, l, r, pid[so]);
+  };
+
+  add_edge(n, n - a[n], n);
+  for (int i = n - 1; i >= 1; --i) {
+    int start = min(n, i + b[i]);
+    int hi = max(0, start - a[start]);
+    add_edge(i, hi, start);
+  }
+
+  priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+  vector<int> d(n * 4 + 5, 1000000000);
+  vector<int> vis(n * 4 + 5, 0);
+  vector<int> cf(n * 4 + 5, 0);
+  pq.emplace(0, pid[n]);
+  d[pid[n]] = 0;
+
+  while (pq.size()) {
+    while (pq.size() && vis[pq.top().second]) pq.pop();
+    if (pq.empty()) break;
+    int now = pq.top().second;
+    vis[now] = 1;
+    for (auto [u, co] : g[now]) {
+      if (d[now] + co < d[u]) {
+        d[u] = d[now] + co;
+        pq.emplace(d[u], u);
+        cf[u] = now;
+      }
+    }
+  }
+
+  if (d[pid[0]] >= 1000000000) {
+    cout << -1 << endl;
+    return;
+  }
+
+  map<int, int> oumap;
+  for (int i = 0; i <= n; ++i) oumap[pid[i]] = i;
+
+  vector<int> path;
+  for (int i = pid[0]; ; i = cf[i]) {
+    auto it = oumap.find(i);
+    if (it != oumap.end()) {
+      path.push_back(it->second);
+      if (it->second == n) break;
+    }
+  }
+
+  cout << path.size() - 1 << endl;
+  for (int i = path.size() - 2; i >= 0; --i) {
+    cout << path[i] << ' ';
+  }
+  cout << endl;
 
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
+  int t;
+  // cin >> t;
+  t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

@@ -105,13 +105,57 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n; cin >> n;
+  vector<ll> a(n);
+  for (int i = 0; i < n; ++i) cin >> a[i];
+  sort(a.begin(), a.end());
+  if (n == 2) {
+    cout << 0 << '\n';
+    return;
+  }
+  // if (n == 3) {
+  //   cout << min(a[2] - a[1], a[1] - a[0]) << '\n';
+  //   return;
+  // }
+  ll mn = LLONG_MAX;
+  for (int i = 1; i < n; ++i) {
+    ll lmn = a[0];
+    ll lmx = a[i - 1];
+    ll rmn = a[i];
+    ll rmx = a.back();
+    ll lv = lmx - lmn;
+    ll rv = rmx - rmn;
 
+    if (lv == rv) {
+      mn = 0;
+      continue;
+    } else if (lv < rv) {
+      if (i == 1);
+      else mn = min(mn, rv - lv);
+    } else {
+      if (i == n - 1);
+      else mn = min(mn, lv - rv);
+    }
+  }
+  vector<ll> vv1, vv2;
+  for (int i = 0; i < n - 1; ++i) vv1.push_back(a[i]);
+  for (int i = 1; i < n; ++i) vv2.push_back(a[i]);
+  auto get = [&](vector<ll> &a) -> ll {
+    int n = a.size();
+    ll mid = a[n / 2];
+    ll sum = 0;
+    for (ll i : a) sum += abs(mid - i);
+    return sum;
+  };
+  mn = min(min(mn, get(vv1)), get(vv2));
+  cout << mn << '\n';
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
+  int t;
   cin >> t;
+  // t = 1;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

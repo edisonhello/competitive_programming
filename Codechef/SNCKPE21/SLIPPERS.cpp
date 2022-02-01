@@ -102,18 +102,92 @@ void JIZZ(string output = "") {
 
 const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
-const long long mod = 1e9 + 7;
+const long long mod = 998244353;
 
-void solve() {
+int bf(vector<int> v) {
+  int n = v.size();
+  int cnt = 0;
+  for (int z = 0; z < (1 << n); ++z) {
+    bool ok = 1;
+    for (int i = 0; i < n; ++i) if (z & (1 << i)) {
+      for (int j = i + 1; j < n; ++j) if (z & (1 << j)) {
+        if (v[i] >= v[j]) ok = 0;
+      }
+    }
 
+    if (ok) ++cnt;
+  }
+  return cnt;
 }
+
+struct node {
+  node *l, *r;
+  ll sum;
+  node ():l(0), r(0), sum (0) {}
+  void pull() {
+    sum = l->sum + r->sum;
+    sum %= mod;
+  }
+  void add(ll v) {
+    sum = (sum + v) % mod;
+  }
+};
+
+#define mid ((l + r) >> 1)
+void build(node *now, int l, int r) {
+  if (l == r) {
+    return;
+  }
+  build(now->l = new node(), l, mid);
+  build(now->r = new node(), mid + 1, r);
+}
+
+void add(node *now, int l, int r, int x, int v) {
+  if (l == r) {
+    now->add(v);
+    return;
+  }
+  if (x <= mid) add(now->l, l, mid, x, v);
+  else add(now->r, mid + 1, r, x, v);
+  now->pull();
+}
+
+ll query(node *now, int l, int r, int ql, int qr) {
+  if (qr < l || r < ql) return 0;
+  if (ql <= l && r <= qr) {
+    return now->sum;
+  }
+  return query(now->l, l, mid, ql, qr) + query(now->r, mid + 1, r, ql, qr);
+}
+
+ll dp[200005][2];
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
+  int n;
+  cin >> n;
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i) cin >> v[i];
+
+  node *dp0 = new node();
+  node *dp1 = new node();
+  build(dp0 = new node(), 1, 200000); 
+  build(dp1 = new node(), 1, 200000); 
+
+
+
+  dp[0][0] = 1;
+  for (int i = 1; i <= n; ++i) {
+    int vi = v[i - 1];
+    dp[i][0] = dp[i - 1][0] + dp[i - 1][1];
+    dp[i][1] = dp[i][0] - query(dp0, 1, 200000, vi, 200000);
+
+    add(dp0, 1, 200000, vi, dp[i][0]);
+    add(dp1, 1, 200000, vi, dp[i][1]);
+
+    PDE(i, dp[i][0], dp[i][1]);
   }
+
+  cout << (dp[n][0] + dp[n][1]) % mod << endl;
+
 }

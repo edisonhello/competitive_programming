@@ -105,13 +105,44 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, q;
+  cin >> n >> q;
+  string s;
+  cin >> s;
+  int cnt = 0;
+  for (int i = 2; i < n; ++i) {
+    if (s[i - 2] == 'a' && s[i - 1] == 'b' && s[i] == 'c') ++cnt;
+  }
 
+  while (q--) {
+    int pos;
+    string to;
+    cin >> pos >> to;
+    --pos;
+
+    for (int of = -2; of <= 0; ++of) {
+      int l = pos + of;
+      int r = pos + of + 2;
+      if (l < 0 || r >= n) continue;
+      if (s[l] == 'a' && s[l + 1] == 'b' && s[r] == 'c') --cnt;
+    }
+
+    s[pos] = to[0];
+
+    for (int of = -2; of <= 0; ++of) {
+      int l = pos + of;
+      int r = pos + of + 2;
+      if (l < 0 || r >= n) continue;
+      if (s[l] == 'a' && s[l + 1] == 'b' && s[r] == 'c') ++cnt;
+    }
+
+    cout << cnt << '\n';
+  }
 }
 
 int32_t main() {
   CPPinput;
   int t = 1;
-  cin >> t;
   for (int i = 1; i <= t; ++i) {
     // cout << "Case #" << i << ": ";
     solve();

@@ -105,7 +105,81 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
+  int n, k;
+  cin >> n >> k;
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i) cin >> v[i], --v[i];
+  vector<int> cnt(n);
+  for (int i = 0; i < n; ++i) ++cnt[v[i]];
 
+  for (int i = 0; i < n; ++i) if (cnt[i] > k) {
+    cout << -1 << '\n';
+    return;
+  }
+
+  int mxcnt = 0;
+  int mxi = 0;
+  for (int i = n - 1; i >= 0; --i) {
+    if (cnt[i]) {
+      mxcnt = cnt[i];
+      mxi = i;
+      break;
+    }
+  }
+
+  vector<int> ans;
+  for (int i = 0; i < n; ++i) {
+    while (cnt[i] > 0) {
+      --cnt[i];
+      --k;
+      bool bad = 0;
+
+      for (int j = i; j < n; ++j) {
+        if (cnt[j] > k) bad = 1;
+      }
+      PDE(i, k, bad);
+
+      if (bad) {
+        ++cnt[i];
+        ++k;
+        break;
+      }
+
+      ans.push_back(i);
+    }
+
+    if (cnt[i]) break;
+  }
+
+  while (k) {
+    int blk = 0;
+    for (int i = n - 1; i >= 0; --i) {
+      if (cnt[i] == k) {
+        ++blk;
+      }
+    }
+    for (int i = n - 1; i >= 0; --i) {
+      if (cnt[i] == k) {
+        ans.push_back(i);
+        --cnt[i];
+        --blk;
+        if (blk == 0) {
+          for (int j = 0; j < i; ++j) {
+            if (cnt[j]) {
+              --cnt[j];
+              ans.push_back(j);
+              break;
+            }
+          }
+          break;
+        }
+      }
+    }
+    --k;
+  }
+
+  for (int i : ans) cout << i + 1 << ' ';
+  cout << endl;
 }
 
 int32_t main() {

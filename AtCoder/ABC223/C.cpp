@@ -104,16 +104,57 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
+bool same(double x, double y) {
+  return abs(x - y) < eps;
+}
+
 void solve() {
 
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
+  int n; cin >> n;
+  vector<int> a(n + 2), b(n + 2);
+  vector<int> prea(n + 2);
+  for (int i = 1; i <= n; ++i) cin >> a[i] >> b[i], prea[i] = prea[i - 1] + a[i];
+
+  vector<double> pret(n + 2), suft(n + 2);
+  for (int i = 1; i <= n; ++i) {
+    pret[i] = suft[i] = (double)a[i] / b[i];
+    pret[i] += pret[i - 1];
+  }
+  pret[n + 1] = pret[n];
+
+  for (int i = n - 1; i >= 0; --i) {
+    suft[i] += suft[i + 1];
+  }
+
+  cout << fixed << setprecision(12);
+  for (int i = 0; i <= n; ++i) {
+    if (same(pret[i], suft[i + 1])) {
+      cout << prea[i] << endl;
+      exit(0);
+    }
+  }
+  PDE(pret);
+  PDE(suft);
+  for (int i = 1; i <= n; ++i) {
+    if (pret[i] > suft[i + 1] && suft[i] > pret[i - 1]) {
+      if (pret[i - 1] <= suft[i + 1]) {
+        double go = suft[i + 1] - pret[i - 1];
+        double god = go * b[i];
+        double left = a[i] - god;
+        cout << prea[i - 1] + god + left / 2 << endl;
+        exit(0);
+      } else {
+        double go = -(suft[i + 1] - pret[i - 1]);
+        double god = go * b[i];
+        double left = a[i] - god;
+        PDE(go, god, left);
+        cout << prea[i - 1] + left / 2 << endl;
+        exit(0);
+      }
+    }
   }
 }

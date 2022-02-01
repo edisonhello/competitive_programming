@@ -105,15 +105,14 @@ const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
 void solve() {
-
+  
 }
 
 int32_t main() {
   CPPinput;
-  int t = 1;
-  cin >> t;
-  for (int i = 1; i <= t; ++i) {
-    // cout << "Case #" << i << ": ";
-    solve();
-  }
+  srand(time(0) * clock());
+  int n = rand() % 6 + 1;
+  cout << n << endl;
+  for (int i = 1; i <= n; ++i) cout << rand() % n << ' '; cout << endl;
+  for (int i = 1; i <= n; ++i) cout << rand() % n << ' '; cout << endl;
 }
