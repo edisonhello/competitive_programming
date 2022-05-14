@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include <algorithm>
@@ -102,7 +103,43 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {}
+void Update(auto &x, auto y) { x = min(x, y); }
+
+auto calc(int64_t start, int64_t to, int64_t end) {
+  return abs(start - to) + abs(to - end);
+}
+
+void solve() {
+  int n, p;
+  cin >> n >> p;
+  vector v(n + 2, pair(0ll, 0ll));
+
+  for (int i = 1; i <= n; i++) {
+    vector<int> t(p);
+    for (int j = 0; j < p; ++j)
+      cin >> t[j];
+
+    v[i] = pair(*min_element(t.begin(), t.end()),
+                *max_element(t.begin(), t.end()));
+
+    // cout << v[i].first << " " << v[i].second << endl;
+  }
+
+  vector dp(n + 2, vector(2, LLONG_MAX / 2));
+  dp[0][0] = 0;
+  dp[0][1] = 0;
+
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 0; j < 2; ++j) {
+      int prev = j ? v[i - 1].second : v[i - 1].first;
+      Update(dp[i][0], dp[i - 1][j] + calc(prev, v[i].second, v[i].first));
+      Update(dp[i][1], dp[i - 1][j] + calc(prev, v[i].first, v[i].second));
+    }
+    // cout << "i dp0 dp1 " << i << ' ' << dp[i][0] << ' ' << dp[i][1] << endl;
+  }
+
+  cout << min(dp[n][0], dp[n][1]) << '\n';
+}
 
 int main() {
   CPPinput;

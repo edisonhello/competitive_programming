@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include <algorithm>
@@ -102,7 +103,49 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {}
+void solve() {
+  int n;
+  cin >> n;
+  vector<int> v(n);
+  for (int i = 0; i < n; ++i)
+    cin >> v[i];
+
+  int mx = *max_element(v.begin(), v.end());
+
+  deque<int> vl, vr;
+
+  int ans = count(v.begin(), v.end(), mx);
+  for (int i = 0; i < n; ++i) {
+    if (v[i] == mx)
+      break;
+    vl.push_back(v[i]);
+  }
+  for (int i = n - 1; i >= 0; --i) {
+    if (v[i] == mx)
+      break;
+    vr.push_back(v[i]);
+  }
+
+  int prev = 0;
+  while (vl.size() || vr.size()) {
+    int lv = vl.size() ? vl[0] : INT_MAX;
+    int rv = vr.size() ? vr[0] : INT_MAX;
+
+    if (lv < rv) {
+      if (lv >= prev)
+        ++ans;
+      prev = max(prev, lv);
+      vl.pop_front();
+    } else {
+      if (rv >= prev)
+        ++ans;
+      prev = max(prev, rv);
+      vr.pop_front();
+    }
+  }
+
+  cout << ans << '\n';
+}
 
 int main() {
   CPPinput;

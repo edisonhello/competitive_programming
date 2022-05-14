@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include <algorithm>
@@ -74,7 +75,7 @@ using namespace std;
 #define No cout << "No" << endl
 
 #ifdef WEAK
-#include "/home/edison/Coding/cpp/template/debug.cpp"
+#include "/Users/edison/Coding/competitive_programming/template/debug.cpp"
 #define DEB(...) printf(__VA_ARGS__), fflush(stdout)
 #define WHR()                                                                  \
   printf("%s: Line %d\n", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
@@ -102,14 +103,59 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {}
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {1, 0, -1, 0};
+
+int solve(int r) {
+  vector<string> draw(r + 1, string(r + 1, '.'));
+
+  for (int rr = 0; rr <= r; ++rr) {
+    for (int i = 0; i <= rr; ++i) {
+      int y = round(sqrt(rr * rr - i * i));
+      draw[i][y] = '#';
+      draw[y][i] = '#';
+    }
+  }
+
+  // cout << endl;
+  // for (auto s : draw) {
+  //   cout << s << endl;
+  // }
+
+  int cnt = 0;
+  for (int i = 0; i <= r; ++i) {
+    for (int j = 0; j <= r; ++j) {
+      if (round(sqrt(i * i + j * j)) <= r && draw[i][j] == '.') {
+        ++cnt;
+        if (i <= j) {
+          cout << i << ' ' << j << ' ';
+          cout << fixed << setprecision(12);
+          cout << sqrt(i * i + j * j) << endl;
+        }
+      }
+    }
+  }
+
+  return cnt * 4;
+}
 
 int main() {
+  for (int i = 1; i <= 100; ++i) {
+    cout << i << " = ";
+    cout << int(ceil(pow(i - 0.5, 2))) << " to " << int(floor(pow(i + 0.5, 2)))
+         << endl;
+  }
+
+  // for (int i = 1; i <= 100; ++i) {
+  //   cout << i << ": " << solve(i) / 4 << endl;
+  // }
   CPPinput;
   int t;
   cin >> t;
   for (int T = 1; T <= t; ++T) {
+    int n;
+    cin >> n;
     cout << "Case #" << T << ": ";
-    solve();
+    cout << solve(n) << '\n';
   }
 }

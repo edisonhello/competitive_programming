@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include <algorithm>
@@ -102,14 +103,29 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {}
+int output(int x) {
+  bitset<8> bs(x);
+  cout << bs << endl << flush;
+  int rt;
+  cin >> rt;
+  if (rt == -1)
+    exit(0);
+  return rt;
+}
+
+void solve() {
+  int cnt = 8;
+  while (cnt != 0) {
+    int guess = 0;
+    for (int z = 0; z < cnt; ++z)
+      guess |= 1 << z;
+    cnt = output(guess);
+  }
+}
 
 int main() {
-  CPPinput;
   int t;
   cin >> t;
-  for (int T = 1; T <= t; ++T) {
-    cout << "Case #" << T << ": ";
+  while (t--)
     solve();
-  }
 }

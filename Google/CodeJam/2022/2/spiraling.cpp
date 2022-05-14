@@ -1,5 +1,6 @@
 // #pragma GCC optimize("no-stack-protector")
-// #pragma GCC target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
+// #pragma GCC
+// target("sse,sse2,sse3,ssse3,sse4,sse4.2,popcnt,abm,mmx,avx,tune=native")
 // #pragma GCC diagnostic ignored "-W"
 
 #include <algorithm>
@@ -74,7 +75,7 @@ using namespace std;
 #define No cout << "No" << endl
 
 #ifdef WEAK
-#include "/home/edison/Coding/cpp/template/debug.cpp"
+#include "/Users/edison/Coding/competitive_programming/template/debug.cpp"
 #define DEB(...) printf(__VA_ARGS__), fflush(stdout)
 #define WHR()                                                                  \
   printf("%s: Line %d\n", __PRETTY_FUNCTION__, __LINE__), fflush(stdout)
@@ -102,7 +103,82 @@ const long double PI = 3.14159265358979323846264338327950288;
 const long double eps = 1e-10;
 const long long mod = 1e9 + 7;
 
-void solve() {}
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {1, 0, -1, 0};
+
+void solve() {
+  int n, k;
+  cin >> n >> k;
+
+  vector<pair<int, int>> sc;
+  vector v(n, vector(n, 0));
+
+  auto inside = [&](int x, int y) {
+    return x >= 0 and x < n and y >= 0 and y < n;
+  };
+  auto filled = [&](int x, int y) { return inside(x, y) && v[x][y]; };
+
+  auto dfs = [&](auto dfs, int x, int y, int now, int d) -> void {
+    v[x][y] = now;
+    if (now == n * n)
+      return;
+
+    if (!inside(x + dx[d], y + dy[d]) || filled(x + dx[d], y + dy[d])) {
+      int nd = (d + 1) % 4;
+      dfs(dfs, x + dx[nd], y + dy[nd], now + 1, nd);
+    } else {
+      dfs(dfs, x + dx[d], y + dy[d], now + 1, d);
+    }
+  };
+
+  dfs(dfs, 0, 0, 1, 0);
+
+  // for (int i = 0; i < n; ++i) {
+  //   for (int j = 0; j < n; ++j) {
+  //     cout << v[i][j] << ' ';
+  //   }
+  //   cout << endl;
+  // }
+
+  int nx = 0, ny = 0, d = 0;
+  int exp_step = n * n - 1;
+
+  while (v[nx][ny] != n * n) {
+    PDE(nx, ny, v[nx][ny]);
+    int nxx = nx + dx[d], nxy = ny + dy[d];
+    if (!inside(nxx, nxy) || v[nxx][nxy] < v[nx][ny]) {
+      d = (d + 1) % 4;
+      nx += dx[d];
+      ny += dy[d];
+      continue;
+    }
+
+    int nd = (d + 1) % 4;
+    int scx = nx + dx[nd], scy = ny + dy[nd];
+    int to = v[scx][scy];
+    int fast = to - v[nx][ny] - 1;
+    if (to >= v[nx][ny] && exp_step - fast >= k) {
+      sc.emplace_back(v[nx][ny], to);
+      nx = scx;
+      ny = scy;
+      exp_step -= fast;
+      continue;
+    }
+
+    nx = nxx;
+    ny = nxy;
+  }
+
+  if (exp_step != k) {
+    cout << "IMPOSSIBLE" << endl;
+    return;
+  }
+
+  cout << sc.size() << endl;
+  for (auto [x, y] : sc) {
+    cout << x << ' ' << y << '\n';
+  }
+}
 
 int main() {
   CPPinput;
